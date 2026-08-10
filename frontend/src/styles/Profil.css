@@ -1,0 +1,161 @@
+.account {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #faf7f0 0%, #e8f5e9 100%);
+}
+
+.account-chargement {
+  color: #1b4332;
+  font-size: 1.1rem;
+  align-self: center;
+}
+
+.account-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 640px;
+  width: 100%;
+  height: fit-content;
+  box-shadow: 0 20px 50px rgba(27, 67, 50, 0.15);
+}
+
+.account-card h1 {
+  color: #1b4332;
+  font-size: 2rem;
+  margin: 0 0 1.5rem;
+}
+
+.account-card h2 {
+  color: #2d6a4f;
+  font-size: 1.3rem;
+  margin: 2rem 0 1rem;
+}
+
+.account-profil {
+  background: #f4f9f5;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.account-profil p {
+  margin: 0.3rem 0;
+  color: #444;
+}
+
+.account-vide {
+  text-align: center;
+  padding: 2rem 0;
+  color: #666;
+}
+
+.account-vide .btn-primary {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.account-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid #d8e6dc;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: border-color 0.2s;
+}
+
+.account-item.remis {
+  opacity: 0.65;
+  border-style: dashed;
+}
+
+.account-item .gain-emoji {
+  font-size: 2rem;
+}
+
+.gain-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.gain-details strong {
+  color: #1b4332;
+}
+
+.gain-code,
+.gain-date {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.gain-code {
+  font-family: monospace;
+}
+
+.gain-statut {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.gain-statut.a-retirer {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.gain-statut.remis {
+  background: #d4edda;
+  color: #155724;
+}
+
+.btn-primary {
+  background: #2d6a4f;
+  color: white;
+  border: none;
+  padding: 0.9rem 1.8rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #1b4332;
+  transform: translateY(-2px);
+}
+
+.erreur {
+  background: #fdecea;
+  color: #b3261e;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 560px) {
+  .account-item {
+    flex-wrap: wrap;
+  }
+  .gain-statut {
+    width: 100%;
+    text-align: center;
+  }
+}

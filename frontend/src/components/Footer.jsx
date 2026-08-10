@@ -17,8 +17,9 @@ export default function Footer() {
         </div>
         <div>
           <h4 style={{ color: 'white' }}>Légal</h4>
-          <Link to="/cgu" style={{ color: 'rgba(255,255,255,0.8)', display: 'block', marginBottom: 8 }}>CGU & Règlement</Link>
-          <Link to="/cgu#confidentialite" style={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>Politique de confidentialité</Link>
+          <Link to="/mentions-legales" style={{ color: 'rgba(255,255,255,0.8)', display: 'block', marginBottom: 8 }}>Mentions légales</Link>
+          <Link to="/confidentialite" style={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>Politique de confidentialité</Link>
+          <Link to="/reglement"style={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>Règlement du jeu</Link>
         </div>
       </div>
       <div className="container" style={{ marginTop: 32, textAlign: 'center' }}>

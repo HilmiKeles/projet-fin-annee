@@ -1,34 +1,41 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import EnterCode from './pages/EnterCode';
-import Profile from './pages/Profile';
-import Employee from './pages/Employee';
-import Admin from './pages/Admin';
-import CGU from './pages/CGU';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import Participate from "./pages/Participate";
+import EnterCode from "./pages/EnterCode";
+import Profil from "./pages/Profil";
+import Admin from "./pages/Admin";
+import Employee from "./pages/Employee";
+import Prizes from "./pages/Prizes";
+import CGU from "./pages/CGU";
+import Result from "./pages/Result";
+import MentionsLegales from "./pages/MentionsLegales";
+import Confidentialite from "./pages/Confidentialite";
+import Reglement from "./pages/Reglement";
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
-      <Header />
-      <main style={{ minHeight: '80vh' }}>
-        <Routes>
+      <Routes>
+        <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/connexion" element={<Login />} />
           <Route path="/inscription" element={<Register />} />
+          <Route path="/connexion" element={<Login />} />
+          <Route path="/participer" element={<Participate />} />
           <Route path="/saisie-code" element={<EnterCode />} />
-          <Route path="/profil" element={<Profile />} />
-          <Route path="/employe" element={<Employee />} />
+          <Route path="/profil" element={<Profil />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/employe" element={<Employee />} />
+          <Route path="/lots" element={<Prizes />} />
           <Route path="/cgu" element={<CGU />} />
-        </Routes>
-      </main>
-      <Footer />
+          <Route path="/resultat" element={<Result />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/confidentialite" element={<Confidentialite />} />
+          <Route path="/reglement" element={<Reglement />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;

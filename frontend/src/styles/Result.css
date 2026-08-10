@@ -1,0 +1,128 @@
+.result {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: linear-gradient(135deg, #faf7f0 0%, #e8f5e9 100%);
+}
+
+.result-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(27, 67, 50, 0.15);
+  text-align: center;
+  animation: apparition 0.5s ease-out;
+}
+
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.confetti {
+  font-size: 2.5rem;
+  display: block;
+  animation: rebond 1s ease-in-out infinite alternate;
+}
+
+@keyframes rebond {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+.result-card h1 {
+  color: #1b4332;
+  font-size: 2.2rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.gain-emoji {
+  font-size: 5rem;
+  line-height: 1;
+  margin: 1rem 0;
+}
+
+.result-card h2 {
+  color: #2d6a4f;
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.gain-description {
+  color: #555;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+.result-info {
+  background: #f4f9f5;
+  border: 1px solid #d8e6dc;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.result-info p {
+  margin: 0.4rem 0;
+  color: #444;
+  line-height: 1.5;
+}
+
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.9rem 1.8rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s, background 0.2s;
+}
+
+.btn-primary {
+  background: #2d6a4f;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1b4332;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #2d6a4f;
+  border: 2px solid #2d6a4f;
+}
+
+.btn-secondary:hover {
+  background: #2d6a4f;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .gain-emoji {
+    font-size: 3.5rem;
+  }
+  .result-actions {
+    flex-direction: column;
+  }
+}

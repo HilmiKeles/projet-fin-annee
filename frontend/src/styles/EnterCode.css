@@ -1,0 +1,100 @@
+.enter-code {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: var(--creme);
+}
+
+.enter-code-card {
+  background: var(--blanc);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(27, 67, 50, 0.12);
+}
+
+.enter-code-card h1 {
+  color: var(--vert-fonce);
+  margin-top: 0;
+  text-align: center;
+}
+
+.enter-code-intro {
+  text-align: center;
+  color: var(--texte);
+  margin-bottom: 1.5rem;
+}
+
+.enter-code form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.enter-code label {
+  font-weight: 600;
+  color: var(--vert-fonce);
+}
+
+.enter-code input {
+  padding: 0.9rem;
+  border: 2px solid var(--vert-clair);
+  border-radius: 8px;
+  font-size: 1.2rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.enter-code input:focus {
+  outline: none;
+  border-color: var(--vert-the);
+}
+
+.compteur {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.erreur {
+  background: #fdecea;
+  color: #b3261e;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--vert-the);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--vert-fonce);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.enter-code-aide {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.enter-code-aide a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
