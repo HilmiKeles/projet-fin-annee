@@ -1,34 +1,73 @@
 import { Link } from 'react-router-dom';
+import '../styles/Footer.css';
 
 export default function Footer() {
   return (
-    <footer style={{ background: 'var(--vert-the)', color: 'white', padding: '48px 0 24px' }}>
-      <div className="container" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 32
-      }}>
-        <div>
-          <h4 style={{ color: 'white' }}>Thé Tip Top</h4>
-          <p style={{ fontSize: 14, opacity: 0.8 }}>12 rue de la Paix, 06000 Nice</p>
-        </div>
-        <div>
-          <h4 style={{ color: 'white' }}>Navigation</h4>
-          <Link to="/" style={{ color: 'rgba(255,255,255,0.8)', display: 'block', marginBottom: 8 }}>Accueil</Link>
-          <Link to="/saisie-code" style={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>Participer</Link>
-        </div>
-        <div>
-          <h4 style={{ color: 'white' }}>Légal</h4>
-          <Link to="/mentions-legales" style={{ color: 'rgba(255,255,255,0.8)', display: 'block', marginBottom: 8 }}>Mentions légales</Link>
-          <Link to="/confidentialite" style={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>Politique de confidentialité</Link>
-          <Link to="/reglement"style={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>Règlement du jeu</Link>
+    <footer className="footer">
+      {/* Section principale */}
+      <div className="footer-main">
+        <div className="footer-main-container">
+          {/* Logo et réseaux */}
+          <div className="footer-brand">
+            <div className="footer-brand-logo">
+              <span className="footer-brand-icon">🍵</span>
+              <span className="footer-brand-text">Thé Tip Top</span>
+            </div>
+            <div className="footer-brand-socials">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <span>📘</span>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <span>📸</span>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <span>🐦</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Colonne Navigation */}
+          <div className="footer-col">
+            <h3>Navigation</h3>
+            <ul>
+              <li><Link to="/">Accueil</Link></li>
+              <li><Link to="/lots">Lots à gagner</Link></li>
+              <li><Link to="/saisie-code">Participer</Link></li>
+              <li><Link to="/connexion">Connexion</Link></li>
+            </ul>
+          </div>
+
+          {/* Colonne Informations */}
+          <div className="footer-col">
+            <h3>Informations</h3>
+            <ul>
+              <li><Link to="/mentions-legales">Mentions légales</Link></li>
+              <li><Link to="/cgu">CGU du jeu-concours</Link></li>
+              <li><Link to="/reglement">Règlement du jeu</Link></li>
+              <li><Link to="/confidentialite">Politique de confidentialité</Link></li>
+            </ul>
+          </div>
+
+          {/* Colonne Contact */}
+          <div className="footer-col">
+            <h3>Contact</h3>
+            <ul className="footer-contact-list">
+              <li>📍 18 rue Léon Frot, 75011 Paris</li>
+              <li>📞 01 23 45 67 89</li>
+              <li>✉️ contact@thetiptop.fr</li>
+            </ul>
+          </div>
         </div>
       </div>
-      <div className="container" style={{ marginTop: 32, textAlign: 'center' }}>
-        <p style={{ fontSize: 13, opacity: 0.7 }}>© 2026 Thé Tip Top — Tous droits réservés</p>
-        <p style={{
-          fontSize: 12, fontStyle: 'italic', marginTop: 8, padding: '6px 14px',
-          border: '1px solid rgba(255,255,255,0.15)', borderRadius: 4, display: 'inline-block'
-        }}>
-          ⚠️ Projet étudiant fictif — aucun achat, gain ou réservation réelle possible
+
+      {/* Barre du bas */}
+      <div className="footer-bottom">
+        <p>
+          © {new Date().getFullYear()} Thé Tip Top — Projet étudiant fictif réalisé par l'agence Furious Ducks.
+        </p>
+        <p className="footer-legal-note">
+          Aucun achat, gain ou réservation réel ne peut être effectué sur ce site.
+          Les données collectées sont uniquement destinées à la démonstration du jeu-concours.
         </p>
       </div>
     </footer>

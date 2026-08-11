@@ -6,10 +6,20 @@ export default function Layout() {
   return (
     <>
       <Header />
-      <main style={{ minHeight: "70vh" }}>
-        <Outlet />
-      </main>
+      <Outlet />
       <Footer />
     </>
   );
 }
+
+// export default function Layout() {
+//   return (
+//     <>
+//       <Header />
+//       <main style={{ minHeight: "70vh" }}>
+//         <Outlet />
+//       </main>
+//       <Footer />
+//     </>
+//   );
+// }

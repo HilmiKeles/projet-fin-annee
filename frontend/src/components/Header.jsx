@@ -1,45 +1,85 @@
-import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import '../styles/Header.css';
 
 export default function Header() {
   const [menuOuvert, setMenuOuvert] = useState(false);
 
+  // Récupération de l'utilisateur connecté (adapté à votre sessionStorage)
+  const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+  const navigate = useNavigate();
+
+  const toggleMenu = () => setMenuOuvert(!menuOuvert);
+  const fermerMenu = () => setMenuOuvert(false);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    fermerMenu();
+    navigate('/');
+  };
+
   return (
-    <header style={{
-      background: 'white',
-      borderBottom: '1px solid rgba(168,195,160,0.3)',
-      position: 'sticky', top: 0, zIndex: 100
-    }}>
-      <div className="container" style={{
-        display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', height: '72px'
-      }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <svg width="36" height="36" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="18" fill="#2E5A3C" />
-            <path d="M18 8 C14 12 10 16 12 22 C14 26 18 28 18 28 C18 28 22 26 24 22 C26 16 22 12 18 8Z" fill="#A8C3A0" />
-          </svg>
-          <span style={{ fontFamily: 'var(--font-titre)', fontSize: 22, color: 'var(--vert-the)', fontWeight: 700 }}>
-            Thé Tip Top
-          </span>
+    <header className="header">
+      <div className="header-container">
+        {/* Logo */}
+        <Link to="/" className="header-logo" onClick={fermerMenu}>
+          <span className="logo-icon">🍵</span>
+          <span className="logo-text">Thé Tip Top</span>
         </Link>
 
-        {/* Menu burger mobile */}
+        {/* Bouton burger (mobile) */}
         <button
-          onClick={() => setMenuOuvert(!menuOuvert)}
-          className="burger"
-          aria-label="Menu"
-          style={{ display: 'none', background: 'none', border: 'none', fontSize: 24, cursor: 'pointer' }}
+          className={`burger ${menuOuvert ? 'burger-open' : ''}`}
+          onClick={toggleMenu}
+          aria-label="Menu de navigation"
+          aria-expanded={menuOuvert}
         >
-          ☰
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
 
-        <nav className={menuOuvert ? 'nav ouvert' : 'nav'} style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <Link to="/saisie-code">🎟️ Participer</Link>
-          <Link to="/profil">Mon compte</Link>
-          <Link to="/connexion">
-            <button className="btn-primary" style={{ padding: '10px 20px' }}>Connexion</button>
-          </Link>
+        {/* Navigation */}
+        <nav className={`header-nav ${menuOuvert ? 'nav-open' : ''}`}>
+          <NavLink to="/" onClick={fermerMenu} className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            Accueil
+          </NavLink>
+          <NavLink to="/lots" onClick={fermerMenu} className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+            Lots à gagner
+          </NavLink>
+
+          {user ? (
+            <>
+              <NavLink to="/saisie-code" onClick={fermerMenu} className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                Saisir un code
+              </NavLink>
+              <NavLink to="/profil" onClick={fermerMenu} className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                Mon profil
+              </NavLink>
+              {(user.role === 'admin' || user.role === 'employe') && (
+                <NavLink
+                  to={user.role === 'admin' ? '/admin' : '/employe'}
+                  onClick={fermerMenu}
+                  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+                >
+                  {user.role === 'admin' ? 'Administration' : 'Espace employé'}
+                </NavLink>
+              )}
+              <button onClick={handleLogout} className="nav-link nav-logout">
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/connexion" onClick={fermerMenu} className="nav-link">
+                Connexion
+              </NavLink>
+              <NavLink to="/inscription" onClick={fermerMenu} className="nav-link nav-cta">
+                Participer
+              </NavLink>
+            </>
+          )}
         </nav>
       </div>
     </header>

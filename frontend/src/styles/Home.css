@@ -1,118 +1,219 @@
-/* ===== HERO ===== */
+/* ============ HOME ============ */
+.home {
+  width: 100%;
+}
+
+/* ---------- HERO ---------- */
 .hero {
-  background: linear-gradient(135deg, var(--vert-the, #2e5d3f) 0%, var(--vert-fonce, #1e3d29) 100%);
-  color: #fff;
-  padding: 5rem 1.5rem;
+  background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-the) 100%);
+  padding: 4rem 8%;
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.hero h1 {
+  color: var(--blanc);
+  font-size: 2.8rem;
+  margin: 0 0 1.2rem;
+  line-height: 1.2;
+}
+
+.hero-highlight {
+  color: var(--or);
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.hero-subtitle strong {
+  color: var(--blanc);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-image {
+  font-size: 7rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* ---------- BOUTONS ---------- */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+  background: var(--or);
+  color: var(--vert-fonce);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--blanc);
+  border: 2px solid var(--blanc);
+}
+
+.btn-gold {
+  background: var(--or);
+  color: var(--vert-fonce);
+  font-size: 1.1rem;
+  padding: 14px 36px;
+}
+
+/* ---------- ÉTAPES ---------- */
+.etapes {
+  padding: 4rem 8%;
   text-align: center;
 }
 
-.hero-content { max-width: 800px; margin: 0 auto; }
-
-.hero-badge {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  padding: 0.4rem 1.2rem;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+.etapes h2,
+.lots-apercu h2 {
+  color: var(--vert-fonce);
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 
-.hero h1 { font-size: 2.8rem; margin-bottom: 1rem; line-height: 1.2; }
-.hero-subtitle { font-size: 1.2rem; opacity: 0.95; margin-bottom: 2rem; }
-
-.hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-
-.btn {
-  display: inline-block;
-  padding: 0.9rem 2rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.05rem;
-  text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.btn-primary { background: var(--doré, #d4a94e); color: #1e3d29; }
-.btn-outline { border: 2px solid #fff; color: #fff; }
-
-/* ===== SECTIONS GÉNÉRIQUES ===== */
-section { padding: 4rem 1.5rem; }
-section h2 { text-align: center; font-size: 2rem; margin-bottom: 2.5rem; color: var(--vert-fonce, #1e3d29); }
-.section-intro { text-align: center; margin: -1.5rem 0 2.5rem; color: #555; }
-
-/* ===== ÉTAPES ===== */
-.steps { background: var(--creme, #f8f4ec); }
-.steps-grid, .prizes-grid, .about-grid {
+.etapes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  max-width: 1100px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.step-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 2rem 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  position: relative;
-  padding-top: 3rem;
+.etape-card {
+  padding: 24px;
 }
-.step-number {
-  position: absolute;
-  top: -1.2rem;
-  left: 1.5rem;
-  background: var(--vert-the, #2e5d3f);
-  color: #fff;
-  width: 2.4rem;
-  height: 2.4rem;
+
+.etape-numero {
+  width: 48px;
+  height: 48px;
+  background: var(--vert-the);
+  color: var(--blanc);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.3rem;
   font-weight: 700;
-  font-size: 1.1rem;
+  margin: 0 auto 1rem;
 }
-.step-card h3 { color: var(--vert-the, #2e5d3f); margin-bottom: 0.5rem; }
 
-/* ===== LOTS ===== */
-.prize-card {
-  border: 2px solid #e5e0d5;
-  border-radius: 12px;
-  padding: 2rem 1.5rem;
+.etape-card h3 {
+  color: var(--vert-fonce);
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- LOTS ---------- */
+.lots-apercu {
+  padding: 4rem 8%;
   text-align: center;
-  background: #fff;
+  background: var(--creme);
 }
-.prize-highlight {
-  border-color: var(--doré, #d4a94e);
-  background: linear-gradient(180deg, #fffdf5 0%, #fff 100%);
+
+.section-subtitle {
+  color: var(--texte);
+  margin-bottom: 2rem;
 }
-.prize-chance {
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--doré, #b08a3c);
-  font-weight: 700;
+
+.lots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 2.5rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.prize-value { font-size: 2.2rem; font-weight: 800; color: var(--vert-the, #2e5d3f); margin: 0.5rem 0; }
-.prize-card h3 { margin-bottom: 0.5rem; }
-.prizes-note { text-align: center; margin-top: 2rem; color: #555; }
 
-/* ===== À PROPOS ===== */
-.about { background: var(--creme, #f8f4ec); }
-.about-grid article { background: #fff; border-radius: 12px; padding: 1.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.about-grid h3 { color: var(--vert-the, #2e5d3f); margin-bottom: 0.6rem; }
+.lot-card {
+  background: var(--blanc);
+  border-radius: 12px;
+  padding: 28px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
 
-/* ===== CTA FINAL ===== */
-.cta-final { text-align: center; background: var(--vert-the, #2e5d3f); color: #fff; }
-.cta-final h2 { color: #fff; margin-bottom: 0.8rem; }
-.cta-final p { margin-bottom: 1.8rem; font-size: 1.1rem; }
-.cta-final .btn-outline { border-color: #fff; color: #fff; }
+.lot-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
-  .hero h1 { font-size: 2rem; }
-  .hero-subtitle { font-size: 1rem; }
-  section { padding: 3rem 1rem; }
+.lot-card h3 {
+  color: var(--vert-fonce);
+  margin-bottom: 0.5rem;
+}
+
+.lot-card p {
+  font-size: 0.9rem;
+  color: var(--texte);
+}
+
+/* ---------- BANDEAU CTA ---------- */
+.cta-band {
+  background: var(--vert-fonce);
+  text-align: center;
+  padding: 4rem 8%;
+}
+
+.cta-band h2 {
+  color: var(--blanc);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.cta-band p {
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 550px;
+  margin: 0 auto 2rem;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .hero-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-image {
+    font-size: 5rem;
+  }
 }
