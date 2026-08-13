@@ -1,0 +1,41 @@
+/* src/styles/Layout.css (ajouter en haut du fichier) */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background-color: #2d5016;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 0 0 8px 8px;
+  z-index: 10000;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* S'assurer que le main est focusable mais sans outline par défaut */
+.main-content:focus {
+  outline: none;
+}
+
+.main-content:focus-visible {
+  outline: 3px solid #c1a35e;
+  outline-offset: -3px;
+}
+
+/* Vos styles existants de layout... */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}

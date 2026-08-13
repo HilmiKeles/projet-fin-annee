@@ -45,6 +45,7 @@ export default function Footer() {
               <li><Link to="/cgu">CGU du jeu-concours</Link></li>
               <li><Link to="/reglement">Règlement du jeu</Link></li>
               <li><Link to="/confidentialite">Politique de confidentialité</Link></li>
+              <li><Link to="/contact">Contact</Link></li>  {/* AJOUTE CELUI-CI */}
             </ul>
           </div>
 

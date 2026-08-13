@@ -75,7 +75,7 @@ export default function Header() {
               <NavLink to="/connexion" onClick={fermerMenu} className="nav-link">
                 Connexion
               </NavLink>
-              <NavLink to="/inscription" onClick={fermerMenu} className="nav-link nav-cta">
+              <NavLink to="/inscription" onClick={fermerMenu} className="nav-link">
                 Participer
               </NavLink>
             </>
