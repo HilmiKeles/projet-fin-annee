@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  EMPLOYEE
+  ADMIN
+  CAISSE
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  role      Role      @default(CLIENT)
+  gender    String?
+  birthDate DateTime?
+  createdAt DateTime  @default(now())
+  gains     Gain[]
+}
+
+model Ticket {
+  code      String   @id
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  gain      Gain?
+}
+
+model Lot {
+  id    String @id @default(uuid())
+  name  String
+  stock Int
+  gains Gain[]
+}
+
+model Gain {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  ticket     Ticket   @relation(fields: [ticketCode], references: [code])
+  ticketCode String   @unique
+  lot        Lot      @relation(fields: [lotId], references: [id])
+  lotId      String
+  claimed    Boolean  @default(false)
+  wonAt      DateTime @default(now())
+}

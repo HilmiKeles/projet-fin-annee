@@ -1,0 +1,20 @@
+{
+  "name": "projet-fin-annee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HilmiKeles/projet-fin-annee.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HilmiKeles/projet-fin-annee/issues"
+  },
+  "homepage": "https://github.com/HilmiKeles/projet-fin-annee#readme"
+}
