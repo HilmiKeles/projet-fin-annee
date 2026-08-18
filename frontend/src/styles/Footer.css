@@ -77,6 +77,12 @@
   font-size: 1.8rem;
 }
 
+.footer-logo-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
 .footer-brand-text {
   color: var(--blanc);
   font-size: 1.25rem;
@@ -135,6 +141,7 @@
 
 .footer-col a:hover {
   color: var(--dore);
+  text-decoration: underline;
 }
 
 /* --- Liste contact --- */

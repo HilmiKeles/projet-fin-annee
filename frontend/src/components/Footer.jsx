@@ -11,7 +11,7 @@ export default function Footer() {
           {/* Logo et réseaux */}
           <div className="footer-brand">
             <div className="footer-brand-logo">
-              <span className="footer-brand-icon">🍵</span>
+              <img className="footer-logo-icon" src="../logo_TipTop.png" alt="Thé Tip Top" />
               <span className="footer-brand-text">Thé Tip Top</span>
             </div>
             <div className="footer-brand-socials">

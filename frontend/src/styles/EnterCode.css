@@ -80,8 +80,13 @@
   transition: background 0.2s;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primar:hover:not(:disabled) {
   background: var(--vert-fonce);
+}
+
+.btn-participer:hover:not(:disabled) {
+  background: var(--vert-fonce);
+  color: #C9A227;
 }
 
 .btn-primary:disabled {

@@ -32,7 +32,7 @@ export default function Home() {
               <strong> 100% des tickets sont gagnants.</strong>
             </p>
             <div className="hero-actions">
-              <Link to={user ? "/mon-compte" : "/connexion"} className="btn btn-primary">
+              <Link to={user ? "/mon-compte" : "/connexion"} className="btn btn-primary btn-participer">
                 Participer au jeu
               </Link>
               <Link to="/lots" className="btn btn-secondary">
@@ -82,7 +82,7 @@ export default function Home() {
       <section className="cta-band">
         <h2>Prêt à tenter votre chance ?</h2>
         <p>Saisissez le code de votre ticket de caisse et découvrez votre gain en quelques secondes !</p>
-        <Link to={user ? "/mon-compte" : "/inscription"} className="btn btn-gold">
+        <Link to={user ? "/mon-compte" : "/inscription"} className="btn btn-gold btn-participer">
           Je participe maintenant
         </Link>
       </section>
