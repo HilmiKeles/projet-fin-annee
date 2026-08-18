@@ -43,11 +43,11 @@ export default function Lots() {
     },
     {
       emoji: '💝',
-      titre: 'Coffret découverte — 69€',
+      titre: 'Coffret de luxe — 69€',
       pourcentage: 4,
       quantite: '20 000 gagnants',
       description:
-        'Le coffret découverte prestige d\'une valeur de 69€ : notre sélection ' +
+        'Le coffret de luxe prestige d\'une valeur de 69€ : notre sélection ' +
         'la plus raffinée de thés rares et d\'accessoires.',
     },
   ];

@@ -80,7 +80,7 @@
   transition: background 0.2s;
 }
 
-.btn-primar:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled) {
   background: var(--vert-fonce);
 }
 
