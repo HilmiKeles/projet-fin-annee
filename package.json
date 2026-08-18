@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/HilmiKeles/projet-fin-annee/issues"
   },
-  "homepage": "https://github.com/HilmiKeles/projet-fin-annee#readme"
+  "homepage": "https://github.com/HilmiKeles/projet-fin-annee#readme",
+  "dependencies": {
+    "react-icons": "^5.7.0"
+  }
 }
