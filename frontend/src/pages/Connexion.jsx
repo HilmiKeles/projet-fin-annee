@@ -31,7 +31,7 @@ export default function Connexion() {
       };
 
       sessionStorage.setItem("user", JSON.stringify(utilisateur));
-      navigate("/mon-compte");
+      navigate("/profil");
     } catch (err) {
       setErreur(err.message || "Une erreur est survenue, veuillez réessayer.");
     } finally {
@@ -42,11 +42,13 @@ export default function Connexion() {
   return (
     <main className="auth">
       <section className="auth-card">
-        <div className="auth-emoji" aria-hidden="true">🍃</div>
+        <div className="auth-emoji" aria-hidden="true">
+          🍃
+        </div>
         <h1>Connexion</h1>
         <p className="auth-intro">
-          Connectez-vous pour saisir votre code de participation
-          et découvrir votre lot.
+          Connectez-vous pour saisir votre code de participation et découvrir
+          votre lot.
         </p>
 
         {erreur && (
@@ -84,7 +86,11 @@ export default function Connexion() {
             />
           </div>
 
-          <button type="submit" className="btn-primary auth-bouton" disabled={chargement}>
+          <button
+            type="submit"
+            className="btn-primary auth-bouton"
+            disabled={chargement}
+          >
             {chargement ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
