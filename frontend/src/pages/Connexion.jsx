@@ -15,22 +15,37 @@ export default function Connexion() {
     setChargement(true);
 
     try {
-      // TODO : remplacer par l'appel à votre API
-      // const reponse = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ email, motDePasse }),
-      // });
-      // const data = await reponse.json();
-      // if (!reponse.ok) throw new Error(data.message || "Identifiants incorrects");
+      // 1. On appelle la VRAIE API de Timo
+      const reponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: email,
+            password: motDePasse,
+          }),
+        },
+      );
 
-      // Simulation en attendant l'API
-      const utilisateur = {
-        prenom: "Théophile",
-        email: email,
-      };
+      const data = await reponse.json();
 
-      sessionStorage.setItem("user", JSON.stringify(utilisateur));
+      // 2. Si le mot de passe est faux ou l'utilisateur n'existe pas
+      if (!reponse.ok) {
+        throw new Error(data.message || "Identifiants incorrects");
+      }
+
+      // 3. On sauvegarde les VRAIES données de l'utilisateur
+      // (On gère le token JWT de Timo au passage vu qu'il est demandé dans Header.jsx)
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify(data.utilisateur || data.user || data),
+      );
+      if (data.token) {
+        sessionStorage.setItem("token", data.token);
+      }
+
+      // 4. Redirection vers la vraie page profil
       navigate("/profil");
     } catch (err) {
       setErreur(err.message || "Une erreur est survenue, veuillez réessayer.");
