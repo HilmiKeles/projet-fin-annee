@@ -20,10 +20,16 @@ export default function Account() {
   useEffect(() => {
     async function chargerDonnees() {
       try {
-        // TODO : remplacer par votre appel API réel
-        const reponse = await fetch("/api/users/me", {
-          credentials: "include",
-        });
+        // Le VRAI appel à la base de données
+        const reponse = await fetch(
+          `${import.meta.env.VITE_API_URL}/users/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          },
+        );
+
         const data = await reponse.json();
 
         if (!reponse.ok) {
@@ -33,7 +39,7 @@ export default function Account() {
           setParticipations(data.participations || []);
         }
       } catch {
-        setErreur("Erreur de connexion au serveur.");
+        setErreur("Erreur au chargement du profil.");
       } finally {
         setChargement(false);
       }
@@ -54,8 +60,12 @@ export default function Account() {
       <main className="account">
         <div className="account-card">
           <h1>👤 Mon compte</h1>
-          <p className="erreur" role="alert">{erreur}</p>
-          <Link to="/connexion" className="btn-primary">Me connecter</Link>
+          <p className="erreur" role="alert">
+            {erreur}
+          </p>
+          <Link to="/connexion" className="btn-primary">
+            Me connecter
+          </Link>
         </div>
       </main>
     );
@@ -66,10 +76,19 @@ export default function Account() {
       <div className="account-card">
         <h1>👤 Mon compte</h1>
 
-        <section className="account-profil" aria-label="Informations personnelles">
-          <p><strong>Prénom :</strong> {utilisateur.firstName}</p>
-          <p><strong>Nom :</strong> {utilisateur.lastName}</p>
-          <p><strong>Email :</strong> {utilisateur.email}</p>
+        <section
+          className="account-profil"
+          aria-label="Informations personnelles"
+        >
+          <p>
+            <strong>Prénom :</strong> {utilisateur.firstName}
+          </p>
+          <p>
+            <strong>Nom :</strong> {utilisateur.lastName}
+          </p>
+          <p>
+            <strong>Email :</strong> {utilisateur.email}
+          </p>
         </section>
 
         <section aria-label="Historique des participations">
@@ -85,18 +104,29 @@ export default function Account() {
           ) : (
             <ul className="account-liste">
               {participations.map((p) => {
-                const gain = GAINS[p.prize] || { emoji: "🎁", libelle: p.prize };
+                const gain = GAINS[p.prize] || {
+                  emoji: "🎁",
+                  libelle: p.prize,
+                };
                 return (
-                  <li key={p.id} className={`account-item ${p.claimed ? "remis" : ""}`}>
-                    <span className="gain-emoji" aria-hidden="true">{gain.emoji}</span>
+                  <li
+                    key={p.id}
+                    className={`account-item ${p.claimed ? "remis" : ""}`}
+                  >
+                    <span className="gain-emoji" aria-hidden="true">
+                      {gain.emoji}
+                    </span>
                     <div className="gain-details">
                       <strong>{gain.libelle}</strong>
                       <span className="gain-code">Code : {p.code}</span>
                       <span className="gain-date">
-                        Joué le {new Date(p.playedAt).toLocaleDateString("fr-FR")}
+                        Joué le{" "}
+                        {new Date(p.playedAt).toLocaleDateString("fr-FR")}
                       </span>
                     </div>
-                    <span className={`gain-statut ${p.claimed ? "remis" : "a-retirer"}`}>
+                    <span
+                      className={`gain-statut ${p.claimed ? "remis" : "a-retirer"}`}
+                    >
                       {p.claimed ? "✓ Lot remis" : "À retirer en boutique"}
                     </span>
                   </li>
