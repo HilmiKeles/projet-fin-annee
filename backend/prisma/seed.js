@@ -1,38 +1,82 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const LOTS = [
-  { name: 'Infuseur à thé',                    pct: 60, count: 600 },
-  { name: 'Boîte 100g thé détox/infusion',     pct: 20, count: 200 },
-  { name: 'Boîte 100g thé signature',          pct: 10, count: 100 },
-  { name: 'Coffret découverte 39€',            pct: 6,  count: 60 },
-  { name: 'Coffret découverte 69€',            pct: 4,  count: 40 },
-];
-
-function genCode() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  return Array.from({ length: 10 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+// Génère un code à 10 caractères (lettres majuscules + chiffres)
+function genererCode() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 10; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
 }
 
 async function main() {
-  // Nettoyage (idempotent)
-  await prisma.gain.deleteMany();
-  await prisma.ticket.deleteMany();
-  await prisma.lot.deleteMany();
-
-  // 5 lots avec stock
-  for (const lot of LOTS) {
-    await prisma.lot.create({ data: { name: lot.name, stock: lot.count } });
-  }
-
-  // 1000 tickets uniques
-  const codes = new Set();
-  while (codes.size < 1000) codes.add(genCode());
-  await prisma.ticket.createMany({
-    data: [...codes].map(code => ({ code })),
+  // 1. Création des 5 lots (répartition officielle du cahier des charges)
+  const infuseur = await prisma.lot.upsert({
+    where: { name: "infuseur" },
+    update: {},
+    create: { name: "infuseur", stock: 300000 }, // 60% de 500 000
+  });
+  const detox = await prisma.lot.upsert({
+    where: { name: "detox" },
+    update: {},
+    create: { name: "detox", stock: 100000 }, // 20%
+  });
+  const signature = await prisma.lot.upsert({
+    where: { name: "signature" },
+    update: {},
+    create: { name: "signature", stock: 50000 }, // 10%
+  });
+  const coffret39 = await prisma.lot.upsert({
+    where: { name: "coffret39" },
+    update: {},
+    create: { name: "coffret39", stock: 30000 }, // 6%
+  });
+  const coffret69 = await prisma.lot.upsert({
+    where: { name: "coffret69" },
+    update: {},
+    create: { name: "coffret69", stock: 20000 }, // 4%
   });
 
-  console.log('✅ 5 lots créés, 1000 tickets générés');
+  console.log("✅ Lots créés");
+
+  // 2. Génération des tickets avec leur gain pré-associé
+  //    ⚠️ 500 000 en une fois est lourd : commence par 5 000 pour le dev.
+  const NB_TICKETS = 5000;
+
+  // Répartition proportionnelle (mêmes pourcentages)
+  const repartition = [
+    { lot: infuseur, ratio: 0.6 },
+    { lot: detox, ratio: 0.2 },
+    { lot: signature, ratio: 0.1 },
+    { lot: coffret39, ratio: 0.06 },
+    { lot: coffret69, ratio: 0.04 },
+  ];
+
+  let compteur = 0;
+  for (const { lot, ratio } of repartition) {
+    const nb = Math.round(NB_TICKETS * ratio);
+    const tickets = [];
+    for (let i = 0; i < nb; i++) {
+      tickets.push({ code: genererCode(), lotId: lot.id });
+    }
+    // Insertion par paquets de 1000 pour ne pas saturer Postgres
+    for (let i = 0; i < tickets.length; i += 1000) {
+      await prisma.ticket.createMany({
+        data: tickets.slice(i, i + 1000),
+        skipDuplicates: true,
+      });
+    }
+    compteur += nb;
+    console.log(`✅ ${nb} tickets pour le lot "${lot.name}"`);
+  }
+  console.log(`🎉 Total : ${compteur} tickets générés`);
 }
 
-main().catch(console.error).finally(() => prisma.$disconnect());
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

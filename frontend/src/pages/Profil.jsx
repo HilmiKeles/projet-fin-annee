@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Profil.css";
 
+// URL de l'API : utilise la variable d'env Vite au build,
+// sinon fallback sur /api (proxyfié par nginx vers le backend)
+const API_URL = import.meta.env.VITE_API_URL || "/api";
+
 // Correspondance gain → emoji et libellé (même mapping que Result.jsx)
 const GAINS = {
   infuseur: { emoji: "🍵", libelle: "Infuseur à thé" },
@@ -20,15 +24,12 @@ export default function Account() {
   useEffect(() => {
     async function chargerDonnees() {
       try {
-        // Le VRAI appel à la base de données
-        const reponse = await fetch(
-          `${import.meta.env.VITE_API_URL}/users/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-            },
+        // Appel à l'API backend (via le proxy nginx /api en production)
+        const reponse = await fetch(`${API_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-        );
+        });
 
         const data = await reponse.json();
 
@@ -97,7 +98,7 @@ export default function Account() {
           {participations.length === 0 ? (
             <div className="account-vide">
               <p>Vous n'avez pas encore participé au jeu.</p>
-              <Link to="/saisie-code" className="btn-primary">
+              <Link to="/entrer-code" className="btn-primary">
                 🎟️ Jouer maintenant
               </Link>
             </div>
