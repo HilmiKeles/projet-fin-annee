@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import '../styles/Footer.css';
+import { FaInstagram, FaFacebook, FaXTwitter } from "react-icons/fa6";
 
 export default function Footer() {
   return (
@@ -10,18 +11,18 @@ export default function Footer() {
           {/* Logo et réseaux */}
           <div className="footer-brand">
             <div className="footer-brand-logo">
-              <span className="footer-brand-icon">🍵</span>
+              <img className="footer-logo-icon" src="../logo_TipTop.png" alt="Thé Tip Top" />
               <span className="footer-brand-text">Thé Tip Top</span>
             </div>
             <div className="footer-brand-socials">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <span>📘</span>
+                <FaFacebook />
               </a>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <span>📸</span>
+                <FaInstagram />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <span>🐦</span>
+                <FaXTwitter />
               </a>
             </div>
           </div>

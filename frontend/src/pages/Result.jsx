@@ -26,7 +26,7 @@ const GAINS = {
   },
   coffret69: {
     emoji: "🏆",
-    titre: "Un coffret découverte premium (69€) !",
+    titre: "Un coffret de luxe premium (69€) !",
     description: "Le grand gagnant ! Notre coffret le plus prestigieux.",
   },
 };

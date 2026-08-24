@@ -19,10 +19,12 @@ import Confidentialite from './pages/Confidentialite.jsx';
 import NotFound from './pages/NotFound.jsx';
 import ContactPage from './pages/ContactPage';
 import ReportIssuePage from './pages/ReportIssuePage';
+import ScrollToTop from './components/ScrollToTop.jsx';
 
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
           {/* Toutes les routes, aucune protégée */}

@@ -84,6 +84,11 @@
   background: var(--vert-fonce);
 }
 
+.btn-participer:hover:not(:disabled) {
+  background: var(--vert-fonce);
+  color: #C9A227;
+}
+
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
