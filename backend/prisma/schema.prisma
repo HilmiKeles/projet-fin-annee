@@ -29,14 +29,17 @@ model Ticket {
   code      String   @id
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
+  lotId     String?
+  lot       Lot?     @relation(fields: [lotId], references: [id])
   gain      Gain?
 }
 
 model Lot {
-  id    String @id @default(uuid())
-  name  String
-  stock Int
-  gains Gain[]
+  id     String @id @default(uuid())
+  name   String @unique
+  stock  Int
+  gains  Gain[]
+  tickets Ticket[]
 }
 
 model Gain {

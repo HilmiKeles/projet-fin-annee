@@ -24,7 +24,7 @@ router.get("/me", auth, async (req, res) => {
       return res.status(401).json({ message: "Utilisateur non authentifié" });
     }
 
-    // 1. Chercher l'utilisateur complet sans "select" restrictif
+    // 1. Chercher l'utilisateur complet
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -33,25 +33,36 @@ router.get("/me", auth, async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
-    // Sécurité : suppression manuelle du mot de passe
+    // Sécurité : suppression du mot de passe
     delete user.password;
-    delete user.motDePasse;
-    delete user.motDePasseHache;
 
-    // 2. Chercher ses participations / tickets
-    const participations = await prisma.ticket.findMany({
+    // 2. Chercher ses participations via le modèle Gain
+    //    (c'est Gain qui porte userId, pas Ticket)
+    const gains = await prisma.gain.findMany({
       where: { userId: userId },
-      orderBy: { createdAt: "desc" },
+      include: {
+        ticket: true, // pour récupérer le code du ticket
+        lot: true,    // pour récupérer le nom du lot gagné
+      },
+      orderBy: { wonAt: "desc" },
     });
 
-    // 3. Traduction à la volée pour que le profil React s'affiche correctement
+    // 3. Mapper vers le format attendu par Profil.jsx
+    const participations = gains.map((g) => ({
+      id: g.id,
+      prize: g.lot.name,     // clé du mapping GAINS côté React
+      code: g.ticketCode,    // code à 10 caractères du ticket
+      claimed: g.claimed,    // lot remis ou non en boutique
+      playedAt: g.wonAt,     // date de participation
+    }));
+
+    // 4. Traduction des champs nom/prénom pour le front
     const userFormatte = {
       ...user,
       firstName: user.prenom || user.firstName || "Cher",
       lastName: user.nom || user.lastName || "Client",
     };
 
-    // Envoyer la réponse finale au Front-end
     res.json({ user: userFormatte, participations });
   } catch (error) {
     console.error("Erreur route /users/me :", error);

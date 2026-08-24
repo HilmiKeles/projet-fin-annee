@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 
+// URL de l'API : utilise la variable d'env Vite au build,
+// sinon fallback sur /api (proxyfié par nginx vers le backend)
+const API_URL = import.meta.env.VITE_API_URL || "/api";
+
 export default function Inscription() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -69,21 +73,18 @@ export default function Inscription() {
     setChargement(true);
 
     try {
-      // 1. Appel à la VRAIE API de Timo
-      const reponse = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: form.prenom,
-            lastName: form.nom,
-            email: form.email,
-            password: form.motDePasse,
-            newsletter: form.newsletter,
-          }),
-        },
-      );
+      // 1. Appel à l'API backend (via le proxy nginx /api en production)
+      const reponse = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: form.prenom,
+          lastName: form.nom,
+          email: form.email,
+          password: form.motDePasse,
+          newsletter: form.newsletter,
+        }),
+      });
 
       const data = await reponse.json();
 

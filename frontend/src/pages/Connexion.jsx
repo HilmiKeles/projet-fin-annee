@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 
+// URL de l'API : utilise la variable d'env Vite au build,
+// sinon fallback sur /api (proxyfié par nginx vers le backend)
+const API_URL = import.meta.env.VITE_API_URL || "/api";
+
 export default function Connexion() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -15,18 +19,15 @@ export default function Connexion() {
     setChargement(true);
 
     try {
-      // 1. On appelle la VRAIE API de Timo
-      const reponse = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: email,
-            password: motDePasse,
-          }),
-        },
-      );
+      // 1. Appel à l'API backend (via le proxy nginx /api en production)
+      const reponse = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          password: motDePasse,
+        }),
+      });
 
       const data = await reponse.json();
 
@@ -35,8 +36,7 @@ export default function Connexion() {
         throw new Error(data.message || "Identifiants incorrects");
       }
 
-      // 3. On sauvegarde les VRAIES données de l'utilisateur
-      // (On gère le token JWT de Timo au passage vu qu'il est demandé dans Header.jsx)
+      // 3. On sauvegarde les données de l'utilisateur et le token JWT
       sessionStorage.setItem(
         "user",
         JSON.stringify(data.utilisateur || data.user || data),
@@ -45,7 +45,7 @@ export default function Connexion() {
         sessionStorage.setItem("token", data.token);
       }
 
-      // 4. Redirection vers la vraie page profil
+      // 4. Redirection vers la page profil
       navigate("/profil");
     } catch (err) {
       setErreur(err.message || "Une erreur est survenue, veuillez réessayer.");
