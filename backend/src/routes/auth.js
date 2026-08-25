@@ -8,6 +8,20 @@ const prisma = new PrismaClient();
 
 router.post('/register', async (req, res) => {
   const { email, password, gender, birthDate } = req.body;
+
+  if (!password || password.length < 8) {
+  return res.status(400).json({
+    error: 'Le mot de passe doit contenir au moins 8 caractères.'
+  });
+}
+
+if (!/[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]';`~]/.test(password)) {
+  return res.status(400).json({
+    error: 'Le mot de passe doit contenir au moins un caractère spécial.'
+  });
+}
+
+
   try {
     const hashed = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
