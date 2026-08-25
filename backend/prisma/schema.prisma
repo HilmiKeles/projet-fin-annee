@@ -15,31 +15,32 @@ enum Role {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  role      Role      @default(CLIENT)
-  gender    String?
-  birthDate DateTime?
-  createdAt DateTime  @default(now())
-  gains     Gain[]
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  role       Role     @default(CLIENT)
+  firstName  String   @default("Cher")     // Valeur par défaut pour sauver la base
+  lastName   String   @default("Client")   // Valeur par défaut pour sauver la base
+  newsletter Boolean  @default(false)      // Ajout de l'opt-in newsletter
+  createdAt  DateTime @default(now())
+  gains      Gain[]
 }
 
 model Ticket {
-  code      String   @id
-  used      Boolean  @default(false)
-  createdAt DateTime @default(now())
-  lotId     String?
-  lot       Lot?     @relation(fields: [lotId], references: [id])
-  gain      Gain?
+  code       String   @id
+  used       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  lotId      String?
+  lot        Lot?     @relation(fields: [lotId], references: [id])
+  gain       Gain?
 }
 
 model Lot {
-  id     String @id @default(uuid())
-  name   String @unique
-  stock  Int
-  gains  Gain[]
-  tickets Ticket[]
+  id       String   @id @default(uuid())
+  name     String   @unique
+  stock    Int
+  gains    Gain[]
+  tickets  Ticket[]
 }
 
 model Gain {
