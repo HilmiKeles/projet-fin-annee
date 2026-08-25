@@ -43,7 +43,7 @@ async function main() {
 
   // 2. Génération des tickets avec leur gain pré-associé
   //    ⚠️ 500 000 en une fois est lourd : commence par 5 000 pour le dev.
-  const NB_TICKETS = 5000;
+  const NB_TICKETS = 500000;
 
   // Répartition proportionnelle (mêmes pourcentages)
   const repartition = [
