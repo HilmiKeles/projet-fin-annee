@@ -47,6 +47,13 @@ export default function Inscription() {
     } else if (form.motDePasse.length < 8) {
       nouvellesErreurs.motDePasse =
         "Le mot de passe doit contenir au moins 8 caractères.";
+    } else if (!/[A-Z]/.test(form.motDePasse)) {
+  nouvellesErreurs.motDePasse =
+    "Le mot de passe doit contenir au moins une majuscule.";
+    } else if (!/[a-z]/.test(form.motDePasse)) {
+  nouvellesErreurs.motDePasse =
+    "Le mot de passe doit contenir au moins une minuscule.";
+
     } else if (!/[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]';`~]/.test(form.motDePasse)) {
   nouvellesErreurs.motDePasse =
     "Le mot de passe doit contenir au moins un caractère spécial.";
@@ -218,7 +225,7 @@ export default function Inscription() {
                 }
               />
               <p className="champ-aide" id="aide-mdp">
-                Minimum 8 caractères, dont au moins un caractère spécial.
+                Minimum 8 caractères, avec au moins une majuscule, une minuscule et un caractère spécial.
               </p>
               {erreurs.motDePasse && (
                 <p className="champ-erreur" id="erreur-mdp">

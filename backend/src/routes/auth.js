@@ -15,6 +15,18 @@ router.post('/register', async (req, res) => {
   });
 }
 
+if (!/[A-Z]/.test(password)) {
+    return res.status(400).json({
+      error: 'Le mot de passe doit contenir au moins une majuscule.'
+    });
+  }
+
+if (!/[a-z]/.test(password)) {
+    return res.status(400).json({
+      error: 'Le mot de passe doit contenir au moins une minuscule.'
+    });
+  }
+
 if (!/[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]';`~]/.test(password)) {
   return res.status(400).json({
     error: 'Le mot de passe doit contenir au moins un caractère spécial.'
