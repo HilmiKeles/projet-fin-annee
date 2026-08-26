@@ -21,7 +21,7 @@ export default function Footer() {
               <a href="https://instagram.com/thetiptop_projet" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <FaInstagram />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <a href="https://x.com/thetiptopp" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
                 <FaXTwitter />
               </a>
             </div>
