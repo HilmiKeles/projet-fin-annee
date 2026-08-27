@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 
-// URL de l'API : utilise la variable d'env Vite au build,
-// sinon fallback sur /api (proxyfié par nginx vers le backend)
 const API_URL = import.meta.env.VITE_API_URL || "/api";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 export default function Connexion() {
   const navigate = useNavigate();
@@ -12,6 +11,66 @@ export default function Connexion() {
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
+  const googleBtnRef = useRef(null);
+
+  // Charge le SDK Google Identity Services via <script>
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) return;
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if (!window.google) return;
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse,
+      });
+      window.google.accounts.id.renderButton(googleBtnRef.current, {
+        theme: "outline",
+        size: "large",
+        width: 320, // valeur en pixels, pas "100%"
+        text: "signin_with",
+        locale: "fr",
+});
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  // Réponse Google : envoie le credential au backend
+  const handleGoogleResponse = async (response) => {
+    setErreur("");
+    try {
+      const reponse = await fetch(`${API_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        throw new Error(data.error || "Connexion Google échouée");
+      }
+
+      if (data.token) {
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(data.user || data.utilisateur || { role: data.role }),
+        );
+      }
+      navigate("/profil");
+    } catch (err) {
+      setErreur(err.message || "Erreur lors de la connexion Google.");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +78,6 @@ export default function Connexion() {
     setChargement(true);
 
     try {
-      // 1. Appel à l'API backend (via le proxy nginx /api en production)
       const reponse = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -31,12 +89,10 @@ export default function Connexion() {
 
       const data = await reponse.json();
 
-      // 2. Si le mot de passe est faux ou l'utilisateur n'existe pas
       if (!reponse.ok) {
         throw new Error(data.message || "Identifiants incorrects");
       }
 
-      // 3. On sauvegarde les données de l'utilisateur et le token JWT
       sessionStorage.setItem(
         "user",
         JSON.stringify(data.utilisateur || data.user || data),
@@ -44,8 +100,6 @@ export default function Connexion() {
       if (data.token) {
         sessionStorage.setItem("token", data.token);
       }
-
-      // 4. Redirection vers la page profil
       navigate("/profil");
     } catch (err) {
       setErreur(err.message || "Une erreur est survenue, veuillez réessayer.");
@@ -72,6 +126,16 @@ export default function Connexion() {
           </div>
         )}
 
+        {/* Bouton Google (rendu par le SDK dans cette div) */}
+        {GOOGLE_CLIENT_ID && (
+          <>
+            <div ref={googleBtnRef} className="google-btn-container" />
+            <div className="auth-separateur">
+              <span>ou</span>
+            </div>
+          </>
+        )}
+
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-groupe">
             <label htmlFor="email">Adresse e-mail</label>
@@ -86,7 +150,6 @@ export default function Connexion() {
               placeholder="exemple@email.fr"
             />
           </div>
-
           <div className="form-groupe">
             <label htmlFor="motdepasse">Mot de passe</label>
             <input
