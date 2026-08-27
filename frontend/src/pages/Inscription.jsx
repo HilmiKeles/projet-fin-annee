@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
+import GoogleButton from "../components/GoogleButton.jsx";
 
-// URL de l'API : utilise la variable d'env Vite au build,
-// sinon fallback sur /api (proxyfié par nginx vers le backend)
 const API_URL = import.meta.env.VITE_API_URL || "/api";
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 export default function Inscription() {
   const navigate = useNavigate();
@@ -20,10 +20,38 @@ export default function Inscription() {
   const [erreurs, setErreurs] = useState({});
   const [chargement, setChargement] = useState(false);
 
+  const handleGoogleResponse = async (response) => {
+    setErreurs({});
+    try {
+      const reponse = await fetch(`${API_URL}/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+
+      const data = await reponse.json();
+
+      if (!reponse.ok) {
+        throw new Error(data.error || "Inscription Google échouée");
+      }
+      if (data.token) {
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(data.user || { role: data.role }),
+        );
+      }
+      navigate("/profil");
+    } catch (err) {
+      setErreurs({
+        global: err.message || "Erreur lors de l'inscription via Google.",
+      });
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
-    // Efface l'erreur du champ modifié
     if (erreurs[name]) {
       setErreurs({ ...erreurs, [name]: "" });
     }
@@ -41,26 +69,27 @@ export default function Inscription() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       nouvellesErreurs.email = "L'adresse e-mail n'est pas valide.";
     }
-
     if (!form.motDePasse) {
       nouvellesErreurs.motDePasse = "Le mot de passe est obligatoire.";
     } else if (form.motDePasse.length < 8) {
       nouvellesErreurs.motDePasse =
         "Le mot de passe doit contenir au moins 8 caractères.";
     } else if (!/[A-Z]/.test(form.motDePasse)) {
-  nouvellesErreurs.motDePasse =
-    "Le mot de passe doit contenir au moins une majuscule.";
+      nouvellesErreurs.motDePasse =
+        "Le mot de passe doit contenir au moins une majuscule.";
     } else if (!/[a-z]/.test(form.motDePasse)) {
-  nouvellesErreurs.motDePasse =
-    "Le mot de passe doit contenir au moins une minuscule.";
-
-    } else if (!/[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]';`~]/.test(form.motDePasse)) {
-  nouvellesErreurs.motDePasse =
-    "Le mot de passe doit contenir au moins un caractère spécial.";
+      nouvellesErreurs.motDePasse =
+        "Le mot de passe doit contenir au moins une minuscule.";
+    } else if (
+      !/[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]';`~]/.test(form.motDePasse)
+    ) {
+      nouvellesErreurs.motDePasse =
+        "Le mot de passe doit contenir au moins un caractère spécial.";
     }
 
     if (form.confirmation !== form.motDePasse) {
-      nouvellesErreurs.confirmation = "Les mots de passe ne correspondent pas.";
+      nouvellesErreurs.confirmation =
+        "Les mots de passe ne correspondent pas.";
     }
 
     if (!form.consentement) {
@@ -83,7 +112,6 @@ export default function Inscription() {
     setChargement(true);
 
     try {
-      // 1. Appel à l'API backend (via le proxy nginx /api en production)
       const reponse = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,7 +130,6 @@ export default function Inscription() {
         throw new Error(data.message || "Erreur lors de l'inscription");
       }
 
-      // 2. Si le backend connecte l'utilisateur direct après l'inscription (renvoie un token)
       if (data.token) {
         sessionStorage.setItem("token", data.token);
         sessionStorage.setItem(
@@ -111,7 +138,6 @@ export default function Inscription() {
         );
         navigate("/profil");
       } else {
-        // Sinon, on le renvoie vers la page de connexion pour qu'il se connecte lui-même
         navigate("/connexion");
       }
     } catch (err) {
@@ -134,11 +160,19 @@ export default function Inscription() {
           Inscrivez-vous gratuitement pour saisir le code de votre ticket de
           caisse et découvrir votre lot. 100% des tickets sont gagnants !
         </p>
-
         {erreurs.global && (
           <div className="auth-erreur" role="alert">
             {erreurs.global}
           </div>
+        )}
+
+        {GOOGLE_CLIENT_ID && (
+          <>
+            <GoogleButton onSuccess={handleGoogleResponse} text="signup_with" />
+            <div>
+              <span>ou créez un compte avec votre e-mail</span>
+            </div>
+          </>
         )}
 
         <form onSubmit={handleSubmit} noValidate>
@@ -152,15 +186,9 @@ export default function Inscription() {
                 value={form.prenom}
                 onChange={handleChange}
                 autoComplete="given-name"
-                required
-                placeholder="Votre prénom"
-                aria-invalid={!!erreurs.prenom}
-                aria-describedby={erreurs.prenom ? "erreur-prenom" : undefined}
               />
               {erreurs.prenom && (
-                <p className="champ-erreur" id="erreur-prenom">
-                  {erreurs.prenom}
-                </p>
+                <p className="champ-erreur">{erreurs.prenom}</p>
               )}
             </div>
 
@@ -173,16 +201,8 @@ export default function Inscription() {
                 value={form.nom}
                 onChange={handleChange}
                 autoComplete="family-name"
-                required
-                placeholder="Votre nom"
-                aria-invalid={!!erreurs.nom}
-                aria-describedby={erreurs.nom ? "erreur-nom" : undefined}
               />
-              {erreurs.nom && (
-                <p className="champ-erreur" id="erreur-nom">
-                  {erreurs.nom}
-                </p>
-              )}
+              {erreurs.nom && <p className="champ-erreur">{erreurs.nom}</p>}
             </div>
           </div>
 
@@ -195,47 +215,28 @@ export default function Inscription() {
               value={form.email}
               onChange={handleChange}
               autoComplete="email"
-              required
-              placeholder="exemple@email.fr"
-              aria-invalid={!!erreurs.email}
-              aria-describedby={erreurs.email ? "erreur-email" : undefined}
             />
-            {erreurs.email && (
-              <p className="champ-erreur" id="erreur-email">
-                {erreurs.email}
-              </p>
-            )}
+            {erreurs.email && <p className="champ-erreur">{erreurs.email}</p>}
           </div>
 
           <div className="form-ligne">
             <div className="form-groupe">
-              <label htmlFor="motdepasse">Mot de passe</label>
+              <label htmlFor="motDePasse">Mot de passe</label>
               <input
                 type="password"
-                id="motdepasse"
+                id="motDePasse"
                 name="motDePasse"
                 value={form.motDePasse}
                 onChange={handleChange}
                 autoComplete="new-password"
-                required
-                placeholder="8 caractères minimum"
-                aria-invalid={!!erreurs.motDePasse}
-                aria-describedby={
-                  erreurs.motDePasse ? "erreur-mdp" : "aide-mdp"
-                }
               />
-              <p className="champ-aide" id="aide-mdp">
-                Minimum 8 caractères, avec au moins une majuscule, une minuscule et un caractère spécial.
-              </p>
               {erreurs.motDePasse && (
-                <p className="champ-erreur" id="erreur-mdp">
-                  {erreurs.motDePasse}
-                </p>
+                <p className="champ-erreur">{erreurs.motDePasse}</p>
               )}
             </div>
 
             <div className="form-groupe">
-              <label htmlFor="confirmation">Confirmation</label>
+              <label htmlFor="confirmation">Confirmation du mot de passe</label>
               <input
                 type="password"
                 id="confirmation"
@@ -243,68 +244,41 @@ export default function Inscription() {
                 value={form.confirmation}
                 onChange={handleChange}
                 autoComplete="new-password"
-                required
-                placeholder="Répétez le mot de passe"
-                aria-invalid={!!erreurs.confirmation}
-                aria-describedby={
-                  erreurs.confirmation ? "erreur-confirmation" : undefined
-                }
               />
               {erreurs.confirmation && (
-                <p className="champ-erreur" id="erreur-confirmation">
-                  {erreurs.confirmation}
-                </p>
+                <p className="champ-erreur">{erreurs.confirmation}</p>
               )}
             </div>
           </div>
 
           <div className="form-groupe form-checkbox">
-            <input
-              type="checkbox"
-              id="consentement"
-              name="consentement"
-              checked={form.consentement}
-              onChange={handleChange}
-              required
-              aria-invalid={!!erreurs.consentement}
-              aria-describedby={
-                erreurs.consentement ? "erreur-consentement" : undefined
-              }
-            />
-            <label htmlFor="consentement">
-              J'accepte le{" "}
-              <Link to="/reglement">règlement du jeu-concours</Link> et la{" "}
-              <Link to="/politique-confidentialite">
-                politique de confidentialité
-              </Link>
-              .
+            <label>
+              <input
+                type="checkbox"
+                name="consentement"
+                checked={form.consentement}
+                onChange={handleChange}
+              />
+              J'accepte le règlement du jeu *
             </label>
+            {erreurs.consentement && (
+              <p className="champ-erreur">{erreurs.consentement}</p>
+            )}
           </div>
-          {erreurs.consentement && (
-            <p className="champ-erreur" id="erreur-consentement">
-              {erreurs.consentement}
-            </p>
-          )}
 
           <div className="form-groupe form-checkbox">
-            <input
-              type="checkbox"
-              id="newsletter"
-              name="newsletter"
-              checked={form.newsletter}
-              onChange={handleChange}
-            />
-            <label htmlFor="newsletter">
-              Je souhaite recevoir par e-mail les actualités et offres de Thé
-              Tip Top (optionnel, désinscription possible à tout moment).
+            <label>
+              <input
+                type="checkbox"
+                name="newsletter"
+                checked={form.newsletter}
+                onChange={handleChange}
+              />
+              Je souhaite recevoir la newsletter
             </label>
           </div>
 
-          <button
-            type="submit"
-            className="btn-primary auth-bouton"
-            disabled={chargement}
-          >
+          <button type="submit" className="btn-primary auth-bouton" disabled={chargement}>
             {chargement
               ? "Création du compte..."
               : "Créer mon compte et participer"}

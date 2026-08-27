@@ -200,3 +200,8 @@
     font-size: 1.6rem;
   }
 }
+.google-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
