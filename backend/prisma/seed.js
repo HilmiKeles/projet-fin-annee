@@ -41,6 +41,18 @@ async function main() {
 
   console.log("✅ Lots créés");
 
+  // --- NOUVELLE SÉCURITÉ ---
+  // On compte combien il y a de tickets dans la base
+  const ticketsExistants = await prisma.ticket.count();
+
+  if (ticketsExistants >= 500000) {
+    console.log(
+      "🛡️ Sécurité : Les 500 000 tickets sont déjà là. On ignore la génération !",
+    );
+    return; // Ce 'return' magique stoppe net la fonction main() ici.
+  }
+  // -------------------------
+
   // 2. Génération des tickets avec leur gain pré-associé
   //    ⚠️ 500 000 en une fois est lourd : commence par 5 000 pour le dev.
   const NB_TICKETS = 500000;
