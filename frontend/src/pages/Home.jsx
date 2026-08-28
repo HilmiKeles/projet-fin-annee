@@ -8,13 +8,13 @@ const TITRE = 'Lancez le tirage et tentez de remporter un cadeau';
 // Éléments qui remontent en fond du bandeau (position en %, durée en secondes).
 const DECOR = [
   { emoji: '🍃', gauche: 5, taille: 90, duree: 19, delai: 0 },
-  { emoji: '🍃', gauche: 17, taille: 90, duree: 24, delai: -6 },
-  { emoji: '🌿', gauche: 28, taille: 90, duree: 21, delai: -13 },
+  { emoji: '🍵', gauche: 17, taille: 90, duree: 24, delai: -6 },
+  { emoji: '🎁', gauche: 28, taille: 90, duree: 21, delai: -13 },
   { emoji: '🍵', gauche: 41, taille: 90, duree: 26, delai: -3 },
-  { emoji: '⭐', gauche: 53, taille: 90, duree: 18, delai: -9 },
+  { emoji: '🎁', gauche: 53, taille: 90, duree: 18, delai: -9 },
   { emoji: '🍃', gauche: 65, taille: 90, duree: 23, delai: -16 },
   { emoji: '🎁', gauche: 76, taille: 90, duree: 20, delai: -11 },
-  { emoji: '🌿', gauche: 87, taille: 90, duree: 25, delai: -5 },
+  { emoji: '🍵', gauche: 87, taille: 90, duree: 25, delai: -5 },
   { emoji: '🍃', gauche: 96, taille: 90, duree: 22, delai: -18 },
 ];
 
