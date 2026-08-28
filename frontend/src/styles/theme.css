@@ -4,10 +4,19 @@
   --vert-clair: #d8f3dc;
   --creme: #fefae0;
   --or: #c9a227;
+  --or-clair: #e8cf6b;
+  --or-fonce: #a8871f;
   --blanc: #ffffff;
   --texte: #2d3436;
+
+  /* Alias historiques encore utilisés par les pages Lots, Résultat, etc. */
+  --dore: var(--or);
+  --dore-clair: var(--or-clair);
+  --blanc-casse: var(--creme);
+  --gris-fonce: #4a5459;
   --font-titre: Georgia, "Times New Roman", serif;
   --font-texte: "Segoe UI", system-ui, sans-serif;
+  --font-accueil: "Nunito", var(--font-texte);
 }
 
 * {
