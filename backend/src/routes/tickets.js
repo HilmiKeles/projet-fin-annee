@@ -40,10 +40,15 @@ router.post("/validate", auth, async (req, res) => {
     // 3. Tirage au sort
     const lot = lots[Math.floor(Math.random() * lots.length)];
 
-    // 4. Enregistrement de la victoire
+    // 4. Enregistrement de la victoire (CORRIGÉ AVEC CONNECT)
     const [gain] = await prisma.$transaction([
       prisma.gain.create({
-        data: { userId: userId, ticketCode: code, lotId: lot.id },
+        data: {
+          userId: userId,
+          lotId: lot.id,
+          // La syntaxe relationnelle parfaite pour Prisma :
+          ticket: { connect: { id: ticket.id } },
+        },
         include: { lot: true },
       }),
       // On met à jour avec ticket.id, c'est 100% sûr pour Prisma
