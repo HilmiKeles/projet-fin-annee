@@ -226,14 +226,21 @@ export default function Confidentialite() {
                 <td>Sécurité des formulaires</td>
                 <td>Session</td>
               </tr>
+              <tr>
+                <td>thetiptop_cookie_consent</td>
+                <td>Mémorisation de vos choix cookies (stockage local)</td>
+                <td>12 mois</td>
+              </tr>
             </tbody>
           </table>
 
           <h3>7.2 Cookies optionnels</h3>
           <p>
-            Aucun cookie de suivi d'audience, publicitaire ou de réseaux sociaux 
-            n'est déposé par défaut. En cas d'ajout futur, une bannière de consentement 
-            vous sera présentée avec possibilité de refus.
+            Les cookies de mesure d'audience et de marketing ne sont déposés
+            qu'après votre consentement, via le bandeau cookies affiché lors de
+            votre première visite. Vous pouvez à tout moment modifier vos choix
+            depuis le lien « Gérer les cookies » en pied de page.
+            Le refus est aussi simple que l'acceptation.
           </p>
 
           <h3>7.3 Paramétrage du navigateur</h3>

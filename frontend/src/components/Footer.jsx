@@ -46,7 +46,16 @@ export default function Footer() {
               <li><Link to="/cgu">CGU du jeu-concours</Link></li>
               <li><Link to="/reglement">Règlement du jeu</Link></li>
               <li><Link to="/confidentialite">Politique de confidentialité</Link></li>
-              <li><Link to="/contact">Contact</Link></li>  {/* AJOUTE CELUI-CI */}
+              <li>
+                <button
+                  type="button"
+                  className="footer-cookie-btn"
+                  onClick={() => window.dispatchEvent(new Event('ouvrir-bandeau-cookies'))}
+                >
+                  Gérer les cookies
+                </button>
+              </li>
+              <li><Link to="/contact">Contact</Link></li>
             </ul>
           </div>
 
