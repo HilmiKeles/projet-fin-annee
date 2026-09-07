@@ -19,5 +19,10 @@ app.use("/api/users", usersRouter);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
+// Si l'API est exposée directement (port 4000), interdire l'indexation
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain").send("User-agent: *\nDisallow: /\n");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`API running on port ${PORT}`));
