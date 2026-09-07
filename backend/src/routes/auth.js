@@ -2,13 +2,15 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
+const { activerAbonnement } = require("../services/newsletter");
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 router.post("/register", async (req, res) => {
   // 1. On récupère ENFIN les bonnes variables envoyées par ton React !
-  const { email, password, firstName, lastName, newsletter } = req.body;
+  const { password, firstName, lastName, newsletter } = req.body;
+  const email = String(req.body.email || "").trim().toLowerCase();
 
   if (!password || password.length < 8) {
     return res.status(400).json({
@@ -47,6 +49,10 @@ router.post("/register", async (req, res) => {
         newsletter: newsletter || false,
       },
     });
+
+    if (newsletter) {
+      await activerAbonnement(email);
+    }
 
     res.status(201).json({ id: user.id, email: user.email });
   } catch (e) {

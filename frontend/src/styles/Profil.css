@@ -46,6 +46,39 @@
   color: #444;
 }
 
+.account-newsletter {
+  margin-top: 0.5rem;
+}
+
+.account-newsletter-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  cursor: pointer;
+  color: #444;
+}
+
+.account-newsletter-toggle input {
+  margin-top: 0.25rem;
+}
+
+.account-newsletter-msg {
+  margin: 0.75rem 0 0;
+  color: #2d6a4f;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.account-newsletter-lien {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+}
+
+.account-newsletter-lien a {
+  color: #2d6a4f;
+  font-weight: 600;
+}
+
 .account-vide {
   text-align: center;
   padding: 2rem 0;

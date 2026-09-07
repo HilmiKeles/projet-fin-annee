@@ -3,6 +3,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const ticketRoutes = require("./routes/tickets");
 const adminRoutes = require("./routes/admin");
+const newsletterRoutes = require("./routes/newsletter");
 // CORRECTION : on pointe bien vers le dossier routes
 const usersRouter = require("./routes/users");
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 // AJOUT : on active la route pour le frontend
 app.use("/api/users", usersRouter);
 

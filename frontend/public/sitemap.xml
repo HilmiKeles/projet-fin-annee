@@ -25,6 +25,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://dsp5-archi-024a-g3.fr/newsletter</loc>
+    <lastmod>2026-09-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://dsp5-archi-024a-g3.fr/mentions-legales</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>yearly</changefreq>
