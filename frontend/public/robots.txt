@@ -1,0 +1,20 @@
+# robots.txt — Thé Tip Top (jeu-concours)
+# https://dsp5-archi-024a-g3.fr
+
+User-agent: *
+Allow: /
+
+# Espaces privés (comptes, tirage, back-office)
+Disallow: /admin
+Disallow: /employe
+Disallow: /profil
+Disallow: /resultat
+Disallow: /entrer-code
+Disallow: /connexion
+Disallow: /inscription
+Disallow: /signaler-probleme
+
+# API interne — ne pas indexer
+Disallow: /api/
+
+Sitemap: https://dsp5-archi-024a-g3.fr/sitemap.xml
