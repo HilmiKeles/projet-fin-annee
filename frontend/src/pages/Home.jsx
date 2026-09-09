@@ -1,8 +1,51 @@
 import { Link } from 'react-router-dom';
+import TirageBoules from '../components/TirageBoules.jsx';
+import { DUREE_JOURS, dateClotureLisible, joursAvantCloture } from '../config/jeu.js';
 import '../styles/Home.css';
+
+const TITRE = 'Lancez le tirage et tentez de remporter un cadeau';
+
+// Éléments qui remontent en fond du bandeau (position en %, durée en secondes).
+const DECOR = [
+  { emoji: '🍃', gauche: 5, taille: 90, duree: 19, delai: 0 },
+  { emoji: '🍵', gauche: 17, taille: 90, duree: 24, delai: -6 },
+  { emoji: '🎁', gauche: 28, taille: 90, duree: 21, delai: -13 },
+  { emoji: '🍵', gauche: 41, taille: 90, duree: 26, delai: -3 },
+  { emoji: '🎁', gauche: 53, taille: 90, duree: 18, delai: -9 },
+  { emoji: '🍃', gauche: 65, taille: 90, duree: 23, delai: -16 },
+  { emoji: '🎁', gauche: 76, taille: 90, duree: 20, delai: -11 },
+  { emoji: '🍵', gauche: 87, taille: 90, duree: 25, delai: -5 },
+  { emoji: '🍃', gauche: 96, taille: 90, duree: 22, delai: -18 },
+];
+
+// Flèche décorative qui relie chaque consigne à l'élément correspondant.
+function Fleche({ className }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 76 26"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="4"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M72 5 C52 2 28 5 13 19" />
+      <path d="M13 19 L26 14" />
+      <path d="M13 19 L16 5" />
+    </svg>
+  );
+}
 
 export default function Home() {
   const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+  const lienParticiper = user ? '/entrer-code' : '/connexion';
+
+  const consignes = [
+    'Je récupère le code à 10 caractères sur mon ticket de caisse',
+    'Je saisis mon code et je lance le tirage des boules',
+    'Je participe au grand tirage de clôture',
+  ];
 
   const lots = [
     { emoji: '🍵', titre: 'Infuseur à thé', description: 'Un infuseur élégant pour vos moments de dégustation.' },
@@ -15,38 +58,114 @@ export default function Home() {
   const etapes = [
     { numero: 1, titre: 'Achetez', texte: 'Effectuez un achat de 49€ ou plus en boutique Thé Tip Top.' },
     { numero: 2, titre: 'Récupérez votre code', texte: 'Un code unique à 10 caractères figure sur votre ticket de caisse.' },
-    { numero: 3, titre: 'Participez en ligne', texte: 'Créez votre compte et saisissez votre code sur notre site.' },
-    { numero: 4, titre: 'Gagnez !', texte: '100% des tickets sont gagnants : découvrez immédiatement votre lot.' },
+    { numero: 3, titre: 'Lancez le tirage', texte: 'Saisissez votre code : les boules se mélangent et révèlent votre lot.' },
+    { numero: 4, titre: 'Visez le gros lot', texte: `Inscrivez-vous au grand tirage organisé à la clôture, le ${dateClotureLisible()}.` },
   ];
 
   return (
-    <main className="home">
-      {/* ===== HERO ===== */}
-      <section className="hero">
-        <div className="hero-inner">
-          <div className="hero-content">
-            <h1>Grand Jeu-Concours<br /><span className="hero-highlight">Thé Tip Top</span></h1>
-            <p className="hero-subtitle">
-              Pour fêter l'ouverture de notre 10ème boutique à Nice,
-              tentez de remporter de nombreux lots !
-              <strong> 100% des tickets sont gagnants.</strong>
-            </p>
-            <div className="hero-actions">
-              <Link to={user ? "/mon-compte" : "/connexion"} className="btn btn-primary btn-participer">
-                Participer au jeu
-              </Link>
-              <Link to="/lots" className="btn btn-secondary">
-                Découvrir les lots
-              </Link>
+    <div className="home">
+      {/* ===== ACCUEIL DU JEU ===== */}
+      <section className="jeu-hero">
+        <div className="jeu-decor" aria-hidden="true">
+          <span className="jeu-halo" />
+
+          {DECOR.map((element, index) => (
+            <span
+              key={`decor-${index}`}
+              className="jeu-decor-item"
+              style={{
+                left: `${element.gauche}%`,
+                '--taille': `${element.taille}px`,
+                animationDuration: `${element.duree}s`,
+                animationDelay: `${element.delai}s`,
+              }}
+            >
+              {element.emoji}
+            </span>
+          ))}
+        </div>
+
+        <div className="jeu-hero-inner">
+          <div className="jeu-hero-entete">
+            <h1 className="jeu-titre">
+              {TITRE.split(' ').map((mot, index) => (
+                <span
+                  key={`${mot}-${index}`}
+                  className="jeu-titre-mot"
+                  style={{ animationDelay: `${index * 0.07}s` }}
+                >
+                  {mot}
+                </span>
+              ))}
+            </h1>
+
+            <div className="jeu-badge-gagnant" aria-label="100% gagnant">
+              <div className="jeu-badge-gagnant-etoiles" aria-hidden="true" />
+              <div className="jeu-badge-gagnant-cercle">
+                <span className="jeu-badge-pourcent">100%</span>
+                <span className="jeu-badge-texte">GAGNANT</span>
+              </div>
             </div>
           </div>
-          <div className="hero-image" aria-hidden="true">🍵</div>
+
+          <p className="jeu-marque">
+            <span className="jeu-marque-logo" aria-hidden="true">🍵</span>
+            <span className="jeu-marque-nom">Thé Tip Top</span>
+            <span className="jeu-marque-note">Ouverture de la 10ᵉ boutique — Nice</span>
+          </p>
+
+          <div className="jeu-scene">
+            <div className="jeu-scene-machine">
+              <TirageBoules connecte={Boolean(user)} />
+            </div>
+
+            <div className="jeu-scene-infos">
+              <a className="jeu-btn-comment" href="#comment-jouer">
+                Comment jouer ?
+                <Fleche className="jeu-fleche-comment" />
+              </a>
+
+              <ol className="jeu-consignes">
+                {consignes.map((consigne, index) => (
+                  <li key={consigne} className="jeu-consigne">
+                    <Fleche className="jeu-consigne-fleche" />
+                    <span className="jeu-consigne-num">{index + 1}</span>
+                    <span className="jeu-consigne-texte">{consigne}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          <aside className="jeu-tirage">
+            <span className="jeu-tirage-pouce" aria-hidden="true">🎱</span>
+            <div className="jeu-tirage-contenu">
+              <h2>Grand tirage de clôture</h2>
+              <p>
+                Le jeu-concours dure <strong>{DUREE_JOURS} jours</strong>. À sa clôture, le{' '}
+                <strong>{dateClotureLisible()}</strong>, un tirage au sort désignera le
+                gagnant du gros lot : <strong>un an de thé offert, d'une valeur de 360 €</strong>.
+              </p>
+              <p className="jeu-tirage-note">
+                Chaque code saisi vous inscrit automatiquement au grand tirage. Il vous
+                reste {joursAvantCloture()} jours pour tenter votre chance.
+              </p>
+              <div className="jeu-tirage-actions">
+                <Link to={lienParticiper} className="btn btn-gold">Je participe</Link>
+                <Link to="/reglement" className="jeu-lien-discret">Voir le règlement</Link>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
 
       {/* ===== COMMENT PARTICIPER ===== */}
-      <section className="etapes">
-        <h2>Comment participer ?</h2>
+      <section className="etapes" id="comment-jouer">
+        <h2>Comment jouer ?</h2>
+        <p className="section-subtitle">
+          Quatre étapes suffisent pour découvrir votre lot :
+          <strong> 100 % des tickets sont gagnants.</strong>
+        </p>
         <div className="etapes-grid">
           {etapes.map((etape) => (
             <article key={etape.numero} className="etape-card">
@@ -82,10 +201,10 @@ export default function Home() {
       <section className="cta-band">
         <h2>Prêt à tenter votre chance ?</h2>
         <p>Saisissez le code de votre ticket de caisse et découvrez votre gain en quelques secondes !</p>
-        <Link to={user ? "/mon-compte" : "/inscription"} className="btn btn-gold btn-participer">
+        <Link to={user ? lienParticiper : '/inscription'} className="btn btn-gold btn-participer">
           Je participe maintenant
         </Link>
       </section>
-    </main>
+    </div>
   );
 }
