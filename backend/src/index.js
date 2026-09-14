@@ -5,11 +5,29 @@ const ticketRoutes = require("./routes/tickets");
 const adminRoutes = require("./routes/admin");
 // CORRECTION : on pointe bien vers le dossier routes
 const usersRouter = require("./routes/users");
+const { client, httpRequestsTotal } = require("./metrics");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+  
+// Middleware pour incrémenter le compteur de requêtes HTTP
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    httpRequestsTotal.inc({
+      method: req.method,
+      route: req.route ? req.route.path : req.path,
+      status: res.statusCode,
+    });
+  });
+  next();
+});
+
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/tickets", ticketRoutes);
