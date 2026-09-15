@@ -7,7 +7,7 @@ pipeline {
         IMAGE_BACK    = "${REGISTRY}/the-tip-top-backend"
         TAG           = "${env.BUILD_NUMBER}"
         JENKINS_VOL   = 'jenkins_jenkins_home'
-        WORKSPACE_DIR = "/ws/${JOB_NAME}"
+        WORKSPACE_DIR = "/ws/workspace/${JOB_NAME}"
     }
 
     stages {
