@@ -6,6 +6,8 @@ pipeline {
         IMAGE_FRONT   = "${REGISTRY}/the-tip-top-frontend"
         IMAGE_BACK    = "${REGISTRY}/the-tip-top-backend"
         TAG           = "${env.BUILD_NUMBER}"
+        JENKINS_VOL   = 'jenkins_jenkins_home'
+        WORKSPACE_DIR = "/ws/${JOB_NAME}"
     }
 
     stages {
@@ -20,16 +22,22 @@ pipeline {
             parallel {
                 stage('Frontend') {
                     steps {
-                        dir('frontend') {
-                            sh 'docker run --rm -v $PWD:/app -w /app node:20-alpine sh -c "npm ci && (npm run lint || true)"'
-                        }
+                        sh """
+                            docker run --rm \
+                              -v ${JENKINS_VOL}:/ws \
+                              -w ${WORKSPACE_DIR}/frontend \
+                              node:20-alpine sh -c "npm ci && (npm run lint || true)"
+                        """
                     }
                 }
                 stage('Backend') {
                     steps {
-                        dir('backend') {
-                            sh 'docker run --rm -v $PWD:/app -w /app node:20-alpine npm ci'
-                        }
+                        sh """
+                            docker run --rm \
+                              -v ${JENKINS_VOL}:/ws \
+                              -w ${WORKSPACE_DIR}/backend \
+                              node:20-alpine npm ci
+                        """
                     }
                 }
             }
@@ -37,9 +45,12 @@ pipeline {
 
         stage('Tests unitaires') {
             steps {
-                dir('backend') {
-                    sh 'docker run --rm -v $PWD:/app -w /app node:20-alpine sh -c "npm test || true"'
-                }
+                sh """
+                    docker run --rm \
+                      -v ${JENKINS_VOL}:/ws \
+                      -w ${WORKSPACE_DIR}/backend \
+                      node:20-alpine sh -c "npm test || true"
+                """
             }
             post {
                 always {
@@ -50,10 +61,12 @@ pipeline {
 
         stage('Optimisation des assets') {
             steps {
-                dir('frontend') {
-                    // Build Vite = minification + compression
-                    sh 'docker run --rm -v $PWD:/app -w /app node:20-alpine npm run build'
-                }
+                sh """
+                    docker run --rm \
+                      -v ${JENKINS_VOL}:/ws \
+                      -w ${WORKSPACE_DIR}/frontend \
+                      node:20-alpine npm run build
+                """
             }
         }
 
@@ -72,28 +85,6 @@ pipeline {
                 sh "docker push ${IMAGE_BACK}:latest"
             }
         }
-
-        // À activer quand les serveurs dev/preprod/prod seront prêts :
-        // stage('Déploiement DEV') {
-        //     steps {
-        //         sh 'docker compose up -d'
-        //     }
-        // }
-        //
-        // stage('Déploiement PREPROD') {
-        //     when { branch 'develop' }
-        //     steps {
-        //         sh 'docker compose -f docker-compose.preprod.yml up -d'
-        //     }
-        // }
-        //
-        // stage('Déploiement PROD') {
-        //     when { branch 'main' }
-        //     steps {
-        //         input message: 'Déployer en production ?', ok: 'Déployer'
-        //         sh 'docker compose -f docker-compose.prod.yml up -d'
-        //     }
-        // }
     }
 
     post {
