@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   jenkins:
     build: ./
@@ -8,14 +6,16 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
+    group_add:
+      - "0"
     volumes:
       - jenkins_home:/var/jenkins_home
-      # Acces au daemon Docker de l'hote pour les stages `docker build`
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=Europe/Paris
     networks:
       - ci
+      - jenkins-net
 
 volumes:
   jenkins_home:
@@ -23,3 +23,6 @@ volumes:
 networks:
   ci:
     name: ci-network
+  jenkins-net:
+    name: jenkins-net
+    external: true

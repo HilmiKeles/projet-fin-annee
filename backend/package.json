@@ -18,9 +18,18 @@
   },
   "devDependencies": {
     "jest": "^29.0.0",
-    "supertest": "^6.3.0"
+    "supertest": "^6.3.0",
+    "jest-junit": "^16.0.0"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
-  }
+  },
+  "jest": {
+  "reporters": [
+    "default",
+    ["jest-junit", { "outputName": "junit.xml" }]
+  ],
+  "testEnvironment": "node"
+}
+  
 }
