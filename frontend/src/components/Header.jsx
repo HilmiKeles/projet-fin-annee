@@ -1,20 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { estAdmin, estEmploye, lireSession, viderSession } from "../utils/auth";
 import "../styles/Header.css";
 
 export default function Header() {
   const [menuOuvert, setMenuOuvert] = useState(false);
-
-  // Récupération de l'utilisateur connecté (adapté à votre sessionStorage)
-  const user = JSON.parse(sessionStorage.getItem("user") || "null");
+  const [user, setUser] = useState(lireSession);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const rafraichir = () => setUser(lireSession());
+    window.addEventListener("auth-change", rafraichir);
+    return () => window.removeEventListener("auth-change", rafraichir);
+  }, []);
 
   const toggleMenu = () => setMenuOuvert(!menuOuvert);
   const fermerMenu = () => setMenuOuvert(false);
 
   const handleLogout = () => {
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("token");
+    viderSession();
     fermerMenu();
     navigate("/");
   };
@@ -81,15 +85,15 @@ export default function Header() {
               >
                 Mon profil
               </NavLink>
-              {(user.role === "admin" || user.role === "employe") && (
+              {(estAdmin(user) || estEmploye(user)) && (
                 <NavLink
-                  to={user.role === "admin" ? "/admin" : "/employe"}
+                  to={estAdmin(user) ? "/admin" : "/employe"}
                   onClick={fermerMenu}
                   className={({ isActive }) =>
                     isActive ? "nav-link active" : "nav-link"
                   }
                 >
-                  {user.role === "admin" ? "Administration" : "Espace employé"}
+                  {estAdmin(user) ? "Administration" : "Espace employé"}
                 </NavLink>
               )}
               <button onClick={handleLogout} className="nav-link nav-logout">

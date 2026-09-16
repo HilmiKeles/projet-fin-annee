@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { destinationApresLogin, enregistrerSession } from "../utils/auth";
 import "../styles/Auth.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
@@ -60,11 +61,14 @@ export default function Connexion() {
       }
 
       if (data.token) {
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify(data.user || data.utilisateur || { role: data.role }),
-        );
+        const utilisateur = data.user || data.utilisateur || { role: data.role };
+        enregistrerSession({
+          token: data.token,
+          user: utilisateur,
+          role: data.role,
+        });
+        navigate(destinationApresLogin(utilisateur));
+        return;
       }
       navigate("/profil");
     } catch (err) {
@@ -90,17 +94,17 @@ export default function Connexion() {
       const data = await reponse.json();
 
       if (!reponse.ok) {
-        throw new Error(data.message || "Identifiants incorrects");
+        throw new Error(data.error || data.message || "Identifiants incorrects");
       }
 
-      sessionStorage.setItem(
-        "user",
-        JSON.stringify(data.utilisateur || data.user || data),
-      );
-      if (data.token) {
-        sessionStorage.setItem("token", data.token);
-      }
-      navigate("/profil");
+      const utilisateur = data.utilisateur || data.user || { role: data.role };
+      enregistrerSession({
+        token: data.token,
+        user: utilisateur,
+        role: data.role,
+        email,
+      });
+      navigate(destinationApresLogin(utilisateur));
     } catch (err) {
       setErreur(err.message || "Une erreur est survenue, veuillez réessayer.");
     } finally {

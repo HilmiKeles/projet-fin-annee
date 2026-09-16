@@ -1,0 +1,271 @@
+.admin {
+  min-height: calc(100vh - 200px);
+  padding: 48px 24px 72px;
+  background: linear-gradient(135deg, var(--creme) 0%, #eef6ef 100%);
+}
+
+.admin-chargement {
+  text-align: center;
+  color: var(--vert-fonce);
+  font-size: 1.05rem;
+  padding: 80px 16px;
+}
+
+.admin-mur {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-login {
+  background: var(--blanc);
+  width: 100%;
+  max-width: 480px;
+  padding: 40px 36px;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(27, 67, 50, 0.12);
+}
+
+.admin-kicker {
+  margin: 0 0 6px;
+  color: var(--or-fonce);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-login h1,
+.admin-entete h1 {
+  margin: 0 0 8px;
+  color: var(--vert-fonce);
+  font-size: 2rem;
+}
+
+.admin-intro,
+.admin-entete p {
+  margin: 0 0 24px;
+  color: var(--gris-fonce);
+}
+
+.admin-login form {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-login label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--vert-fonce);
+  margin-bottom: 6px;
+}
+
+.admin-login input {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 16px;
+}
+
+.admin-login input:focus {
+  outline: none;
+  border-color: var(--vert-the);
+}
+
+.admin-voir-mdp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -4px 0 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--gris-fonce);
+  cursor: pointer;
+}
+
+.admin-voir-mdp input {
+  margin: 0;
+  width: auto;
+}
+
+.admin-login .btn-primary {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.admin-aide {
+  margin: 20px 0 0;
+  font-size: 0.88rem;
+  color: var(--gris-fonce);
+  line-height: 1.5;
+}
+
+.admin-aide a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
+.admin-alerte {
+  background: #fdecea;
+  border: 1px solid #c0392b;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.admin-entete {
+  max-width: 1100px;
+  margin: 0 auto 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.admin-stats {
+  max-width: 1100px;
+  margin: 0 auto 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.admin-stats article {
+  background: var(--blanc);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 20px rgba(27, 67, 50, 0.08);
+}
+
+.admin-stats p {
+  margin: 0;
+  color: var(--gris-fonce);
+  font-size: 0.88rem;
+}
+
+.admin-stats strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--vert-fonce);
+  font-size: 1.7rem;
+}
+
+.admin-liste {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--blanc);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 8px 20px rgba(27, 67, 50, 0.08);
+}
+
+.admin-liste-outils {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.admin-onglets {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-onglets button {
+  border: none;
+  background: var(--vert-clair);
+  color: var(--vert-fonce);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-onglets button.actif {
+  background: var(--vert-the);
+  color: white;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-actions input[type="search"] {
+  min-width: 220px;
+  padding: 10px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-liste table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-liste th,
+.admin-liste td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid #e8eee9;
+}
+
+.admin-liste th {
+  color: var(--vert-fonce);
+  font-size: 0.85rem;
+}
+
+.admin-vide {
+  margin: 24px 0;
+  text-align: center;
+  color: var(--gris-fonce);
+}
+
+.badge-oui,
+.badge-non {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.badge-oui {
+  background: #d4edda;
+  color: #155724;
+}
+
+.badge-non {
+  background: #f4f4f4;
+  color: #666;
+}
+
+@media (max-width: 700px) {
+  .admin {
+    padding: 24px 16px 48px;
+  }
+
+  .admin-login {
+    padding: 28px 20px;
+  }
+
+  .admin-entete {
+    flex-direction: column;
+  }
+
+  .admin-actions input[type="search"] {
+    min-width: 0;
+    width: 100%;
+  }
+}

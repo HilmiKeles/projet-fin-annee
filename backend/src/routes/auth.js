@@ -2,13 +2,15 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
+const { activerAbonnement } = require("../services/newsletter");
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 router.post("/register", async (req, res) => {
   // 1. On récupère ENFIN les bonnes variables envoyées par ton React !
-  const { email, password, firstName, lastName, newsletter } = req.body;
+  const { password, firstName, lastName, newsletter } = req.body;
+  const email = String(req.body.email || "").trim().toLowerCase();
 
   if (!password || password.length < 8) {
     return res.status(400).json({
@@ -48,6 +50,10 @@ router.post("/register", async (req, res) => {
       },
     });
 
+    if (newsletter) {
+      await activerAbonnement(email);
+    }
+
     res.status(201).json({ id: user.id, email: user.email });
   } catch (e) {
     res.status(400).json({ error: "Email déjà utilisé" });
@@ -55,20 +61,39 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await prisma.user.findUnique({ where: { email } });
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const { password } = req.body;
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).json({ error: "Identifiants invalides" });
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: "Identifiants invalides" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET || "dev-secret-change-me",
+      { expiresIn: "24h" },
+    );
+
+    res.json({
+      token,
+      role: user.role,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+    });
+  } catch (erreur) {
+    console.error("Login:", erreur);
+    res.status(503).json({
+      error: "Base de données indisponible. Vérifiez que PostgreSQL est démarré.",
+    });
   }
-
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "24h" },
-  );
-
-  res.json({ token, role: user.role });
 });
 
 module.exports = router;

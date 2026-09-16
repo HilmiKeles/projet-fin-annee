@@ -25,8 +25,11 @@ services:
     environment:
       DATABASE_URL: postgresql://thetiptop:${DB_PASSWORD:-secret}@db:5432/thetiptop
       JWT_SECRET: ${JWT_SECRET:-change-me-super-secret-key}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@thetiptop.fr}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
       NODE_ENV: production
       PORT: 4000
+    command: sh -c "npx prisma db push --accept-data-loss && node src/index.js"
     ports:
       - "4000:4000"
 
