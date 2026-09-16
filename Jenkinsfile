@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        REGISTRY      = 'registry:5000'
+        REGISTRY      = 'localhost:5000'
         IMAGE_FRONT   = "${REGISTRY}/the-tip-top-frontend"
         IMAGE_BACK    = "${REGISTRY}/the-tip-top-backend"
         TAG           = "${env.BUILD_NUMBER}"
