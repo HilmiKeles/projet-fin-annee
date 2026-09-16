@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
@@ -8,6 +9,7 @@ const newsletterRoutes = require("./routes/newsletter");
 const usersRouter = require("./routes/users");
 const { client, httpRequestsTotal } = require("./metrics");
 const logger = require("./logger");
+const { assurerCompteAdmin } = require("./services/adminBootstrap");
 
 const app = express();
 
@@ -63,7 +65,14 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Erreur interne du serveur" });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, async () => {
+  try {
+    await assurerCompteAdmin();
+  } catch (erreur) {
+    logger.error("Impossible d'initialiser le compte admin", {
+      message: erreur.message,
+    });
+  }
   logger.info(`API Thé Tip Top démarrée`, { port: PORT, env: process.env.NODE_ENV });
 });

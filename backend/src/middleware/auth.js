@@ -5,7 +5,7 @@ function authMiddleware(req, res, next) {
   if (!token) return res.status(401).json({ error: 'Token manquant' });
 
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = jwt.verify(token, process.env.JWT_SECRET || "dev-secret-change-me");
     next();
   } catch {
     res.status(401).json({ error: 'Token invalide' });

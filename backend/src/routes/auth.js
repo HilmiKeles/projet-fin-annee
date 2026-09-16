@@ -61,20 +61,39 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await prisma.user.findUnique({ where: { email } });
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const { password } = req.body;
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).json({ error: "Identifiants invalides" });
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: "Identifiants invalides" });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET || "dev-secret-change-me",
+      { expiresIn: "24h" },
+    );
+
+    res.json({
+      token,
+      role: user.role,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
+    });
+  } catch (erreur) {
+    console.error("Login:", erreur);
+    res.status(503).json({
+      error: "Base de données indisponible. Vérifiez que PostgreSQL est démarré.",
+    });
   }
-
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "24h" },
-  );
-
-  res.json({ token, role: user.role });
 });
 
 module.exports = router;
