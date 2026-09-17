@@ -41,9 +41,9 @@ function App() {
           <Route path="/mentions-legales" element={<MentionsLegales />} />
           <Route path="/cgu" element={<CGU />} />
           <Route path="/confidentialite" element={<Confidentialite />} />
-          <Route path="*" element={<NotFound />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/signaler-probleme" element={<ReportIssuePage />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

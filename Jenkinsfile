@@ -44,17 +44,31 @@ pipeline {
         }
 
         stage('Tests unitaires') {
-            steps {
-                sh """
-                    docker run --rm \
-                      -v ${JENKINS_VOL}:/ws \
-                      -w ${WORKSPACE_DIR}/backend \
-                      node:20-alpine sh -c "npm test || true"
-                """
-            }
-            post {
-                always {
-                    junit allowEmptyResults: true, testResults: 'backend/junit.xml'
+            parallel {
+                stage('Backend') {
+                    steps {
+                        sh """
+                            docker run --rm \
+                              -v ${JENKINS_VOL}:/ws \
+                              -w ${WORKSPACE_DIR}/backend \
+                              node:20-alpine npm test
+                        """
+                    }
+                    post {
+                        always {
+                            junit allowEmptyResults: true, testResults: 'backend/junit.xml'
+                        }
+                    }
+                }
+                stage('Frontend') {
+                    steps {
+                        sh """
+                            docker run --rm \
+                              -v ${JENKINS_VOL}:/ws \
+                              -w ${WORKSPACE_DIR}/frontend \
+                              node:20-alpine npm test
+                        """
+                    }
                 }
             }
         }
