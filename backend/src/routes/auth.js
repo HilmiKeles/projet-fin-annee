@@ -2,38 +2,17 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
-const { activerAbonnement } = require("../services/newsletter");
+const { validatePassword } = require("../utils/password");
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 router.post("/register", async (req, res) => {
-  // 1. On récupère ENFIN les bonnes variables envoyées par ton React !
-  const { password, firstName, lastName, newsletter } = req.body;
-  const email = String(req.body.email || "").trim().toLowerCase();
+  const { email, password, firstName, lastName, newsletter } = req.body;
 
-  if (!password || password.length < 8) {
-    return res.status(400).json({
-      error: "Le mot de passe doit contenir au moins 8 caractères.",
-    });
-  }
-
-  if (!/[A-Z]/.test(password)) {
-    return res.status(400).json({
-      error: "Le mot de passe doit contenir au moins une majuscule.",
-    });
-  }
-
-  if (!/[a-z]/.test(password)) {
-    return res.status(400).json({
-      error: "Le mot de passe doit contenir au moins une minuscule.",
-    });
-  }
-
-  if (!/[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]';`~]/.test(password)) {
-    return res.status(400).json({
-      error: "Le mot de passe doit contenir au moins un caractère spécial.",
-    });
+  const passwordError = validatePassword(password);
+  if (passwordError) {
+    return res.status(400).json({ error: passwordError });
   }
 
   try {

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
 import "../styles/EnterCode.css";
-
-// Expression régulière pour valider le format du code (10 caractères alphanumériques)
-const CODE_REGEX = /^[A-Z0-9]{10}$/;
 
 export default function EnterCode() {
   const [code, setCode] = useState("");
@@ -11,10 +9,8 @@ export default function EnterCode() {
   const [chargement, setChargement] = useState(false);
   const navigate = useNavigate();
 
-  // Formate le code en majuscules et retire les espaces
   function handleChange(e) {
-    const valeur = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
-    setCode(valeur);
+    setCode(normaliserCode(e.target.value));
     setErreur("");
   }
 
