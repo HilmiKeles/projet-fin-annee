@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import TirageBoules from '../components/TirageBoules.jsx';
+import NewsletterForm from '../components/NewsletterForm.jsx';
 import { DUREE_JOURS, dateClotureLisible, joursAvantCloture } from '../config/jeu.js';
 import '../styles/Home.css';
 
@@ -195,6 +196,18 @@ export default function Home() {
         <div className="lots-cta">
           <Link to="/lots" className="btn btn-primary">Voir le détail des lots</Link>
         </div>
+      </section>
+
+      <section className="home-newsletter" aria-labelledby="home-newsletter-titre">
+        <h2 id="home-newsletter-titre">Restez dans le rythme du thé</h2>
+        <p>
+          Inscrivez-vous à la newsletter pour recevoir recettes, actualités
+          boutiques et rappels du grand tirage.
+        </p>
+        <NewsletterForm variante="page" />
+        <Link to="/newsletter" className="home-newsletter-lien">
+          Lire l'aperçu du dernier numéro
+        </Link>
       </section>
 
       {/* ===== BANDEAU CTA ===== */}

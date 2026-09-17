@@ -1,11 +1,21 @@
 import { Link } from 'react-router-dom';
 import '../styles/Footer.css';
 import { FaInstagram, FaFacebook, FaXTwitter } from "react-icons/fa6";
+import NewsletterForm from './NewsletterForm.jsx';
 
 export default function Footer() {
   return (
     <footer className="footer">
-      {/* Section principale */}
+      <div className="footer-cta">
+        <div className="footer-cta-container">
+          <h2>La newsletter Thé Tip Top</h2>
+          <p>
+            Recettes, ouvertures de boutiques et infos du jeu-concours,
+            une fois par mois dans votre boîte mail.
+          </p>
+          <NewsletterForm variante="sombre" />
+        </div>
+      </div>
       <div className="footer-main">
         <div className="footer-main-container">
           {/* Logo et réseaux */}
@@ -33,7 +43,8 @@ export default function Footer() {
             <ul>
               <li><Link to="/">Accueil</Link></li>
               <li><Link to="/lots">Lots à gagner</Link></li>
-              <li><Link to="/saisie-code">Participer</Link></li>
+              <li><Link to="/entrer-code">Participer</Link></li>
+              <li><Link to="/newsletter">Newsletter</Link></li>
               <li><Link to="/connexion">Connexion</Link></li>
             </ul>
           </div>

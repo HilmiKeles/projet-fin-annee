@@ -274,7 +274,9 @@ export default function Inscription() {
                 checked={form.newsletter}
                 onChange={handleChange}
               />
-              Je souhaite recevoir la newsletter
+              Je souhaite recevoir la{" "}
+              <Link to="/newsletter">newsletter</Link> (actualités, recettes
+              et infos du jeu-concours)
             </label>
           </div>
 

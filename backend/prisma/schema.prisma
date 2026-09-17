@@ -26,6 +26,14 @@ model User {
   gains      Gain[]
 }
 
+model NewsletterSubscriber {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  consent        Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
 model Ticket {
   code       String   @id
   used       Boolean  @default(false)

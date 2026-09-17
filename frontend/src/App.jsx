@@ -17,6 +17,8 @@ import MentionsLegales from './pages/MentionsLegales.jsx';
 import CGU from './pages/CGU.jsx';
 import Confidentialite from './pages/Confidentialite.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Newsletter from './pages/Newsletter.jsx';
+import NewsletterDesinscription from './pages/NewsletterDesinscription.jsx';
 import ContactPage from './pages/ContactPage';
 import ReportIssuePage from './pages/ReportIssuePage';
 import ScrollToTop from './components/ScrollToTop.jsx';
