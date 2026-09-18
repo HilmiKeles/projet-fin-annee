@@ -28,7 +28,7 @@ export default function Header() {
       <div className="header-container">
         {/* Logo */}
         <Link to="/" className="header-logo" onClick={fermerMenu}>
-        <img className="logo-icon" src="../logo_TipTop.png" alt="Thé Tip Top" />
+          <img className="logo-icon" src="/logo_TipTop.png" alt="Thé Tip Top" />
           <span className="logo-text">Thé Tip Top</span>
         </Link>
 

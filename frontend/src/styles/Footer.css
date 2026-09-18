@@ -82,9 +82,15 @@
 }
 
 .footer-logo-icon {
-  width: 60px;
-  height: 60px;
+  height: 36px;
+  width: auto;
+  max-height: 36px;
   object-fit: contain;
+  display: block;
+  background: var(--blanc);
+  padding: 4px 6px;
+  border-radius: 10px;
+  box-sizing: content-box;
 }
 
 .footer-brand-text {
