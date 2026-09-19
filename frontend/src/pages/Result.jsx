@@ -2,31 +2,26 @@ import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Result.css";
 
-// Correspondance gain → emoji et description (aligné sur les pourcentages du cahier des charges)
+// On garde juste les visuels, les titres viendront directement de ta base de données
 const GAINS = {
   infuseur: {
     emoji: "🍵",
-    titre: "Un infuseur à thé !",
     description: "L'accessoire indispensable pour savourer vos thés en vrac.",
   },
   detox: {
     emoji: "🌿",
-    titre: "Une boîte de 100g de thé détox !",
     description: "Un mélange bio et handmade pour prendre soin de vous.",
   },
   signature: {
     emoji: "✨",
-    titre: "Une boîte de 100g de thé signature !",
     description: "Notre mélange exclusif, créé par nos maîtres du thé.",
   },
   coffret39: {
     emoji: "🎁",
-    titre: "Un coffret découverte (39€) !",
     description: "Une sélection de nos meilleurs thés à découvrir.",
   },
   coffret69: {
     emoji: "🏆",
-    titre: "Un coffret de luxe premium (69€) !",
     description: "Le grand gagnant ! Notre coffret le plus prestigieux.",
   },
 };
@@ -34,29 +29,44 @@ const GAINS = {
 export default function Result() {
   const location = useLocation();
   const navigate = useNavigate();
-  const gain = location.state?.gain;
+  // On récupère le nom exact renvoyé par le backend (ex: "Coffret découverte 69€")
+  const gainDb = location.state?.gain;
 
-  // Sécurité : si on arrive sur la page sans gain, on redirige vers la saisie
+  // 1. Correction de la 404 : on redirige bien vers /entrer-code
   useEffect(() => {
-    if (!gain || !GAINS[gain]) {
-      navigate("/saisie-code", { replace: true });
+    if (!gainDb) {
+      navigate("/entrer-code", { replace: true });
     }
-  }, [gain, navigate]);
+  }, [gainDb, navigate]);
 
-  if (!gain || !GAINS[gain]) return null;
+  if (!gainDb) return null;
 
-  const { emoji, titre, description } = GAINS[gain];
+  // 2. Détection intelligente du lot pour afficher le bon émoji
+  let visuals = {
+    emoji: "🎉",
+    description: "Un magnifique cadeau vous attend !",
+  };
+  const gainLower = gainDb.toLowerCase();
+
+  if (gainLower.includes("infuseur")) visuals = GAINS.infuseur;
+  else if (gainLower.includes("détox") || gainLower.includes("detox"))
+    visuals = GAINS.detox;
+  else if (gainLower.includes("signature")) visuals = GAINS.signature;
+  else if (gainLower.includes("39")) visuals = GAINS.coffret39;
+  else if (gainLower.includes("69")) visuals = GAINS.coffret69;
 
   return (
     <main className="result">
       <div className="result-card">
         <span className="confetti">🎉</span>
         <h1>Félicitations !</h1>
-        <div className="gain-emoji" role="img" aria-label={titre}>
-          {emoji}
+        <div className="gain-emoji" role="img" aria-label={gainDb}>
+          {visuals.emoji}
         </div>
-        <h2>{titre}</h2>
-        <p className="gain-description">{description}</p>
+
+        {/* On affiche le vrai nom du lot issu de la base de données */}
+        <h2>{gainDb}</h2>
+        <p className="gain-description">{visuals.description}</p>
 
         <div className="result-info">
           <p>
@@ -69,7 +79,8 @@ export default function Result() {
         </div>
 
         <div className="result-actions">
-          <Link to="/mon-compte" className="btn-primary">
+          {/* Correction de la route /mon-compte en /profil */}
+          <Link to="/profil" className="btn-primary">
             Voir mon historique
           </Link>
           <Link to="/" className="btn-secondary">
