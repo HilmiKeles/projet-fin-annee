@@ -41,7 +41,9 @@
   padding: 14px 32px;
   border-radius: 50px;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .footer-cta-button:hover {
@@ -82,9 +84,8 @@
 }
 
 .footer-logo-icon {
-  height: 36px;
-  width: auto;
-  max-height: 36px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   display: block;
   background: var(--blanc);
@@ -114,7 +115,9 @@
   border-radius: 50%;
   text-decoration: none;
   font-size: 1.2rem;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .footer-brand-socials a:hover {
@@ -125,7 +128,7 @@
 /* --- Colonnes --- */
 .footer-col h3 {
   color: var(--dore);
-  color:black;
+  color: black;
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;

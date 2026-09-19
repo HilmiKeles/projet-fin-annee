@@ -30,9 +30,8 @@
 }
 
 .logo-icon {
-  height: 40px;
-  width: auto;
-  max-height: 40px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
@@ -67,7 +66,9 @@
   border: none;
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .nav-link:hover {
@@ -118,7 +119,9 @@
   height: 3px;
   background: var(--blanc);
   border-radius: 2px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 /* Animation burger → croix */
@@ -167,13 +170,13 @@
     width: 100%;
   }
   .nav-link:focus-visible {
-  outline: 2px solid var(--dore);
-  outline-offset: 2px;
-}
+    outline: 2px solid var(--dore);
+    outline-offset: 2px;
+  }
 
-.burger:focus-visible {
-  outline: 2px solid var(--dore);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+  .burger:focus-visible {
+    outline: 2px solid var(--dore);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
