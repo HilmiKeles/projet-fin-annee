@@ -20,11 +20,7 @@ function authMiddleware(req, res, next) {
   }
 
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(
-      "✅ Accès autorisé pour l'utilisateur ID :",
-      req.user.id || req.user.userId,
-    );
+    req.user = jwt.verify(token, process.env.JWT_SECRET || "dev-secret-change-me");
     next();
   } catch (err) {
     // C'est ICI qu'on va enfin savoir la vérité !

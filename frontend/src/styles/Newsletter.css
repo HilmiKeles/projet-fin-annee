@@ -1,0 +1,375 @@
+.nl-page {
+  background: var(--creme);
+}
+
+.nl-hero {
+  background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-the) 100%);
+  color: var(--blanc);
+  text-align: center;
+  padding: 4rem 1.5rem 3.5rem;
+}
+
+.nl-kicker {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.25rem 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nl-hero h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem;
+}
+
+.nl-hero p {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
+.nl-avantages {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 24px 2rem;
+}
+
+.nl-avantages h2,
+.nl-apercu-intro h2,
+.nl-inscription-card h2 {
+  color: var(--vert-fonce);
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.nl-avantages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.nl-avantage {
+  background: var(--blanc);
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.1);
+  border-top: 4px solid var(--vert-the);
+}
+
+.nl-avantage span {
+  font-size: 1.8rem;
+}
+
+.nl-avantage h3 {
+  color: var(--vert-fonce);
+  margin: 0.6rem 0 0.4rem;
+}
+
+.nl-avantage p {
+  margin: 0;
+  color: var(--gris-fonce);
+}
+
+.nl-apercu {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 24px 1rem;
+}
+
+.nl-apercu-intro p {
+  text-align: center;
+  color: var(--gris-fonce);
+  margin: 0 auto 2rem;
+}
+
+.nl-lettre {
+  background: var(--blanc);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(27, 67, 50, 0.12);
+}
+
+.nl-lettre-entete {
+  background: var(--vert-fonce);
+  color: var(--blanc);
+  padding: 2rem 2rem 1.5rem;
+}
+
+.nl-lettre-marque {
+  margin: 0;
+  color: var(--or);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.nl-lettre-numero {
+  margin: 0.35rem 0 0.8rem;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.nl-lettre-entete h3 {
+  margin: 0;
+  font-size: 1.55rem;
+  color: var(--blanc);
+}
+
+.nl-lettre-corps {
+  padding: 1.75rem 2rem 1.25rem;
+}
+
+.nl-lettre-corps h4 {
+  color: var(--vert-the);
+  margin: 1.4rem 0 0.5rem;
+}
+
+.nl-lettre-corps p,
+.nl-lettre-corps li {
+  color: var(--texte);
+  line-height: 1.7;
+}
+
+.nl-lettre-corps a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
+.nl-lettre-pied {
+  background: var(--vert-clair);
+  padding: 0.9rem 2rem;
+  font-size: 0.82rem;
+  color: var(--vert-fonce);
+}
+
+.nl-inscription {
+  padding: 3rem 24px 5rem;
+}
+
+.nl-inscription-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: var(--blanc);
+  border-radius: 16px;
+  padding: 2.25rem;
+  box-shadow: 0 4px 16px rgba(27, 67, 50, 0.1);
+  border-top: 4px solid var(--or);
+}
+
+.nl-inscription-card > p {
+  text-align: center;
+  color: var(--gris-fonce);
+  margin: 0 0 1.5rem;
+}
+
+.nl-inscription-note {
+  margin-top: 1.25rem;
+  font-size: 0.88rem;
+  color: var(--gris-fonce);
+  text-align: center;
+}
+
+.nl-inscription-note a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
+.nl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.nl-form-ligne {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.nl-form input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  padding: 0.8rem 1.1rem;
+  border: 2px solid var(--vert-clair);
+  border-radius: 50px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.nl-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--vert-the);
+  box-shadow: 0 0 0 3px rgba(58, 125, 68, 0.15);
+}
+
+.nl-form button[type="submit"] {
+  background: var(--vert-the);
+  color: var(--blanc);
+  border: none;
+  border-radius: 50px;
+  padding: 0.8rem 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nl-form button[type="submit"]:hover:not(:disabled) {
+  background: var(--vert-fonce);
+}
+
+.nl-form button[type="submit"]:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.nl-form-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.88rem;
+  color: var(--texte);
+  cursor: pointer;
+}
+
+.nl-form-consent input {
+  margin-top: 0.2rem;
+}
+
+.nl-form-consent a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
+.nl-form-erreur {
+  margin: 0;
+  color: #b3261e;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.nl-form-succes {
+  text-align: center;
+}
+
+.nl-form-succes p {
+  color: var(--gris-fonce);
+  margin: 0 0 1rem;
+}
+
+.nl-form-lien,
+.nl-form-lien-sombre {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.nl-form-lien {
+  color: var(--vert-the);
+}
+
+.nl-form-lien-sombre {
+  color: var(--or);
+}
+
+.nl-form-sombre .nl-form-ligne input[type="email"] {
+  border-color: transparent;
+}
+
+.nl-form-sombre button[type="submit"] {
+  background: var(--or);
+  color: var(--vert-fonce);
+}
+
+.nl-form-sombre button[type="submit"]:hover:not(:disabled) {
+  background: var(--or-clair);
+}
+
+.nl-form-sombre .nl-form-consent,
+.nl-form-sombre .nl-form-erreur {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nl-form-sombre .nl-form-consent a {
+  color: var(--or);
+}
+
+.nl-form-succes-sombre {
+  color: var(--blanc);
+}
+
+.nl-form-succes-sombre p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.home-newsletter {
+  background: var(--creme);
+  padding: 4rem 8%;
+  text-align: center;
+}
+
+.home-newsletter h2 {
+  color: var(--vert-fonce);
+  font-size: 2rem;
+  margin: 0 0 0.75rem;
+}
+
+.home-newsletter > p {
+  max-width: 560px;
+  margin: 0 auto 1.75rem;
+  color: var(--gris-fonce);
+}
+
+.home-newsletter .nl-form {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.home-newsletter-lien {
+  display: inline-block;
+  margin-top: 1.1rem;
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .nl-avantages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nl-hero h1 {
+    font-size: 1.9rem;
+  }
+
+  .nl-form-ligne {
+    flex-direction: column;
+  }
+
+  .nl-lettre-entete,
+  .nl-lettre-corps,
+  .nl-lettre-pied {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}

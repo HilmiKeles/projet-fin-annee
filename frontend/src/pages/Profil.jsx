@@ -20,6 +20,9 @@ export default function Account() {
   const [participations, setParticipations] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState("");
+  const [newsletter, setNewsletter] = useState(false);
+  const [newsletterMsg, setNewsletterMsg] = useState("");
+  const [newsletterChargement, setNewsletterChargement] = useState(false);
 
   useEffect(() => {
     async function chargerDonnees() {
@@ -38,6 +41,7 @@ export default function Account() {
         } else {
           setUtilisateur(data.user);
           setParticipations(data.participations || []);
+          setNewsletter(Boolean(data.user?.newsletter));
         }
       } catch {
         setErreur("Erreur au chargement du profil.");
@@ -47,6 +51,42 @@ export default function Account() {
     }
     chargerDonnees();
   }, []);
+
+  const handleNewsletter = async (cochee) => {
+    setNewsletter(cochee);
+    setNewsletterMsg("");
+    setNewsletterChargement(true);
+
+    try {
+      const reponse = await fetch(`${API_URL}/newsletter/preference`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ newsletter: cochee }),
+      });
+
+      const data = await reponse.json().catch(() => ({}));
+
+      if (!reponse.ok) {
+        setNewsletter(!cochee);
+        setNewsletterMsg(data.error || "Impossible de mettre à jour la newsletter.");
+        return;
+      }
+
+      setNewsletterMsg(
+        cochee
+          ? "Vous êtes inscrit(e) à la newsletter."
+          : "Vous ne recevrez plus la newsletter.",
+      );
+    } catch {
+      setNewsletter(!cochee);
+      setNewsletterMsg("Erreur réseau. Réessayez.");
+    } finally {
+      setNewsletterChargement(false);
+    }
+  };
 
   if (chargement) {
     return (
@@ -89,6 +129,29 @@ export default function Account() {
           </p>
           <p>
             <strong>Email :</strong> {utilisateur.email}
+          </p>
+        </section>
+
+        <section className="account-newsletter" aria-label="Newsletter">
+          <h2>Newsletter</h2>
+          <label className="account-newsletter-toggle">
+            <input
+              type="checkbox"
+              checked={newsletter}
+              disabled={newsletterChargement}
+              onChange={(event) => handleNewsletter(event.target.checked)}
+            />
+            <span>Recevoir la newsletter Thé Tip Top (recettes, boutiques, jeu-concours)</span>
+          </label>
+          {newsletterMsg && (
+            <p className="account-newsletter-msg" role="status">
+              {newsletterMsg}
+            </p>
+          )}
+          <p className="account-newsletter-lien">
+            <Link to="/newsletter">Lire l'aperçu</Link>
+            {" · "}
+            <Link to="/newsletter/desinscription">Page de désinscription</Link>
           </p>
         </section>
 

@@ -24,12 +24,21 @@
   gap: 10px;
   text-decoration: none;
   z-index: 110;
+  height: 64px;
+  max-height: 64px;
+  overflow: hidden;
 }
 
 .logo-icon {
   width: 80px;
   height: 80px;
   object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  background: var(--blanc);
+  padding: 4px 6px;
+  border-radius: 10px;
+  box-sizing: content-box;
 }
 
 .logo-text {
