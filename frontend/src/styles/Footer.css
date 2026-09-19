@@ -145,6 +145,23 @@
   text-decoration: underline;
 }
 
+.footer-cookie-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.85);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: inherit;
+  transition: color 0.2s ease;
+}
+
+.footer-cookie-btn:hover {
+  color: var(--dore);
+  text-decoration: underline;
+}
+
 /* --- Liste contact --- */
 .footer-contact-list li {
   color: rgba(255, 255, 255, 0.85);

@@ -69,9 +69,10 @@ export default function MentionsLegales() {
         <section className="legal-section">
           <h2>Cookies et technologies de suivi</h2>
           <p>
-            Ce site utilise des cookies techniques nécessaires à son fonctionnement 
-            (navigation, authentification). Aucun cookie publicitaire ou de traçage 
-            comportemental n'est déposé sans consentement explicite.
+            Ce site utilise des cookies techniques nécessaires à son fonctionnement
+            (navigation, authentification). Les cookies optionnels ne sont déposés
+            qu'après un consentement explicite via le bandeau cookies.
+            Vous pouvez modifier vos choix à tout moment depuis le pied de page.
           </p>
           <p>
             Pour en savoir plus, consultez notre <a href="/confidentialite">politique de confidentialité</a>.
