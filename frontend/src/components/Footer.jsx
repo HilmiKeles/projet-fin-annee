@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import '../styles/Footer.css';
+import { Link } from "react-router-dom";
+import "../styles/Footer.css";
 import { FaInstagram, FaFacebook, FaXTwitter } from "react-icons/fa6";
 import NewsletterForm from './NewsletterForm.jsx';
 
@@ -21,17 +21,36 @@ export default function Footer() {
           {/* Logo et réseaux */}
           <div className="footer-brand">
             <div className="footer-brand-logo">
-              <img className="footer-logo-icon" src="/logo_TipTop.png" alt="Thé Tip Top" />
+              <img
+                className="footer-logo-icon"
+                src="../logo_fond_blanc.png"
+                alt="Thé Tip Top"
+              />
               <span className="footer-brand-text">Thé Tip Top</span>
             </div>
             <div className="footer-brand-socials">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+              >
                 <FaFacebook />
               </a>
-              <a href="https://instagram.com/thetiptop_projet" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a
+                href="https://instagram.com/thetiptop_projet"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              >
                 <FaInstagram />
               </a>
-              <a href="https://x.com/thetiptopp" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+              <a
+                href="https://x.com/thetiptopp"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+              >
                 <FaXTwitter />
               </a>
             </div>
@@ -53,20 +72,32 @@ export default function Footer() {
           <div className="footer-col">
             <h3>Informations</h3>
             <ul>
-              <li><Link to="/mentions-legales">Mentions légales</Link></li>
-              <li><Link to="/cgu">CGU du jeu-concours</Link></li>
-              <li><Link to="/reglement">Règlement du jeu</Link></li>
-              <li><Link to="/confidentialite">Politique de confidentialité</Link></li>
+              <li>
+                <Link to="/mentions-legales">Mentions légales</Link>
+              </li>
+              <li>
+                <Link to="/cgu">CGU du jeu-concours</Link>
+              </li>
+              <li>
+                <Link to="/reglement">Règlement du jeu</Link>
+              </li>
+              <li>
+                <Link to="/confidentialite">Politique de confidentialité</Link>
+              </li>
               <li>
                 <button
                   type="button"
                   className="footer-cookie-btn"
-                  onClick={() => window.dispatchEvent(new Event('ouvrir-bandeau-cookies'))}
+                  onClick={() =>
+                    window.dispatchEvent(new Event("ouvrir-bandeau-cookies"))
+                  }
                 >
                   Gérer les cookies
                 </button>
               </li>
-              <li><Link to="/contact">Contact</Link></li>
+              <li>
+                <Link to="/contact">Contact</Link>
+              </li>
             </ul>
           </div>
 
@@ -74,9 +105,9 @@ export default function Footer() {
           <div className="footer-col">
             <h3>Contact</h3>
             <ul className="footer-contact-list">
-              <li>📍 18 rue Léon Frot, 75011 Paris</li>
-              <li>📞 01 23 45 67 89</li>
-              <li>✉️ contact@thetiptop.fr</li>
+              <li> 18 rue Léon Frot, 75011 Paris</li>
+              <li> 01 23 45 67 89</li>
+              <li> contact@thetiptop.fr</li>
             </ul>
           </div>
         </div>
@@ -85,11 +116,13 @@ export default function Footer() {
       {/* Barre du bas */}
       <div className="footer-bottom">
         <p>
-          © {new Date().getFullYear()} Thé Tip Top — Projet étudiant fictif réalisé par l'agence Furious Ducks.
+          © {new Date().getFullYear()} Thé Tip Top — Projet étudiant fictif
+          réalisé par l'agence Furious Ducks.
         </p>
         <p className="footer-legal-note">
-          Aucun achat, gain ou réservation réel ne peut être effectué sur ce site.
-          Les données collectées sont uniquement destinées à la démonstration du jeu-concours.
+          Aucun achat, gain ou réservation réel ne peut être effectué sur ce
+          site. Les données collectées sont uniquement destinées à la
+          démonstration du jeu-concours.
         </p>
       </div>
     </footer>

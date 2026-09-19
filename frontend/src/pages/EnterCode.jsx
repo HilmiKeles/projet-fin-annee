@@ -13,12 +13,22 @@ export default function EnterCode() {
     setCode(normaliserCode(e.target.value));
     setErreur("");
   }
-
   async function handleSubmit(e) {
     e.preventDefault();
 
     if (!CODE_REGEX.test(code)) {
-      setErreur("Le code doit contenir exactement 10 caractères (lettres et chiffres).");
+      setErreur(
+        "Le code doit contenir exactement 10 caractères (lettres et chiffres).",
+      );
+      return;
+    }
+
+    // 1. On vérifie que l'utilisateur a bien son token avant de déranger le serveur !
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      setErreur(
+        "Vous n'êtes pas connecté. Veuillez vous connecter pour jouer.",
+      );
       return;
     }
 
@@ -26,21 +36,24 @@ export default function EnterCode() {
     setErreur("");
 
     try {
-      // TODO : remplacer par votre appel API réel
-      const reponse = await fetch("/api/tickets/validate", {
+      const reponse = await fetch(`${API_URL}/tickets/validate`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // On injecte le token récupéré juste au-dessus
+        },
+        // J'ai retiré 'credentials: "include"' pour éviter tout conflit avec le backend
         body: JSON.stringify({ code }),
       });
 
       const data = await reponse.json();
 
       if (!reponse.ok) {
-        setErreur(data.message || "Code invalide ou déjà utilisé.");
+        setErreur(
+          data.error || data.message || "Code invalide ou déjà utilisé.",
+        );
       } else {
-        // Redirection vers la page de résultat avec le gain
-        navigate("/resultat", { state: { gain: data.prize } });
+        navigate("/resultat", { state: { gain: data.gain } });
       }
     } catch {
       setErreur("Erreur de connexion au serveur. Réessayez.");
@@ -72,7 +85,11 @@ export default function EnterCode() {
           />
           <span className="compteur">{code.length}/10</span>
 
-          {erreur && <p className="erreur" role="alert">{erreur}</p>}
+          {erreur && (
+            <p className="erreur" role="alert">
+              {erreur}
+            </p>
+          )}
 
           <button type="submit" className="btn-primary" disabled={chargement}>
             {chargement ? "Vérification..." : "Valider mon code"}
@@ -80,8 +97,8 @@ export default function EnterCode() {
         </form>
 
         <p className="enter-code-aide">
-          Pas encore inscrit ? <a href="/inscription">Créez votre compte</a> pour
-          participer.
+          Pas encore inscrit ? <a href="/inscription">Créez votre compte</a>{" "}
+          pour participer.
         </p>
       </section>
     </main>
