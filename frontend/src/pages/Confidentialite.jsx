@@ -185,8 +185,10 @@ export default function Confidentialite() {
           <h3>6.7 Droit de retirer votre consentement</h3>
           <p>
             À tout moment, sans affecter la licéité du traitement antérieur. 
-            Cochez/décochez vos préférences dans votre <a href="/profil">profil</a> 
-            ou contactez-nous.
+            Cochez/décochez vos préférences dans votre <a href="/profil">profil</a>,
+            utilisez la page de{" "}
+            <a href="/newsletter/desinscription">désinscription de la newsletter</a>
+            {" "}ou contactez-nous.
           </p>
 
           <div className="legal-highlight" style={{ marginTop: 24, padding: 20 }}>
@@ -288,6 +290,7 @@ export default function Confidentialite() {
             <li><a href="/reglement">Règlement du jeu-concours</a></li>
             <li><a href="/cgu">Conditions générales d'utilisation</a></li>
             <li><a href="/mentions-legales">Mentions légales</a></li>
+            <li><a href="/newsletter">Newsletter Thé Tip Top</a></li>
           </ul>
         </section>
       </article>

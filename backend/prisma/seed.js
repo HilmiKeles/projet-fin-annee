@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 // Génère un code à 10 caractères (lettres majuscules + chiffres)
@@ -12,6 +13,23 @@ function genererCode() {
 }
 
 async function main() {
+  const adminEmail = String(process.env.ADMIN_EMAIL || "admin@thetiptop.fr")
+    .trim()
+    .toLowerCase();
+  const adminPassword = process.env.ADMIN_PASSWORD || "Admin123!";
+  await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: { role: "ADMIN" },
+    create: {
+      email: adminEmail,
+      password: await bcrypt.hash(adminPassword, 10),
+      firstName: "Admin",
+      lastName: "Tip Top",
+      role: "ADMIN",
+    },
+  });
+  console.log(`✅ Compte admin : ${adminEmail}`);
+
   // 1. Création des 5 lots (répartition officielle du cahier des charges)
   const infuseur = await prisma.lot.upsert({
     where: { name: "infuseur" },

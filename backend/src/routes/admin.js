@@ -23,11 +23,25 @@ router.get('/stats', authMiddleware, requireRole('ADMIN'), async (req, res) => {
 });
 
 router.get('/export', authMiddleware, requireRole('ADMIN'), async (req, res) => {
-  const clients = await prisma.user.findMany({
-    where: { role: 'CLIENT' },
-    select: { email: true, gender: true, birthDate: true }
-  });
-  res.json(clients);
+  const [clients, abonnesNewsletter] = await Promise.all([
+    prisma.user.findMany({
+      where: { role: 'CLIENT' },
+      select: {
+        email: true,
+        firstName: true,
+        lastName: true,
+        newsletter: true,
+        createdAt: true,
+      },
+    }),
+    prisma.newsletterSubscriber.findMany({
+      where: { unsubscribedAt: null },
+      select: { email: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+  ]);
+
+  res.json({ clients, abonnesNewsletter });
 });
 
 router.get('/gain/:code', authMiddleware, requireRole('EMPLOYEE', 'ADMIN'), async (req, res) => {
