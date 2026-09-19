@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
 import "../styles/EnterCode.css";
 
+// 👇 La voici ! La variable qui manquait pour lier le front au backend 👇
+const API_URL = import.meta.env.VITE_API_URL || "/api";
+
 export default function EnterCode() {
   const [code, setCode] = useState("");
   const [erreur, setErreur] = useState("");
@@ -13,6 +16,7 @@ export default function EnterCode() {
     setCode(normaliserCode(e.target.value));
     setErreur("");
   }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
