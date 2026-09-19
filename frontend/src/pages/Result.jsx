@@ -63,8 +63,8 @@ export default function Result() {
             📍 <strong>Comment récupérer votre gain ?</strong>
           </p>
           <p>
-            Présentez-vous dans l'une de nos boutiques avec votre ticket de caisse
-            ou votre facture pour retirer votre lot.
+            Présentez-vous dans l'une de nos boutiques avec votre ticket de
+            caisse ou votre facture pour retirer votre lot.
           </p>
         </div>
 
