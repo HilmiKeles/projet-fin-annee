@@ -4,9 +4,13 @@ import { vi } from 'vitest';
 import EnterCode from './EnterCode.jsx';
 import { renderPage } from '../test/renderPage.jsx';
 
-vi.mock('../utils/tirage.js', () => ({
-  dureeAnimationTirage: () => 40,
-}));
+vi.mock('../utils/tirage.js', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    dureeAnimationTirage: () => 40,
+  };
+});
 
 function renderEnterCode() {
   return renderPage(<EnterCode />, {
