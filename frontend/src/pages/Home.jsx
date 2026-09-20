@@ -117,7 +117,7 @@ export default function Home() {
 
           <div className="jeu-scene">
             <div className="jeu-scene-machine">
-              <TirageBoules connecte={Boolean(user)} />
+              <TirageBoules />
             </div>
 
             <div className="jeu-scene-infos">

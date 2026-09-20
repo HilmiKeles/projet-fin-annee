@@ -151,6 +151,18 @@
   font-size: 0.85rem;
 }
 
+.loto-aide {
+  margin: 8px 0 0;
+  color: var(--vert-fonce);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.loto-aide a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
 .loto-attente {
   margin: 0;
   color: var(--vert-fonce);

@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LotoMachine from "../components/LotoMachine.jsx";
-import { API_URL, lireToken } from "../utils/auth";
+import { lireToken } from "../utils/auth";
 import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
-import { dureeAnimationTirage } from "../utils/tirage.js";
+import { validerTicket } from "../utils/tickets.js";
+import { attendre, dureeAnimationTirage } from "../utils/tirage.js";
 import "../styles/EnterCode.css";
-
-function attendre(ms) {
-  return new Promise((resolve) => {
-    window.setTimeout(resolve, ms);
-  });
-}
 
 export default function EnterCode() {
   const [code, setCode] = useState("");
@@ -42,8 +37,7 @@ export default function EnterCode() {
       return;
     }
 
-    const token = sessionStorage.getItem("token");
-    if (!token) {
+    if (!lireToken()) {
       setErreur(
         "Vous n'êtes pas connecté. Veuillez vous connecter pour jouer.",
       );
@@ -55,27 +49,7 @@ export default function EnterCode() {
     const debut = Date.now();
 
     try {
-      const reponse = await fetch(`${API_URL}/tickets/validate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ code }),
-      });
-
-      const data = await reponse.json();
-
-      if (!reponse.ok) {
-        if (!ignoreRef.current) {
-          setErreur(
-            data.error || data.message || "Code invalide ou déjà utilisé.",
-          );
-          setTirageEnCours(false);
-        }
-        return;
-      }
-
+      const data = await validerTicket(code);
       const restant = Math.max(
         0,
         dureeAnimationTirage() - (Date.now() - debut),
@@ -85,9 +59,9 @@ export default function EnterCode() {
       }
       if (ignoreRef.current) return;
       navigate("/resultat", { state: { gain: data.gain } });
-    } catch {
+    } catch (err) {
       if (ignoreRef.current) return;
-      setErreur("Erreur de connexion au serveur. Réessayez.");
+      setErreur(err.message || "Erreur de connexion au serveur. Réessayez.");
       setTirageEnCours(false);
     }
   }
