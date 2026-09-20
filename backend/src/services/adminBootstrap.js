@@ -5,9 +5,6 @@ const logger = require("../logger");
 const prisma = new PrismaClient();
 
 async function assurerCompteAdmin() {
-  const dejaAdmin = await prisma.user.findFirst({ where: { role: "ADMIN" } });
-  if (dejaAdmin) return;
-
   const email = String(process.env.ADMIN_EMAIL || "admin@thetiptop.fr")
     .trim()
     .toLowerCase();
