@@ -107,6 +107,69 @@ describe('Profil', () => {
     expect(screen.getByText(/1 lot à retirer en boutique/i)).toBeInTheDocument();
   });
 
+  it('affiche les participations même si gains est un tableau vide', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        user: {
+          firstName: 'Jean',
+          lastName: 'Dupont',
+          email: 'jean@example.com',
+        },
+        gains: [],
+        participations: [
+          {
+            id: 'gain-1',
+            prize: 'signature',
+            code: 'SIGNATU123',
+            claimed: false,
+            playedAt: '2026-09-03T10:00:00.000Z',
+          },
+        ],
+      }),
+    });
+
+    renderProfil();
+
+    expect(await screen.findByText('Boîte de thé signature 100g')).toBeInTheDocument();
+    expect(screen.getByText('Code : SIGNATU123')).toBeInTheDocument();
+  });
+
+  it('récupère les gains via /tickets/my-gains si le profil est vide', async () => {
+    fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          user: {
+            firstName: 'Jean',
+            lastName: 'Dupont',
+            email: 'jean@example.com',
+          },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [
+          {
+            id: 'gain-raw',
+            ticketCode: 'RAWCODE001',
+            claimed: false,
+            wonAt: '2026-09-04T10:00:00.000Z',
+            lot: { name: 'coffret39' },
+          },
+        ],
+      });
+
+    renderProfil();
+
+    expect(await screen.findByText('Coffret découverte (39€)')).toBeInTheDocument();
+    expect(screen.getByText('Code : RAWCODE001')).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining('/tickets/my-gains'),
+      expect.any(Object),
+    );
+  });
+
   it('affiche une erreur réseau', async () => {
     fetch.mockRejectedValueOnce(new Error('offline'));
 

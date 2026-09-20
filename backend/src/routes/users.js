@@ -16,9 +16,7 @@ const auth =
       authModule.authenticate ||
       authModule.verifyToken;
 
-function identifiantUtilisateur(req) {
-  return req.user?.id || req.userId || req.user?.userId;
-}
+const { identifiantUtilisateur } = require("../utils/identite");
 
 function formaterParticipations(gains) {
   return gains.map((g) => ({
@@ -51,7 +49,6 @@ router.get("/me", auth, async (req, res) => {
     const gains = await prisma.gain.findMany({
       where: { userId: userId },
       include: {
-        ticket: true,
         lot: true,
       },
       orderBy: { wonAt: "desc" },

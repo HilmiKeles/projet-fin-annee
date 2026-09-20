@@ -16,7 +16,7 @@ const prisma = new PrismaClient();
 
 function reponseAuth(res, user) {
   const token = jwt.sign(
-    { id: user.id, role: user.role },
+    { id: user.id, userId: user.id, role: user.role },
     process.env.JWT_SECRET || "dev-secret-change-me",
     { expiresIn: "24h" },
   );
