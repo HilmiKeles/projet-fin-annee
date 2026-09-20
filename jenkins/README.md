@@ -8,11 +8,14 @@ Ce dossier decrit l'integration de Jenkins au projet Thé Tip Top.
 - `docker-compose.yml` : service Jenkins (port 8080, agent :50000)
 - `../Jenkinsfile` : pipeline declaratif versionne a la racine du repo
 
+## Accès
+- Production : https://jenkins.dsp5-archi-024a-g3.fr/
+- Local : http://localhost:8080
+
 ## Demarrage en local
 ```bash
 cd jenkins
 docker compose up -d --build
-# Interface : http://localhost:8080
 ```
 Recuper du mot de passe initial (premier demarrage) :
 ```bash
@@ -24,7 +27,7 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 2. Le lier a ce depot GitHub (URL `https://github.com/HilmiKeles/projet-fin-annee`)
 3. Script Path : `Jenkinsfile`
 4. Activer le webhook GitHub (Settings > Webhooks du repo) pointant vers
-   `http://<hote>/github-webhook/`
+   `https://jenkins.dsp5-archi-024a-g3.fr/github-webhook/`
 
 ## Securite / notes
 - Le socket Docker de l'hote est monte pour permettre les `docker build`

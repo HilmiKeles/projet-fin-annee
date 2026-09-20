@@ -2,7 +2,26 @@
 	email {$ACME_EMAIL:admin@dsp5-archi-024a-g3.fr}
 }
 
-{$SITE_ADDRESS} {
+{$SITE_ADDRESS:dsp5-archi-024a-g3.fr} {
 	encode gzip
 	reverse_proxy frontend:80
+}
+
+jenkins.dsp5-archi-024a-g3.fr {
+	encode gzip
+	reverse_proxy jenkins:8080 {
+		flush_interval -1
+	}
+}
+
+prometheus.dsp5-archi-024a-g3.fr {
+	encode gzip
+	reverse_proxy prometheus:9090
+}
+
+kibana.dsp5-archi-024a-g3.fr {
+	encode gzip
+	reverse_proxy kibana:5601 {
+		flush_interval -1
+	}
 }

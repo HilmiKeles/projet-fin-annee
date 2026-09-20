@@ -51,8 +51,10 @@ Variable Description
 DB_PASSWORD Mot de passe PostgreSQL
 JWT_SECRET Clé secrète JWT
  Mise en ligne
-• Site : http://dsp5-archi-024a-g3.fr/
-• Workflow : http://wk-archi-oXXa-…-GX.fr (jenkins.wk-…, grafana.wk-…)
+• Site : https://dsp5-archi-024a-g3.fr/
+• Jenkins : https://jenkins.dsp5-archi-024a-g3.fr/
+• Prometheus : https://prometheus.dsp5-archi-024a-g3.fr/
+• Kibana : https://kibana.dsp5-archi-024a-g3.fr/
  Équipe
 Membre Rôle
 - Chef de projet

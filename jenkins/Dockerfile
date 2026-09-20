@@ -16,4 +16,7 @@ RUN groupadd -f docker && usermod -aG docker jenkins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
+# URL publique Jenkins (sous-domaine Caddy)
+COPY init.groovy.d/ /usr/share/jenkins/ref/init.groovy.d/
+
 USER jenkins
