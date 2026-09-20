@@ -89,15 +89,26 @@ export default function Header() {
               >
                 Mon profil
               </NavLink>
-              {(estAdmin(user) || estEmploye(user)) && (
+              {estAdmin(user) && (
                 <NavLink
-                  to={estAdmin(user) ? "/admin" : "/employe"}
+                  to="/admin"
                   onClick={fermerMenu}
                   className={({ isActive }) =>
                     isActive ? "nav-link active" : "nav-link"
                   }
                 >
-                  {estAdmin(user) ? "Administration" : "Espace employé"}
+                  Administration
+                </NavLink>
+              )}
+              {(estAdmin(user) || estEmploye(user)) && (
+                <NavLink
+                  to="/employe"
+                  onClick={fermerMenu}
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                >
+                  Espace employé
                 </NavLink>
               )}
               <button onClick={handleLogout} className="nav-link nav-logout">

@@ -36,6 +36,8 @@ docker exec -i thetiptop_db psql -U thetiptop -d thetiptop -c \
 
 Il se connecte ensuite sur `/admin` avec **le même mot de passe** que son inscription.
 
+Pour un compte **boutique** (voir les gagnants, marquer un lot remis), ouvre `/admin` puis **Créer un employé boutique**. Détail : [compte employé](compte-employe.md).
+
 Vérifier que la ligne a bien été mise à jour :
 
 ```bash

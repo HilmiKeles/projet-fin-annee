@@ -1,7 +1,10 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const { PrismaClient } = require('@prisma/client');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 const { genererCodeTicket } = require('../utils/ticketCode');
+const { validatePassword } = require('../utils/password');
+const { emailValide, normaliserEmail } = require('../services/newsletter');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -45,10 +48,47 @@ router.get('/export', authMiddleware, requireRole('ADMIN'), async (req, res) => 
   res.json({ clients, abonnesNewsletter });
 });
 
+router.get('/gains', authMiddleware, requireRole('EMPLOYEE', 'ADMIN'), async (req, res) => {
+  try {
+    const gains = await prisma.gain.findMany({
+      include: {
+        lot: { select: { name: true } },
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { wonAt: 'desc' },
+    });
+
+    res.json({
+      gains: gains.map((gain) => ({
+        id: gain.id,
+        prize: gain.lot?.name || 'Lot',
+        code: gain.ticketCode,
+        claimed: gain.claimed,
+        wonAt: gain.wonAt,
+        firstName: gain.user?.firstName || 'Cher',
+        lastName: gain.user?.lastName || 'Client',
+        email: gain.user?.email || '',
+      })),
+    });
+  } catch (erreur) {
+    console.error('Liste des gains :', erreur);
+    res.status(500).json({ error: 'Impossible de charger les gagnants.' });
+  }
+});
+
 router.get('/gain/:code', authMiddleware, requireRole('EMPLOYEE', 'ADMIN'), async (req, res) => {
   const gain = await prisma.gain.findUnique({
     where: { ticketCode: req.params.code },
-    include: { lot: true, user: { select: { email: true } } }
+    include: {
+      lot: true,
+      user: { select: { email: true, firstName: true, lastName: true } },
+    },
   });
   if (!gain) return res.status(404).json({ error: 'Aucun gain pour ce ticket' });
   res.json(gain);
@@ -60,6 +100,95 @@ router.patch('/gain/:id/claim', authMiddleware, requireRole('EMPLOYEE', 'ADMIN')
     data: { claimed: true }
   });
   res.json({ message: 'Gain marqué comme remis', gain });
+});
+
+function resumeEmploye(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    createdAt: user.createdAt,
+  };
+}
+
+router.get('/employes', authMiddleware, requireRole('ADMIN'), async (req, res) => {
+  const employes = await prisma.user.findMany({
+    where: { role: 'EMPLOYEE' },
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      createdAt: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+  res.json({ employes });
+});
+
+router.post('/employes', authMiddleware, requireRole('ADMIN'), async (req, res) => {
+  const email = normaliserEmail(req.body.email);
+  const password = req.body.password;
+  const firstName = String(req.body.firstName || '').trim() || 'Employe';
+  const lastName = String(req.body.lastName || '').trim() || 'Boutique';
+
+  if (!emailValide(email)) {
+    return res.status(400).json({ error: 'Adresse e-mail invalide.' });
+  }
+
+  try {
+    const existant = await prisma.user.findUnique({ where: { email } });
+
+    if (existant?.role === 'ADMIN') {
+      return res.status(400).json({
+        error: 'Impossible de transformer un administrateur en employé.',
+      });
+    }
+
+    if (!existant && !password) {
+      return res.status(400).json({
+        error: 'Indiquez un mot de passe pour créer ce compte.',
+      });
+    }
+
+    const donnees = {
+      role: 'EMPLOYEE',
+    };
+
+    if (password) {
+      const erreurMotDePasse = validatePassword(password);
+      if (erreurMotDePasse) {
+        return res.status(400).json({ error: erreurMotDePasse });
+      }
+      donnees.password = await bcrypt.hash(password, 10);
+    }
+
+    if (!existant) {
+      donnees.firstName = firstName;
+      donnees.lastName = lastName;
+    }
+
+    const user = existant
+      ? await prisma.user.update({
+          where: { email },
+          data: donnees,
+        })
+      : await prisma.user.create({
+          data: { email, ...donnees },
+        });
+
+    res.status(existant ? 200 : 201).json({
+      employe: resumeEmploye(user),
+      cree: !existant,
+      message: existant
+        ? `${user.email} peut maintenant se connecter sur /employe.`
+        : `Compte créé : ${user.email}. Connexion sur /employe.`,
+    });
+  } catch (erreur) {
+    console.error('Création employé :', erreur);
+    res.status(500).json({ error: 'Impossible de créer le compte employé.' });
+  }
 });
 
 router.post('/tickets', authMiddleware, requireRole('ADMIN'), async (req, res) => {
