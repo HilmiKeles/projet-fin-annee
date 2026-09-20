@@ -175,6 +175,111 @@
   transform: translateY(-2px);
 }
 
+.btn-primary:disabled,
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.account-form .form-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.account-form label {
+  font-weight: 600;
+  color: #1b4332;
+  font-size: 0.92rem;
+}
+
+.account-form input[type="password"] {
+  padding: 0.75rem 1rem;
+  border: 2px solid #d8e6dc;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.account-form input[type="password"]:focus {
+  outline: none;
+  border-color: #2d6a4f;
+}
+
+.account-form .champ-aide {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #777;
+}
+
+.account-form .btn-primary,
+.account-form .btn-danger {
+  align-self: flex-start;
+  margin-top: 0.35rem;
+}
+
+.account-succes {
+  background: #d4edda;
+  color: #155724;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.account-gains-alerte {
+  background: #fff3cd;
+  color: #856404;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.account-danger {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  border: 1px solid #f5c2c7;
+  background: #fff8f8;
+  border-radius: 12px;
+}
+
+.account-danger h2 {
+  color: #b3261e;
+  margin: 0 0 0.5rem;
+}
+
+.account-danger > p {
+  color: #666;
+  margin: 0 0 1rem;
+}
+
+.account-form .erreur {
+  margin-bottom: 0;
+}
+
+.btn-danger {
+  background: #b3261e;
+  color: white;
+  border: none;
+  padding: 0.9rem 1.8rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #8c1d16;
+  transform: translateY(-2px);
+}
+
 .erreur {
   background: #fdecea;
   color: #b3261e;

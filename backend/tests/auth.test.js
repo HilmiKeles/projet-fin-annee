@@ -43,10 +43,26 @@ describe("POST /api/auth/register", () => {
     expect(data.newsletter).toBe(true);
     expect(data.password).not.toBe("Password1!");
     expect(await bcrypt.compare("Password1!", data.password)).toBe(true);
+    expect(prisma.newsletterSubscriber.upsert).toHaveBeenCalled();
+  });
+
+  it("refuse une adresse e-mail invalide", async () => {
+    const res = await request(app).post("/api/auth/register").send({
+      email: "pas-un-email",
+      password: "Password1!",
+      firstName: "Jean",
+      lastName: "Dupont",
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/e-mail/i);
+    expect(prisma.user.create).not.toHaveBeenCalled();
   });
 
   it("renvoie une erreur si l'email existe déjà", async () => {
-    prisma.user.create.mockRejectedValue(new Error("Unique constraint"));
+    const conflit = new Error("Unique constraint");
+    conflit.code = "P2002";
+    prisma.user.create.mockRejectedValue(conflit);
 
     const res = await request(app).post("/api/auth/register").send({
       email: "jean@example.com",

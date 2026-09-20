@@ -127,7 +127,9 @@ export default function Inscription() {
       const data = await reponse.json();
 
       if (!reponse.ok) {
-        throw new Error(data.message || "Erreur lors de l'inscription");
+        throw new Error(
+          data.error || data.message || "Erreur lors de l'inscription",
+        );
       }
 
       if (data.token) {

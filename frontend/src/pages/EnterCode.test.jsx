@@ -22,6 +22,20 @@ describe('EnterCode', () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Votre code')).toBeInTheDocument();
     expect(screen.getByText('0/10')).toBeInTheDocument();
+    expect(screen.getByText(/pas encore inscrit/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /créez votre compte/i }),
+    ).toHaveAttribute('href', '/inscription');
+  });
+
+  it('n’invite pas à s’inscrire si l’utilisateur est connecté', () => {
+    sessionStorage.setItem('token', 'jwt-test');
+    renderEnterCode();
+
+    expect(screen.queryByText(/pas encore inscrit/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /votre profil/i }),
+    ).toHaveAttribute('href', '/profil');
   });
 
   it('normalise le code en majuscules alphanumériques', async () => {
@@ -49,6 +63,7 @@ describe('EnterCode', () => {
 
   it('redirige vers le résultat si le ticket est valide', async () => {
     const user = userEvent.setup();
+    sessionStorage.setItem('token', 'jwt-test');
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ prize: 'infuseur' }),
@@ -72,6 +87,7 @@ describe('EnterCode', () => {
 
   it('affiche l’erreur renvoyée par l’API', async () => {
     const user = userEvent.setup();
+    sessionStorage.setItem('token', 'jwt-test');
     fetch.mockResolvedValueOnce({
       ok: false,
       json: async () => ({ message: 'Ticket déjà utilisé' }),
@@ -88,6 +104,7 @@ describe('EnterCode', () => {
 
   it('affiche une erreur si le serveur est injoignable', async () => {
     const user = userEvent.setup();
+    sessionStorage.setItem('token', 'jwt-test');
     fetch.mockRejectedValueOnce(new Error('offline'));
 
     renderEnterCode();

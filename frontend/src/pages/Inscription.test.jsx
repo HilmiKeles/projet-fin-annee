@@ -129,6 +129,24 @@ describe('Inscription', () => {
     expect(corps.email).toBe('jean@example.com');
   });
 
+  it('affiche l’erreur renvoyée par l’API', async () => {
+    const user = userEvent.setup();
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Email déjà utilisé' }),
+    });
+
+    renderInscription();
+    await remplirFormulaire(user);
+    await user.click(
+      screen.getByRole('button', { name: /créer mon compte et participer/i }),
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Email déjà utilisé',
+    );
+  });
+
   it('redirige vers la connexion si le compte est créé sans token', async () => {
     const user = userEvent.setup();
     fetch.mockResolvedValueOnce({
