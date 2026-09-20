@@ -2,6 +2,8 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const authModule = require("../middleware/auth");
 
+const { identifiantUtilisateur } = require("../utils/identite");
+
 const router = express.Router();
 const prisma = new PrismaClient();
 
@@ -18,7 +20,7 @@ router.post("/validate", auth, async (req, res) => {
   try {
     const { code } = req.body;
 
-    const userId = req.user?.id || req.userId || req.user?.userId;
+    const userId = identifiantUtilisateur(req);
     if (!userId) {
       return res.status(401).json({ error: "Utilisateur non authentifié" });
     }
@@ -66,7 +68,7 @@ router.post("/validate", auth, async (req, res) => {
 
 router.get("/my-gains", auth, async (req, res) => {
   try {
-    const userId = req.user?.id || req.userId || req.user?.userId;
+    const userId = identifiantUtilisateur(req);
     const gains = await prisma.gain.findMany({
       where: { userId: userId },
       include: { lot: true },

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL, enTetesAuth, viderSession } from "../utils/auth";
+import { extraireParticipations } from "../utils/gains";
 import "../styles/Profil.css";
 
 const GAINS = {
@@ -77,7 +78,25 @@ export default function Account() {
           setErreur("Vous devez être connecté pour voir cette page.");
         } else {
           setUtilisateur(data.user);
-          setParticipations(data.gains || data.participations || []);
+          let liste = extraireParticipations(data);
+          const aucuneListeFournie =
+            !Array.isArray(data.participations) && !Array.isArray(data.gains);
+
+          if (liste.length === 0 && aucuneListeFournie) {
+            const reponseGains = await fetch(`${API_URL}/tickets/my-gains`, {
+              headers: enTetesAuth(),
+            });
+            if (reponseGains.ok) {
+              const brut = await reponseGains.json();
+              liste = extraireParticipations({
+                gains: Array.isArray(brut)
+                  ? brut
+                  : brut.gains || brut.participations,
+              });
+            }
+          }
+
+          setParticipations(liste);
           setNewsletter(Boolean(data.user?.newsletter));
         }
       } catch {
@@ -316,7 +335,9 @@ export default function Account() {
                       <span className="gain-code">Code : {p.code}</span>
                       <span className="gain-date">
                         Joué le{" "}
-                        {new Date(p.playedAt).toLocaleDateString("fr-FR")}
+                        {p.playedAt
+                          ? new Date(p.playedAt).toLocaleDateString("fr-FR")
+                          : "—"}
                       </span>
                     </div>
                     <span
