@@ -2,7 +2,9 @@ const prisma = {
   user: {
     create: jest.fn(),
     findUnique: jest.fn(),
+    findFirst: jest.fn(),
     findMany: jest.fn(),
+    upsert: jest.fn(),
     update: jest.fn(),
     updateMany: jest.fn(),
     delete: jest.fn(),
