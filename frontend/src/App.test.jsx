@@ -33,6 +33,14 @@ describe('App — routage', () => {
     ).toBeInTheDocument();
   });
 
+  it('affiche l’espace employé sur /employe', () => {
+    visiter('/employe');
+
+    expect(
+      screen.getByRole('heading', { name: 'Espace employé' }),
+    ).toBeInTheDocument();
+  });
+
   it('affiche la page contact sur /contact', () => {
     visiter('/contact');
 

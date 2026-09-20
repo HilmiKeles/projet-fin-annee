@@ -70,6 +70,65 @@ describe("GET /api/admin/export", () => {
   });
 });
 
+describe("GET /api/admin/gains", () => {
+  it("refuse un client", async () => {
+    const res = await request(app)
+      .get("/api/admin/gains")
+      .set(authHeader({ id: "user-1", role: "CLIENT" }));
+
+    expect(res.status).toBe(403);
+    expect(prisma.gain.findMany).not.toHaveBeenCalled();
+  });
+
+  it("liste les gagnants pour un employé", async () => {
+    prisma.gain.findMany.mockResolvedValue([
+      {
+        id: "gain-1",
+        ticketCode: "ABCDEFGHIJ",
+        claimed: false,
+        wonAt: "2026-03-15T10:00:00.000Z",
+        lot: { name: "infuseur" },
+        user: {
+          firstName: "Marie",
+          lastName: "Martin",
+          email: "marie@example.com",
+        },
+      },
+    ]);
+
+    const res = await request(app)
+      .get("/api/admin/gains")
+      .set(authHeader({ id: "emp-1", role: "EMPLOYEE" }));
+
+    expect(res.status).toBe(200);
+    expect(res.body.gains).toEqual([
+      {
+        id: "gain-1",
+        prize: "infuseur",
+        code: "ABCDEFGHIJ",
+        claimed: false,
+        wonAt: "2026-03-15T10:00:00.000Z",
+        firstName: "Marie",
+        lastName: "Martin",
+        email: "marie@example.com",
+      },
+    ]);
+    expect(prisma.gain.findMany).toHaveBeenCalledWith({
+      include: {
+        lot: { select: { name: true } },
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { wonAt: "desc" },
+    });
+  });
+});
+
 describe("GET /api/admin/gain/:code", () => {
   it("autorise un employé à consulter un gain", async () => {
     const gain = {
@@ -115,6 +174,154 @@ describe("PATCH /api/admin/gain/:id/claim", () => {
     expect(prisma.gain.update).toHaveBeenCalledWith({
       where: { id: "gain-1" },
       data: { claimed: true },
+    });
+  });
+});
+
+describe("GET /api/admin/employes", () => {
+  it("refuse un employé", async () => {
+    const res = await request(app)
+      .get("/api/admin/employes")
+      .set(authHeader({ id: "emp-1", role: "EMPLOYEE" }));
+
+    expect(res.status).toBe(403);
+  });
+
+  it("liste les employés pour un admin", async () => {
+    const employes = [
+      {
+        id: "emp-1",
+        email: "employe@example.com",
+        firstName: "Employe",
+        lastName: "Boutique",
+        createdAt: "2026-09-20T00:00:00.000Z",
+      },
+    ];
+    prisma.user.findMany.mockResolvedValue(employes);
+
+    const res = await request(app)
+      .get("/api/admin/employes")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }));
+
+    expect(res.status).toBe(200);
+    expect(res.body.employes).toEqual(employes);
+    expect(prisma.user.findMany).toHaveBeenCalledWith({
+      where: { role: "EMPLOYEE" },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  });
+});
+
+describe("POST /api/admin/employes", () => {
+  it("refuse un client", async () => {
+    const res = await request(app)
+      .post("/api/admin/employes")
+      .set(authHeader({ id: "user-1", role: "CLIENT" }))
+      .send({ email: "employe@example.com", password: "MotDePasse1!" });
+
+    expect(res.status).toBe(403);
+    expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+
+  it("refuse un e-mail invalide", async () => {
+    const res = await request(app)
+      .post("/api/admin/employes")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ email: "pas-un-email", password: "MotDePasse1!" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/e-mail/i);
+  });
+
+  it("refuse un mot de passe trop faible", async () => {
+    prisma.user.findUnique.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post("/api/admin/employes")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ email: "employe@example.com", password: "faible" });
+
+    expect(res.status).toBe(400);
+    expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+
+  it("refuse de transformer un administrateur", async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      email: "admin@thetiptop.fr",
+      role: "ADMIN",
+    });
+
+    const res = await request(app)
+      .post("/api/admin/employes")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ email: "admin@thetiptop.fr", password: "MotDePasse1!" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/administrateur/i);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it("crée un nouvel employé", async () => {
+    prisma.user.findUnique.mockResolvedValue(null);
+    prisma.user.create.mockResolvedValue({
+      id: "emp-1",
+      email: "employe@example.com",
+      firstName: "Employe",
+      lastName: "Boutique",
+      createdAt: "2026-09-20T00:00:00.000Z",
+      role: "EMPLOYEE",
+    });
+
+    const res = await request(app)
+      .post("/api/admin/employes")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ email: "employe@example.com", password: "MotDePasse1!" });
+
+    expect(res.status).toBe(201);
+    expect(res.body.cree).toBe(true);
+    expect(res.body.employe.email).toBe("employe@example.com");
+    expect(prisma.user.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        email: "employe@example.com",
+        role: "EMPLOYEE",
+        firstName: "Employe",
+        lastName: "Boutique",
+      }),
+    });
+  });
+
+  it("promeut un client existant sans changer son mot de passe", async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      id: "u1",
+      email: "marie@example.com",
+      role: "CLIENT",
+    });
+    prisma.user.update.mockResolvedValue({
+      id: "u1",
+      email: "marie@example.com",
+      firstName: "Marie",
+      lastName: "Martin",
+      createdAt: "2026-01-01T00:00:00.000Z",
+      role: "EMPLOYEE",
+    });
+
+    const res = await request(app)
+      .post("/api/admin/employes")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ email: "marie@example.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.cree).toBe(false);
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { email: "marie@example.com" },
+      data: { role: "EMPLOYEE" },
     });
   });
 });

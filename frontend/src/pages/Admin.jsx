@@ -57,17 +57,40 @@ export default function Admin() {
   const [erreurCodes, setErreurCodes] = useState("");
   const [succesCodes, setSuccesCodes] = useState("");
   const [chargementCodes, setChargementCodes] = useState(false);
+  const [employes, setEmployes] = useState([]);
+  const [emailEmploye, setEmailEmploye] = useState("");
+  const [motDePasseEmploye, setMotDePasseEmploye] = useState("");
+  const [erreurEmploye, setErreurEmploye] = useState("");
+  const [succesEmploye, setSuccesEmploye] = useState("");
+  const [chargementEmploye, setChargementEmploye] = useState(false);
+  const [promotionEmail, setPromotionEmail] = useState("");
+
+  function enregistrerEmployeDansListes(employe) {
+    if (!employe?.email) return;
+    setEmployes((liste) => [
+      employe,
+      ...liste.filter((item) => item.email !== employe.email),
+    ]);
+    setClients((liste) =>
+      liste.filter((client) => client.email !== employe.email),
+    );
+  }
 
   async function chargerTableauDeBord(token) {
     setErreurData("");
 
     try {
-      const [reponseStats, reponseExport] = await Promise.all([
+      const [reponseStats, reponseExport, reponseEmployes] = await Promise.all([
         fetch(`${API_URL}/admin/stats`, { headers: enTetesAuth(token) }),
         fetch(`${API_URL}/admin/export`, { headers: enTetesAuth(token) }),
+        fetch(`${API_URL}/admin/employes`, { headers: enTetesAuth(token) }),
       ]);
 
-      if (reponseStats.status === 401 || reponseExport.status === 401) {
+      if (
+        reponseStats.status === 401 ||
+        reponseExport.status === 401 ||
+        reponseEmployes.status === 401
+      ) {
         viderSession();
         setEtat("login");
         return;
@@ -80,6 +103,7 @@ export default function Admin() {
 
       const dataStats = await reponseStats.json().catch(() => ({}));
       const dataExport = await reponseExport.json().catch(() => ({}));
+      const dataEmployes = await reponseEmployes.json().catch(() => ({}));
 
       if (!reponseStats.ok || !reponseExport.ok) {
         throw new Error(
@@ -92,6 +116,7 @@ export default function Admin() {
       setStats(dataStats);
       setClients(dataExport.clients || []);
       setAbonnes(dataExport.abonnesNewsletter || []);
+      setEmployes(dataEmployes.employes || []);
       setEtat("ok");
     } catch (erreur) {
       setErreurData(erreur.message || "Erreur de connexion au serveur.");
@@ -247,6 +272,66 @@ export default function Admin() {
     setSuccesCodes("Codes copiés dans le presse-papiers.");
   }
 
+  async function creerOuPromouvoirEmploye(corps) {
+    const reponse = await fetch(`${API_URL}/admin/employes`, {
+      method: "POST",
+      headers: enTetesAuth(),
+      body: JSON.stringify(corps),
+    });
+    const data = await reponse.json().catch(() => ({}));
+
+    if (reponse.status === 401) {
+      viderSession();
+      setEtat("login");
+      return null;
+    }
+
+    if (!reponse.ok) {
+      throw new Error(data.error || "Impossible de créer l'employé.");
+    }
+
+    enregistrerEmployeDansListes(data.employe);
+    return data;
+  }
+
+  async function handleCreationEmploye(event) {
+    event.preventDefault();
+    setErreurEmploye("");
+    setSuccesEmploye("");
+    setChargementEmploye(true);
+
+    try {
+      const data = await creerOuPromouvoirEmploye({
+        email: emailEmploye.trim().toLowerCase(),
+        password: motDePasseEmploye,
+      });
+      if (!data) return;
+      setSuccesEmploye(data.message);
+      setEmailEmploye("");
+      setMotDePasseEmploye("");
+    } catch (erreur) {
+      setErreurEmploye(erreur.message || "Impossible de créer l'employé.");
+    } finally {
+      setChargementEmploye(false);
+    }
+  }
+
+  async function promouvoirClient(email) {
+    setErreurEmploye("");
+    setSuccesEmploye("");
+    setPromotionEmail(email);
+
+    try {
+      const data = await creerOuPromouvoirEmploye({ email });
+      if (!data) return;
+      setSuccesEmploye(data.message);
+    } catch (erreur) {
+      setErreurEmploye(erreur.message || "Impossible de promouvoir ce compte.");
+    } finally {
+      setPromotionEmail("");
+    }
+  }
+
   if (etat === "chargement") {
     return (
       <main className="admin">
@@ -330,7 +415,8 @@ export default function Admin() {
           <p className="admin-kicker">Back-office</p>
           <h1>Tableau de bord</h1>
           <p>
-            Statistiques du jeu-concours et export des abonnés newsletter.
+            Statistiques du jeu-concours, création d'employés boutique et export
+            newsletter.
           </p>
         </div>
         <button
@@ -369,6 +455,67 @@ export default function Admin() {
           <p>Abonnés newsletter</p>
           <strong>{abonnes.length}</strong>
         </article>
+      </section>
+
+      <section className="admin-codes" aria-labelledby="admin-employes-titre">
+        <h2 id="admin-employes-titre">Créer un employé boutique</h2>
+        <p>
+          Le collègue se connecte ensuite sur « Espace employé » avec cet e-mail
+          et ce mot de passe. Mot de passe : 8 caractères min., une majuscule,
+          une minuscule et un caractère spécial.
+        </p>
+
+        {erreurEmploye && (
+          <p className="admin-alerte" role="alert">
+            {erreurEmploye}
+          </p>
+        )}
+        {succesEmploye && (
+          <p className="admin-succes" role="status">
+            {succesEmploye}
+          </p>
+        )}
+
+        <form className="admin-employe-form" onSubmit={handleCreationEmploye}>
+          <div>
+            <label htmlFor="admin-employe-email">E-mail</label>
+            <input
+              id="admin-employe-email"
+              type="email"
+              value={emailEmploye}
+              onChange={(event) => setEmailEmploye(event.target.value)}
+              required
+              autoComplete="off"
+            />
+          </div>
+          <div>
+            <label htmlFor="admin-employe-password">Mot de passe</label>
+            <input
+              id="admin-employe-password"
+              type="password"
+              value={motDePasseEmploye}
+              onChange={(event) => setMotDePasseEmploye(event.target.value)}
+              required
+              autoComplete="new-password"
+            />
+          </div>
+          <button type="submit" className="btn-primary" disabled={chargementEmploye}>
+            {chargementEmploye ? "Création..." : "Créer l'employé"}
+          </button>
+        </form>
+
+        {employes.length > 0 && (
+          <div className="admin-codes-resultat">
+            <strong>Employés actuels ({employes.length})</strong>
+            <ul className="admin-employes-liste">
+              {employes.map((employe) => (
+                <li key={employe.id || employe.email}>
+                  {employe.firstName} {employe.lastName} — {employe.email}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       <section className="admin-codes" aria-labelledby="admin-codes-titre">
@@ -501,6 +648,7 @@ export default function Admin() {
                     <th>E-mail</th>
                     <th>Newsletter</th>
                     <th>Inscrit le</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -516,6 +664,18 @@ export default function Admin() {
                         </span>
                       </td>
                       <td>{formaterDate(client.createdAt)}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn-secondary admin-table-action"
+                          disabled={promotionEmail === client.email}
+                          onClick={() => promouvoirClient(client.email)}
+                        >
+                          {promotionEmail === client.email
+                            ? "…"
+                            : "Rendre employé"}
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
