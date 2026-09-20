@@ -16,12 +16,15 @@ const prisma = {
     updateMany: jest.fn(),
   },
   ticket: {
+    create: jest.fn(),
     findFirst: jest.fn(),
     count: jest.fn(),
     update: jest.fn(),
   },
   lot: {
+    findFirst: jest.fn(),
     findMany: jest.fn(),
+    upsert: jest.fn(),
     update: jest.fn(),
   },
   gain: {
