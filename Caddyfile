@@ -1,0 +1,8 @@
+{
+	email {$ACME_EMAIL:admin@dsp5-archi-024a-g3.fr}
+}
+
+{$SITE_ADDRESS} {
+	encode gzip
+	reverse_proxy frontend:80
+}

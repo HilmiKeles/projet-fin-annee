@@ -36,10 +36,30 @@ services:
   frontend:
     build: ./frontend
     container_name: thetiptop_frontend
+    restart: unless-stopped
     depends_on:
       - backend
+    # Pas de publication 80/443 : Caddy termine le TLS et proxy vers ce service.
+    expose:
+      - "80"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: thetiptop_caddy
+    restart: unless-stopped
+    depends_on:
+      - frontend
     ports:
       - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-dsp5-archi-024a-g3.fr}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@dsp5-archi-024a-g3.fr}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
 
   registry:
     image: registry:2
@@ -133,6 +153,8 @@ volumes:
   prometheus_data:
   grafana_data:
   elastic_data:
+  caddy_data:
+  caddy_config:
 
 networks:
   jenkins-net:
