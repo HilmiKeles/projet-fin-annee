@@ -266,10 +266,7 @@ export default function Admin() {
           </form>
 
           <p className="admin-aide">
-            Compte initial : <strong>admin@thetiptop.fr</strong> /{" "}
-            <strong>Admin123!</strong>
-            {" — "}
-            <Link to="/connexion">page de connexion générale</Link>
+            <Link to="/connexion">Page de connexion générale</Link>
           </p>
         </section>
       </main>
