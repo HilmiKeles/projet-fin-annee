@@ -1,24 +1,33 @@
+# Usage isolé (dev). En production, Jenkins est dans ../docker-compose.yml :
+# ne pas lancer les deux en même temps (même container_name).
 services:
   jenkins:
     build: ./
     container_name: jenkins
     restart: unless-stopped
-    ports:
-      - "8080:8080"
-      - "50000:50000"
+    # Accès public via Caddy (https://jenkins.dsp5-archi-024a-g3.fr/).
+    # 8080 n'est plus publié sur l'hôte (conflit fréquent → conteneur down → 502).
+    expose:
+      - "8080"
+      - "50000"
+    # GID de /var/run/docker.sock sur l'hôte (stat -c '%g' /var/run/docker.sock).
+    # Sur le VPS actuel : 109. Sans ça, jenkins est dans docker(102) et
+    # reçoit "permission denied" sur le daemon.
     group_add:
-      - "0"
+      - "${DOCKER_GID:-109}"
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - TZ=Europe/Paris
+      - JAVA_OPTS=-Xms256m -Xmx512m
     networks:
       - ci
       - jenkins-net
 
 volumes:
   jenkins_home:
+    name: jenkins_jenkins_home
 
 networks:
   ci:

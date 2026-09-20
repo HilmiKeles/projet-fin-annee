@@ -83,6 +83,34 @@ services:
     networks:
       - jenkins-net
 
+  # Même réseau Docker que Caddy (default + jenkins-net).
+  # Pas de publication 8080 sur l'hôte : Caddy proxy vers jenkins:8080.
+  jenkins:
+    build: ./jenkins
+    container_name: jenkins
+    restart: unless-stopped
+    expose:
+      - "8080"
+      - "50000"
+    # GID de /var/run/docker.sock sur l'hôte (stat -c '%g' /var/run/docker.sock).
+    group_add:
+      - "${DOCKER_GID:-109}"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=Europe/Paris
+      - JAVA_OPTS=-Xms256m -Xmx512m
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 15
+      start_period: 180s
+    networks:
+      - default
+      - jenkins-net
+
   # ─── MONITORING ───────────────────────────────
   prometheus:
     image: prom/prometheus:latest
@@ -169,6 +197,8 @@ volumes:
   elastic_data:
   caddy_data:
   caddy_config:
+  jenkins_home:
+    name: jenkins_jenkins_home
 
 networks:
   jenkins-net:

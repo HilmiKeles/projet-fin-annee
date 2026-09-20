@@ -10,14 +10,23 @@ Ce dossier decrit l'integration de Jenkins au projet Thé Tip Top.
 
 ## Accès
 - Production : https://jenkins.dsp5-archi-024a-g3.fr/
-- Local : http://localhost:8080
+- Caddy reverse-proxifie le conteneur `jenkins:8080` (pas d'exposition du port 8080 sur l'hôte)
 
-## Demarrage en local
+## Démarrage (production, à la racine du repo)
+Jenkins est déclaré dans le `docker-compose.yml` racine, sur le même réseau que Caddy.
+Ne pas lancer aussi `jenkins/docker-compose.yml` en parallèle (même `container_name`).
+
 ```bash
-cd jenkins
-docker compose up -d --build
+# Si un ancien conteneur Jenkins tourne encore (stack du dossier jenkins/)
+cd jenkins && docker compose down && cd ..
+
+docker compose up -d --build jenkins caddy
 ```
-Recuper du mot de passe initial (premier demarrage) :
+
+Une HTTP 502 sur le sous-domaine signifie que Caddy n'atteint pas Jenkins
+(conteneur arrêté, mauvais réseau, ou port 8080 déjà pris sur l'hôte).
+
+Mot de passe initial (premier démarrage) :
 ```bash
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
@@ -32,5 +41,28 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ## Securite / notes
 - Le socket Docker de l'hote est monte pour permettre les `docker build`
   dans le pipeline : c'est puissant, a securiser cote infra (acces reserve).
+- Le user `jenkins` n'est pas root. L'entrypoint aligne automatiquement son
+  groupe sur le GID de `/var/run/docker.sock` (sinon : `permission denied`
+  sur le daemon Docker pendant `Install & Lint`).
 - Toute modification du workflow se fait en editant `Jenkinsfile` a la racine
   (conformement a l'exigence : pas besoin d'acces a l'interface Jenkins).
+
+### Erreur `permission denied ... docker.sock`
+Reconstruire l'image Jenkins pour prendre l'entrypoint, puis relancer :
+
+```bash
+# Production (racine du repo)
+docker compose up -d --build jenkins
+
+# Ou stack isolee
+cd jenkins && docker compose up -d --build
+```
+
+Verifier depuis le conteneur :
+
+```bash
+docker exec -u jenkins jenkins id
+docker exec -u jenkins jenkins docker info
+```
+
+`id` doit lister un groupe dont le GID = `stat -c '%g' /var/run/docker.sock` sur l'hote.
