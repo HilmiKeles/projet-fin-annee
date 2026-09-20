@@ -24,6 +24,11 @@ prometheus.dsp5-archi-024a-g3.fr {
 	reverse_proxy prometheus:9090
 }
 
+grafana.dsp5-archi-024a-g3.fr {
+	encode gzip
+	reverse_proxy grafana:3000
+}
+
 kibana.dsp5-archi-024a-g3.fr {
 	encode gzip
 	reverse_proxy kibana:5601 {

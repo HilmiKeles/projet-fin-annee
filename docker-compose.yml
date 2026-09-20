@@ -57,6 +57,7 @@ services:
       - frontend
       - prometheus
       - kibana
+      - grafana
     ports:
       - "80:80"
       - "443:443"
@@ -154,6 +155,8 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_DOMAIN=grafana.dsp5-archi-024a-g3.fr
+      - GF_SERVER_ROOT_URL=https://grafana.dsp5-archi-024a-g3.fr/
     restart: unless-stopped
 
   # ─── LOGS (ELK) ───────────────────────────────
