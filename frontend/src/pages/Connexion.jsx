@@ -39,7 +39,7 @@ export default function Connexion() {
         navigate(destinationApresLogin(utilisateur));
         return;
       }
-      navigate("/profil");
+      navigate("/");
     } catch (err) {
       setErreur(err.message || "Erreur lors de la connexion Google.");
     }
