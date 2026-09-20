@@ -16,6 +16,16 @@
   box-shadow: 0 8px 24px rgba(27, 67, 50, 0.12);
 }
 
+.enter-code-tirage {
+  width: min(240px, 70%);
+  margin: 0 auto 1.25rem;
+}
+
+.enter-code-tirage .loto-machine {
+  width: 100%;
+  margin: 0;
+}
+
 .enter-code-card h1 {
   color: var(--vert-fonce);
   margin-top: 0;

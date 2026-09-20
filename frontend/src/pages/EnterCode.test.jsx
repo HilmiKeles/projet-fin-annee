@@ -1,7 +1,12 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import EnterCode from './EnterCode.jsx';
 import { renderPage } from '../test/renderPage.jsx';
+
+vi.mock('../utils/tirage.js', () => ({
+  dureeAnimationTirage: () => 40,
+}));
 
 function renderEnterCode() {
   return renderPage(<EnterCode />, {
@@ -73,6 +78,9 @@ describe('EnterCode', () => {
     await user.type(screen.getByLabelText('Votre code'), 'ABC123XYZ9');
     await user.click(screen.getByRole('button', { name: 'Valider mon code' }));
 
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      /mélange des boules/i,
+    );
     await waitFor(() => {
       expect(screen.getByText('Page résultat')).toBeInTheDocument();
     });
