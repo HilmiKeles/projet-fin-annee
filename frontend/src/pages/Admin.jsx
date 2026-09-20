@@ -52,6 +52,11 @@ export default function Admin() {
   const [abonnes, setAbonnes] = useState([]);
   const [onglet, setOnglet] = useState("newsletter");
   const [recherche, setRecherche] = useState("");
+  const [quantiteCodes, setQuantiteCodes] = useState(1);
+  const [codesCrees, setCodesCrees] = useState([]);
+  const [erreurCodes, setErreurCodes] = useState("");
+  const [succesCodes, setSuccesCodes] = useState("");
+  const [chargementCodes, setChargementCodes] = useState(false);
 
   async function chargerTableauDeBord(token) {
     setErreurData("");
@@ -197,6 +202,51 @@ export default function Admin() {
     ]);
   }
 
+  async function handleCreationCodes(event) {
+    event.preventDefault();
+    setErreurCodes("");
+    setSuccesCodes("");
+    setChargementCodes(true);
+
+    try {
+      const reponse = await fetch(`${API_URL}/admin/tickets`, {
+        method: "POST",
+        headers: enTetesAuth(),
+        body: JSON.stringify({ quantite: Number(quantiteCodes) }),
+      });
+      const data = await reponse.json().catch(() => ({}));
+
+      if (reponse.status === 401) {
+        viderSession();
+        setEtat("login");
+        return;
+      }
+
+      if (!reponse.ok) {
+        throw new Error(data.error || "Impossible de créer les codes.");
+      }
+
+      const codes = data.codes || [];
+      setCodesCrees(codes);
+      setSuccesCodes(
+        codes.length === 1
+          ? "1 code créé. Copiez-le pour le tester sur /entrer-code."
+          : `${codes.length} codes créés. Copiez-les pour les tester sur /entrer-code.`,
+      );
+      await chargerTableauDeBord(lireToken());
+    } catch (erreur) {
+      setErreurCodes(erreur.message || "Impossible de créer les codes.");
+    } finally {
+      setChargementCodes(false);
+    }
+  }
+
+  async function copierCodes() {
+    if (codesCrees.length === 0 || !navigator.clipboard) return;
+    await navigator.clipboard.writeText(codesCrees.join("\n"));
+    setSuccesCodes("Codes copiés dans le presse-papiers.");
+  }
+
   if (etat === "chargement") {
     return (
       <main className="admin">
@@ -319,6 +369,58 @@ export default function Admin() {
           <p>Abonnés newsletter</p>
           <strong>{abonnes.length}</strong>
         </article>
+      </section>
+
+      <section className="admin-codes" aria-labelledby="admin-codes-titre">
+        <h2 id="admin-codes-titre">Créer des codes ticket</h2>
+        <p>
+          Génère des codes à 10 caractères, utilisables une fois sur la page
+          « Saisir mon code ».
+        </p>
+
+        {erreurCodes && (
+          <p className="admin-alerte" role="alert">
+            {erreurCodes}
+          </p>
+        )}
+        {succesCodes && (
+          <p className="admin-succes" role="status">
+            {succesCodes}
+          </p>
+        )}
+
+        <form className="admin-codes-form" onSubmit={handleCreationCodes}>
+          <label htmlFor="admin-quantite-codes">Nombre de codes</label>
+          <input
+            id="admin-quantite-codes"
+            type="number"
+            min="1"
+            max="20"
+            value={quantiteCodes}
+            onChange={(event) => setQuantiteCodes(event.target.value)}
+          />
+          <button type="submit" className="btn-primary" disabled={chargementCodes}>
+            {chargementCodes ? "Création..." : "Créer"}
+          </button>
+        </form>
+
+        {codesCrees.length > 0 && (
+          <div className="admin-codes-resultat">
+            <div className="admin-codes-resultat-entete">
+              <strong>Codes générés</strong>
+              <button type="button" className="btn-secondary" onClick={copierCodes}>
+                Copier
+              </button>
+            </div>
+            <ul>
+              {codesCrees.map((code) => (
+                <li key={code}>
+                  <code>{code}</code>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       <section className="admin-liste">

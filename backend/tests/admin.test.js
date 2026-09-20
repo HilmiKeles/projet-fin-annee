@@ -118,3 +118,41 @@ describe("PATCH /api/admin/gain/:id/claim", () => {
     });
   });
 });
+
+describe("POST /api/admin/tickets", () => {
+  it("refuse un client", async () => {
+    const res = await request(app)
+      .post("/api/admin/tickets")
+      .set(authHeader({ id: "user-1", role: "CLIENT" }))
+      .send({ quantite: 1 });
+
+    expect(res.status).toBe(403);
+    expect(prisma.ticket.create).not.toHaveBeenCalled();
+  });
+
+  it("refuse une quantité invalide", async () => {
+    const res = await request(app)
+      .post("/api/admin/tickets")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ quantite: 0 });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/1 et 20/);
+  });
+
+  it("crée des codes pour un admin", async () => {
+    prisma.lot.findFirst.mockResolvedValue({ id: "lot-1", name: "infuseur", stock: 10 });
+    prisma.ticket.create
+      .mockResolvedValueOnce({ code: "ABCDEFGHIJ", used: false })
+      .mockResolvedValueOnce({ code: "KLMNOPQRST", used: false });
+
+    const res = await request(app)
+      .post("/api/admin/tickets")
+      .set(authHeader({ id: "admin-1", role: "ADMIN" }))
+      .send({ quantite: 2 });
+
+    expect(res.status).toBe(201);
+    expect(res.body.codes).toEqual(["ABCDEFGHIJ", "KLMNOPQRST"]);
+    expect(prisma.ticket.create).toHaveBeenCalledTimes(2);
+  });
+});
