@@ -3,12 +3,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 const { validatePassword } = require("../utils/password");
+const {
+  activerAbonnement,
+  emailValide,
+  normaliserEmail,
+} = require("../services/newsletter");
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 router.post("/register", async (req, res) => {
-  const { email, password, firstName, lastName, newsletter } = req.body;
+  const email = normaliserEmail(req.body.email);
+  const { password, firstName, lastName, newsletter } = req.body;
+
+  if (!emailValide(email)) {
+    return res.status(400).json({ error: "Adresse e-mail invalide." });
+  }
 
   const passwordError = validatePassword(password);
   if (passwordError) {
@@ -18,24 +28,31 @@ router.post("/register", async (req, res) => {
   try {
     const hashed = await bcrypt.hash(password, 10);
 
-    // 2. On insère les vraies données dans la base PostgreSQL
     const user = await prisma.user.create({
       data: {
         email,
         password: hashed,
         firstName,
         lastName,
-        newsletter: newsletter || false,
+        newsletter: Boolean(newsletter),
       },
     });
 
     if (newsletter) {
-      await activerAbonnement(email);
+      try {
+        await activerAbonnement(email);
+      } catch (erreurNewsletter) {
+        console.error("Newsletter à l'inscription:", erreurNewsletter);
+      }
     }
 
     res.status(201).json({ id: user.id, email: user.email });
   } catch (e) {
-    res.status(400).json({ error: "Email déjà utilisé" });
+    if (e.code === "P2002") {
+      return res.status(400).json({ error: "Email déjà utilisé" });
+    }
+    console.error("Register:", e);
+    res.status(500).json({ error: "Impossible de créer le compte." });
   }
 });
 

@@ -45,6 +45,8 @@ function App() {
           <Route path="/confidentialite" element={<Confidentialite />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/signaler-probleme" element={<ReportIssuePage />} />
+          <Route path="/newsletter" element={<Newsletter />} />
+          <Route path="/newsletter/desinscription" element={<NewsletterDesinscription />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

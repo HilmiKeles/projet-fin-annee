@@ -3,7 +3,15 @@ const prisma = {
     create: jest.fn(),
     findUnique: jest.fn(),
     findMany: jest.fn(),
+    update: jest.fn(),
+    updateMany: jest.fn(),
+    delete: jest.fn(),
     count: jest.fn(),
+  },
+  newsletterSubscriber: {
+    upsert: jest.fn(),
+    findMany: jest.fn(),
+    updateMany: jest.fn(),
   },
   ticket: {
     findFirst: jest.fn(),
@@ -19,6 +27,7 @@ const prisma = {
     findMany: jest.fn(),
     findUnique: jest.fn(),
     update: jest.fn(),
+    deleteMany: jest.fn(),
   },
   $transaction: jest.fn((operations) => Promise.all(operations)),
 };

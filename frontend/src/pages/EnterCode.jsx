@@ -1,16 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { API_URL, lireToken } from "../utils/auth";
 import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
 import "../styles/EnterCode.css";
-
-// 👇 La voici ! La variable qui manquait pour lier le front au backend 👇
-const API_URL = import.meta.env.VITE_API_URL || "/api";
 
 export default function EnterCode() {
   const [code, setCode] = useState("");
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
   const navigate = useNavigate();
+  const connecte = Boolean(lireToken());
 
   function handleChange(e) {
     setCode(normaliserCode(e.target.value));
@@ -100,10 +99,18 @@ export default function EnterCode() {
           </button>
         </form>
 
-        <p className="enter-code-aide">
-          Pas encore inscrit ? <a href="/inscription">Créez votre compte</a>{" "}
-          pour participer.
-        </p>
+        {connecte ? (
+          <p className="enter-code-aide">
+            Vos lots seront enregistrés dans{" "}
+            <Link to="/profil">votre profil</Link>.
+          </p>
+        ) : (
+          <p className="enter-code-aide">
+            Pas encore inscrit ?{" "}
+            <Link to="/inscription">Créez votre compte</Link> pour participer.
+            Déjà un compte ? <Link to="/connexion">Connectez-vous</Link>.
+          </p>
+        )}
       </section>
     </main>
   );
