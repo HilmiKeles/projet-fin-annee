@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { destinationApresLogin, enregistrerSession } from "../utils/auth";
 import "../styles/Auth.css";
 import GoogleButton from "../components/GoogleButton.jsx";
 
@@ -35,11 +36,14 @@ export default function Inscription() {
         throw new Error(data.error || "Inscription Google échouée");
       }
       if (data.token) {
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify(data.user || { role: data.role }),
-        );
+        const utilisateur = data.user || data.utilisateur || { role: data.role };
+        enregistrerSession({
+          token: data.token,
+          user: utilisateur,
+          role: data.role,
+        });
+        navigate(destinationApresLogin(utilisateur));
+        return;
       }
       navigate("/profil");
     } catch (err) {

@@ -1,6 +1,10 @@
 const request = require("supertest");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
+jest.mock("../src/services/googleAuth");
+
+const { verifierCredentialGoogle } = require("../src/services/googleAuth");
 const app = require("../src/app");
 const { prisma } = require("@prisma/client");
 
@@ -124,5 +128,70 @@ describe("POST /api/auth/login", () => {
     const decoded = jwt.verify(res.body.token, process.env.JWT_SECRET);
     expect(decoded.id).toBe("user-1");
     expect(decoded.role).toBe("CLIENT");
+  });
+});
+
+describe("POST /api/auth/google", () => {
+  const profilGoogle = {
+    email: "jean.google@example.com",
+    firstName: "Jean",
+    lastName: "Dupont",
+  };
+
+  it("refuse un jeton Google rejeté", async () => {
+    const erreur = new Error("Jeton Google invalide.");
+    erreur.status = 401;
+    verifierCredentialGoogle.mockRejectedValue(erreur);
+
+    const res = await request(app)
+      .post("/api/auth/google")
+      .send({ credential: "mauvais-jeton" });
+
+    expect(res.status).toBe(401);
+    expect(res.body.error).toBe("Jeton Google invalide.");
+    expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+
+  it("crée un compte puis renvoie un JWT", async () => {
+    verifierCredentialGoogle.mockResolvedValue(profilGoogle);
+    prisma.user.findUnique.mockResolvedValue(null);
+    prisma.user.create.mockResolvedValue({
+      id: "user-google",
+      email: profilGoogle.email,
+      firstName: "Jean",
+      lastName: "Dupont",
+      role: "CLIENT",
+    });
+
+    const res = await request(app)
+      .post("/api/auth/google")
+      .send({ credential: "google-jwt" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.user.email).toBe("jean.google@example.com");
+    expect(typeof res.body.token).toBe("string");
+    expect(prisma.user.create).toHaveBeenCalledTimes(1);
+
+    const decoded = jwt.verify(res.body.token, process.env.JWT_SECRET);
+    expect(decoded.id).toBe("user-google");
+  });
+
+  it("connecte un utilisateur déjà existant sans le recréer", async () => {
+    verifierCredentialGoogle.mockResolvedValue(profilGoogle);
+    prisma.user.findUnique.mockResolvedValue({
+      id: "user-1",
+      email: profilGoogle.email,
+      firstName: "Jean",
+      lastName: "Dupont",
+      role: "CLIENT",
+    });
+
+    const res = await request(app)
+      .post("/api/auth/google")
+      .send({ credential: "google-jwt" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.user.id).toBe("user-1");
+    expect(prisma.user.create).not.toHaveBeenCalled();
   });
 });
