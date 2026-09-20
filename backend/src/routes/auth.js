@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -8,9 +9,30 @@ const {
   emailValide,
   normaliserEmail,
 } = require("../services/newsletter");
+const { verifierCredentialGoogle } = require("../services/googleAuth");
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+function reponseAuth(res, user) {
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET || "dev-secret-change-me",
+    { expiresIn: "24h" },
+  );
+
+  return res.json({
+    token,
+    role: user.role,
+    user: {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+    },
+  });
+}
 
 router.post("/register", async (req, res) => {
   const email = normaliserEmail(req.body.email);
@@ -67,27 +89,59 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Identifiants invalides" });
     }
 
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET || "dev-secret-change-me",
-      { expiresIn: "24h" },
-    );
-
-    res.json({
-      token,
-      role: user.role,
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-      },
-    });
+    return reponseAuth(res, user);
   } catch (erreur) {
     console.error("Login:", erreur);
     res.status(503).json({
       error: "Base de données indisponible. Vérifiez que PostgreSQL est démarré.",
+    });
+  }
+});
+
+router.post("/google", async (req, res) => {
+  try {
+    const profil = await verifierCredentialGoogle(req.body.credential);
+    let user = await prisma.user.findUnique({
+      where: { email: profil.email },
+    });
+
+    if (!user) {
+      try {
+        user = await prisma.user.create({
+          data: {
+            email: profil.email,
+            password: await bcrypt.hash(
+              crypto.randomBytes(32).toString("hex"),
+              10,
+            ),
+            firstName: profil.firstName,
+            lastName: profil.lastName,
+          },
+        });
+      } catch (erreurCreation) {
+        if (erreurCreation.code !== "P2002") {
+          throw erreurCreation;
+        }
+        user = await prisma.user.findUnique({
+          where: { email: profil.email },
+        });
+      }
+    }
+
+    if (!user) {
+      return res.status(500).json({
+        error: "Impossible de se connecter avec Google.",
+      });
+    }
+
+    return reponseAuth(res, user);
+  } catch (erreur) {
+    if (erreur.status) {
+      return res.status(erreur.status).json({ error: erreur.message });
+    }
+    console.error("Google auth:", erreur);
+    return res.status(500).json({
+      error: "Impossible de se connecter avec Google.",
     });
   }
 });

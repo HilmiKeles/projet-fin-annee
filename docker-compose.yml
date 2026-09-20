@@ -29,12 +29,17 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
       NODE_ENV: production
       PORT: 4000
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-349236804300-ri1ua1ahuj1vd14bmf0297gjjgd7r927.apps.googleusercontent.com}
     command: sh -c "npx prisma db push --accept-data-loss && node src/index.js"
     ports:
       - "4000:4000"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-349236804300-ri1ua1ahuj1vd14bmf0297gjjgd7r927.apps.googleusercontent.com}
+        VITE_API_URL: /api
     container_name: thetiptop_frontend
     restart: unless-stopped
     depends_on:

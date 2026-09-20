@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { destinationApresLogin, enregistrerSession } from "../utils/auth";
+import GoogleButton from "../components/GoogleButton.jsx";
 import "../styles/Auth.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
@@ -12,39 +13,7 @@ export default function Connexion() {
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
-  const googleBtnRef = useRef(null);
 
-  // Charge le SDK Google Identity Services via <script>
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID) return;
-
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-
-    script.onload = () => {
-      if (!window.google) return;
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleResponse,
-      });
-      window.google.accounts.id.renderButton(googleBtnRef.current, {
-        theme: "outline",
-        size: "large",
-        width: 320, // valeur en pixels, pas "100%"
-        text: "signin_with",
-        locale: "fr",
-});
-    };
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  // Réponse Google : envoie le credential au backend
   const handleGoogleResponse = async (response) => {
     setErreur("");
     try {
@@ -130,10 +99,9 @@ export default function Connexion() {
           </div>
         )}
 
-        {/* Bouton Google (rendu par le SDK dans cette div) */}
         {GOOGLE_CLIENT_ID && (
           <>
-            <div ref={googleBtnRef} className="google-btn-container" />
+            <GoogleButton onSuccess={handleGoogleResponse} text="signin_with" />
             <div className="auth-separateur">
               <span>ou</span>
             </div>

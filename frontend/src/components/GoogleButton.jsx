@@ -1,52 +1,80 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const SCRIPT_SRC = "https://accounts.google.com/gsi/client";
 
-export default function GoogleButton({ onSuccess }) {
+export default function GoogleButton({ onSuccess, text = "signin_with" }) {
   const buttonRef = useRef(null);
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!CLIENT_ID || initialized.current) return;
-    initialized.current = true;
+    if (!CLIENT_ID) {
+      return undefined;
+    }
+
+    let annule = false;
+    let timer;
+    let script;
 
     const init = () => {
+      if (
+        annule ||
+        initialized.current ||
+        !buttonRef.current ||
+        !window.google?.accounts?.id
+      ) {
+        return;
+      }
+      initialized.current = true;
       try {
         window.google.accounts.id.initialize({
           client_id: CLIENT_ID,
           callback: onSuccess,
-          // PAS de auto_select ni de prompt automatique
         });
         window.google.accounts.id.renderButton(buttonRef.current, {
-          theme: 'outline',
-          size: 'large',
-          width: 300, // ⚠️ nombre en pixels, JAMAIS "100%"
+          theme: "outline",
+          size: "large",
+          width: 320,
+          text,
+          locale: "fr",
         });
-        // ⚠️ NE PAS appeler window.google.accounts.id.prompt() ici
       } catch (e) {
-        console.error('Google init error:', e);
+        initialized.current = false;
+        console.error("Google init error:", e);
       }
     };
 
-    if (window.google) {
+    if (window.google?.accounts?.id) {
       init();
     } else {
-      // Le script est déjà chargé via <script> dans index.html :
-      // on attend qu'il soit prêt
-      const timer = setInterval(() => {
-        if (window.google) {
-          clearInterval(timer);
-          init();
-        }
-      }, 100);
-      return () => clearInterval(timer);
+      script = document.querySelector(`script[src="${SCRIPT_SRC}"]`);
+      if (!script) {
+        script = document.createElement("script");
+        script.src = SCRIPT_SRC;
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+      script.addEventListener("load", init);
+      timer = setInterval(init, 100);
     }
-  }, [onSuccess]);
+
+    return () => {
+      annule = true;
+      initialized.current = false;
+      if (script) {
+        script.removeEventListener("load", init);
+      }
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [onSuccess, text]);
 
   if (!CLIENT_ID) return null;
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }}>
+    <div className="google-btn-container">
       <div ref={buttonRef} />
     </div>
   );
