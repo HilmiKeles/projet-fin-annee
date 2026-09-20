@@ -54,6 +54,7 @@ JWT_SECRET Clé secrète JWT
 • Site : https://dsp5-archi-024a-g3.fr/
 • Jenkins : https://jenkins.dsp5-archi-024a-g3.fr/
 • Prometheus : https://prometheus.dsp5-archi-024a-g3.fr/
+• Grafana : https://grafana.dsp5-archi-024a-g3.fr/
 • Kibana : https://kibana.dsp5-archi-024a-g3.fr/
  Équipe
 Membre Rôle
