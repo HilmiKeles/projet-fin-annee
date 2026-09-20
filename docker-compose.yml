@@ -30,6 +30,7 @@ services:
       NODE_ENV: production
       PORT: 4000
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-349236804300-ri1ua1ahuj1vd14bmf0297gjjgd7r927.apps.googleusercontent.com}
+      CAMPAGNE_BUDGET: ${CAMPAGNE_BUDGET:-15000}
     command: sh -c "npx prisma db push --accept-data-loss && node src/index.js"
     ports:
       - "4000:4000"

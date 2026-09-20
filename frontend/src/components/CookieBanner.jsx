@@ -29,7 +29,16 @@ function enregistrerConsentement(preferences) {
   };
   localStorage.setItem(CLE_CONSENTEMENT, JSON.stringify(consentement));
   window.dispatchEvent(new CustomEvent('cookie-consent-updated', { detail: consentement }));
+  appliquerConsentementGa(consentement);
   return consentement;
+}
+
+function appliquerConsentementGa(consentement) {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('consent', 'update', {
+    analytics_storage: consentement?.analytics ? 'granted' : 'denied',
+    ad_storage: consentement?.marketing ? 'granted' : 'denied',
+  });
 }
 
 export default function CookieBanner() {
@@ -38,7 +47,10 @@ export default function CookieBanner() {
   const [preferences, setPreferences] = useState(DEFAUT);
 
   useEffect(() => {
-    if (!lireConsentement()) {
+    const actuel = lireConsentement();
+    if (actuel) {
+      appliquerConsentementGa(actuel);
+    } else {
       setVisible(true);
     }
 

@@ -26,7 +26,10 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
+      gtag("consent", "default", {
+        analytics_storage: "denied",
+        ad_storage: "denied",
+      });
       gtag("config", "G-VED2LCK279");
     </script>
   </head>

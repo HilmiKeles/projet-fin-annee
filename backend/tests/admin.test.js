@@ -24,19 +24,30 @@ describe("GET /api/admin/stats", () => {
       { user: {}, lot: { name: "coffret39" } },
     ]);
     prisma.user.count.mockResolvedValue(25);
+    prisma.ctaClick.groupBy.mockResolvedValue([
+      { name: "je-participe", _count: { name: 10 } },
+      { name: "lancer-tirage", _count: { name: 4 } },
+    ]);
 
     const res = await request(app)
       .get("/api/admin/stats")
       .set(authHeader({ id: "admin-1", role: "ADMIN" }));
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({
-      ticketsTotal: 100,
-      ticketsUsed: 40,
-      totalGains: 4,
-      totalClients: 25,
-      gagnantsParSexe: { femme: 2, homme: 1, inconnu: 1 },
+    expect(res.body.ticketsTotal).toBe(100);
+    expect(res.body.ticketsUsed).toBe(40);
+    expect(res.body.totalGains).toBe(4);
+    expect(res.body.totalClients).toBe(25);
+    expect(res.body.gagnantsParSexe).toEqual({
+      femme: 2,
+      homme: 1,
+      inconnu: 1,
     });
+    expect(res.body.kpis.tauxConversion).toBe(40);
+    expect(res.body.kpis.clicsCta).toBe(14);
+    expect(res.body.kpis.valeurLots).toBe(74);
+    expect(res.body.kpis.budgetCampagne).toBe(15000);
+    expect(res.body.kpis.roi).toBe(0.5);
   });
 });
 
