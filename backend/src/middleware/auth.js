@@ -25,9 +25,7 @@ function authMiddleware(req, res, next) {
   } catch (err) {
     // C'est ICI qu'on va enfin savoir la vérité !
     console.error("❌ Rejet (Token invalide) :", err.message);
-    return res
-      .status(401)
-      .json({ error: "Token invalide", details: err.message });
+    return res.status(401).json({ error: "Token invalide" });
   }
 }
 

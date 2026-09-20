@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --forceExit"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",

@@ -46,16 +46,26 @@ describe("GET /api/admin/export", () => {
       { email: "a@example.com", gender: "femme", birthDate: null },
     ];
     prisma.user.findMany.mockResolvedValue(clients);
+    prisma.newsletterSubscriber.findMany.mockResolvedValue([]);
 
     const res = await request(app)
       .get("/api/admin/export")
       .set(authHeader({ id: "admin-1", role: "ADMIN" }));
 
     expect(res.status).toBe(200);
-    expect(res.body).toEqual(clients);
+    expect(res.body).toEqual({
+      clients,
+      abonnesNewsletter: [],
+    });
     expect(prisma.user.findMany).toHaveBeenCalledWith({
       where: { role: "CLIENT" },
-      select: { email: true, gender: true, birthDate: true },
+      select: {
+        email: true,
+        firstName: true,
+        lastName: true,
+        newsletter: true,
+        createdAt: true,
+      },
     });
   });
 });

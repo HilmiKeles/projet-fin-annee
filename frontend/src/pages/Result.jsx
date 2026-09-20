@@ -6,22 +6,27 @@ import "../styles/Result.css";
 const GAINS = {
   infuseur: {
     emoji: "🍵",
+    libelle: "Infuseur à thé",
     description: "L'accessoire indispensable pour savourer vos thés en vrac.",
   },
   detox: {
     emoji: "🌿",
+    libelle: "Boîte de thé détox 100g",
     description: "Un mélange bio et handmade pour prendre soin de vous.",
   },
   signature: {
     emoji: "✨",
+    libelle: "Boîte de thé signature 100g",
     description: "Notre mélange exclusif, créé par nos maîtres du thé.",
   },
   coffret39: {
     emoji: "🎁",
+    libelle: "Coffret découverte (39€)",
     description: "Une sélection de nos meilleurs thés à découvrir.",
   },
   coffret69: {
     emoji: "🏆",
+    libelle: "Coffret découverte premium (69€)",
     description: "Le grand gagnant ! Notre coffret le plus prestigieux.",
   },
 };
@@ -44,28 +49,28 @@ export default function Result() {
   // 2. Détection intelligente du lot pour afficher le bon émoji
   let visuals = {
     emoji: "🎉",
+    libelle: gainDb,
     description: "Un magnifique cadeau vous attend !",
   };
   const gainLower = gainDb.toLowerCase();
 
-  if (gainLower.includes("infuseur")) visuals = GAINS.infuseur;
+  if (gainLower.includes("infuseur")) visuals = { ...GAINS.infuseur };
   else if (gainLower.includes("détox") || gainLower.includes("detox"))
-    visuals = GAINS.detox;
-  else if (gainLower.includes("signature")) visuals = GAINS.signature;
-  else if (gainLower.includes("39")) visuals = GAINS.coffret39;
-  else if (gainLower.includes("69")) visuals = GAINS.coffret69;
+    visuals = { ...GAINS.detox };
+  else if (gainLower.includes("signature")) visuals = { ...GAINS.signature };
+  else if (gainLower.includes("39")) visuals = { ...GAINS.coffret39 };
+  else if (gainLower.includes("69")) visuals = { ...GAINS.coffret69 };
 
   return (
     <main className="result">
       <div className="result-card">
         <span className="confetti">🎉</span>
         <h1>Félicitations !</h1>
-        <div className="gain-emoji" role="img" aria-label={gainDb}>
+        <div className="gain-emoji" role="img" aria-label={visuals.libelle}>
           {visuals.emoji}
         </div>
 
-        {/* On affiche le vrai nom du lot issu de la base de données */}
-        <h2>{gainDb}</h2>
+        <h2>{visuals.libelle}</h2>
         <p className="gain-description">{visuals.description}</p>
 
         <div className="result-info">
