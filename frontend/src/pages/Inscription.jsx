@@ -45,7 +45,7 @@ export default function Inscription() {
         navigate(destinationApresLogin(utilisateur));
         return;
       }
-      navigate("/profil");
+      navigate("/");
     } catch (err) {
       setErreurs({
         global: err.message || "Erreur lors de l'inscription via Google.",
@@ -137,12 +137,17 @@ export default function Inscription() {
       }
 
       if (data.token) {
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify(data.utilisateur || data.user || data),
-        );
-        navigate("/profil");
+        const utilisateur = data.utilisateur || data.user || {
+          role: data.role,
+          email: form.email,
+        };
+        enregistrerSession({
+          token: data.token,
+          user: utilisateur,
+          role: data.role,
+          email: form.email,
+        });
+        navigate(destinationApresLogin(utilisateur));
       } else {
         navigate("/connexion");
       }

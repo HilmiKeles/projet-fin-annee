@@ -35,6 +35,12 @@ describe('EnterCode', () => {
     expect(
       screen.getByRole('link', { name: /créez votre compte/i }),
     ).toHaveAttribute('href', '/inscription');
+    expect(
+      screen.getByRole('link', { name: /connectez-vous pour jouer/i }),
+    ).toHaveAttribute('href', '/connexion');
+    expect(
+      screen.queryByRole('button', { name: 'Valider mon code' }),
+    ).not.toBeInTheDocument();
   });
 
   it('n’invite pas à s’inscrire si l’utilisateur est connecté', () => {
@@ -59,6 +65,7 @@ describe('EnterCode', () => {
 
   it('refuse un code trop court', async () => {
     const user = userEvent.setup();
+    sessionStorage.setItem('token', 'jwt-test');
     renderEnterCode();
 
     await user.type(screen.getByLabelText('Votre code'), 'ABC123');

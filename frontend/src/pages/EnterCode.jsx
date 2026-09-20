@@ -85,7 +85,7 @@ export default function EnterCode() {
               votre ticket de caisse pour découvrir votre gain.
             </p>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={connecte ? handleSubmit : (e) => e.preventDefault()}>
               <label htmlFor="code">Votre code</label>
               <input
                 id="code"
@@ -105,9 +105,15 @@ export default function EnterCode() {
                 </p>
               )}
 
-              <button type="submit" className="btn-primary">
-                Valider mon code
-              </button>
+              {connecte ? (
+                <button type="submit" className="btn-primary">
+                  Valider mon code
+                </button>
+              ) : (
+                <Link to="/connexion" className="btn-primary">
+                  Connectez-vous pour jouer
+                </Link>
+              )}
             </form>
 
             {connecte ? (

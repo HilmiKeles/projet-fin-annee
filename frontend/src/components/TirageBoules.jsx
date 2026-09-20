@@ -77,7 +77,7 @@ export default function TirageBoules() {
             Mélange des boules…
           </p>
         ) : (
-          <form className="loto-form" onSubmit={lancerTirage}>
+          <form className="loto-form" onSubmit={connecte ? lancerTirage : (e) => e.preventDefault()}>
             <label htmlFor="code-loto">Code de votre ticket de caisse</label>
             <input
               id="code-loto"
@@ -99,9 +99,15 @@ export default function TirageBoules() {
               </p>
             )}
 
-            <button type="submit" className="loto-btn">
-              Lancer le tirage
-            </button>
+            {connecte ? (
+              <button type="submit" className="loto-btn">
+                Lancer le tirage
+              </button>
+            ) : (
+              <Link to="/connexion" className="loto-btn">
+                Connectez-vous pour jouer
+              </Link>
+            )}
 
             {connecte ? (
               <p className="loto-aide">
@@ -110,9 +116,8 @@ export default function TirageBoules() {
               </p>
             ) : (
               <p className="loto-aide">
-                <Link to="/connexion">Connectez-vous</Link> ou{" "}
-                <Link to="/inscription">créez un compte</Link> avant de jouer,
-                sinon le gain ne sera pas enregistré.
+                Le tirage n'est possible qu'avec un compte.{" "}
+                <Link to="/inscription">Créez-en un</Link> si besoin.
               </p>
             )}
           </form>

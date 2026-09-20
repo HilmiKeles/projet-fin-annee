@@ -8,7 +8,10 @@ function renderConnexion() {
   return renderPage(<Connexion />, {
     route: '/connexion',
     path: '/connexion',
-    routes: [{ path: '/profil', element: <p>Page profil</p> }],
+    routes: [
+      { path: '/', element: <p>Page accueil</p> },
+      { path: '/profil', element: <p>Page profil</p> },
+    ],
   });
 }
 
@@ -52,7 +55,7 @@ describe('Connexion', () => {
     );
   });
 
-  it('enregistre le token et redirige vers le profil', async () => {
+  it('enregistre le token et redirige vers l’accueil', async () => {
     const user = userEvent.setup();
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -69,7 +72,7 @@ describe('Connexion', () => {
     await user.click(screen.getByRole('button', { name: 'Se connecter' }));
 
     await waitFor(() => {
-      expect(screen.getByText('Page profil')).toBeInTheDocument();
+      expect(screen.getByText('Page accueil')).toBeInTheDocument();
     });
     expect(sessionStorage.getItem('token')).toBe('jwt-test');
   });
@@ -86,7 +89,10 @@ describe('Connexion via Google', () => {
     render(<ConnexionGoogle />, {
       route: '/connexion',
       path: '/connexion',
-      routes: [{ path: '/profil', element: <p>Page profil</p> }],
+      routes: [
+        { path: '/', element: <p>Page accueil</p> },
+        { path: '/profil', element: <p>Page profil</p> },
+      ],
     });
 
     const script = document.querySelector('script[src*="accounts.google.com"]');
@@ -95,7 +101,7 @@ describe('Connexion via Google', () => {
     return google;
   }
 
-  it('enregistre le token Google et redirige vers le profil', async () => {
+  it('enregistre le token Google et redirige vers l’accueil', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -113,7 +119,7 @@ describe('Connexion via Google', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Page profil')).toBeInTheDocument();
+      expect(screen.getByText('Page accueil')).toBeInTheDocument();
     });
     expect(sessionStorage.getItem('token')).toBe('jwt-google');
     expect(fetch).toHaveBeenCalledWith(

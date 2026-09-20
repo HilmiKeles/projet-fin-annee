@@ -104,6 +104,12 @@
   cursor: not-allowed;
 }
 
+a.btn-primary {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
 .enter-code-aide {
   text-align: center;
   margin-top: 1.5rem;

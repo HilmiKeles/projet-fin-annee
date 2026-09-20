@@ -21,16 +21,15 @@ function renderTirage() {
 }
 
 describe("TirageBoules", () => {
-  it("refuse de tirer au sort sans connexion", async () => {
-    const user = userEvent.setup();
+  it('refuse de tirer au sort sans connexion', () => {
     renderTirage();
 
-    await user.type(screen.getByLabelText(/code de votre ticket/i), "ABC123XYZ9");
-    await user.click(screen.getByRole("button", { name: "Lancer le tirage" }));
-
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      /connectez-vous pour enregistrer votre gain/i,
-    );
+    expect(
+      screen.queryByRole("button", { name: "Lancer le tirage" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Connectez-vous pour jouer" }),
+    ).toHaveAttribute("href", "/connexion");
     expect(fetch).not.toHaveBeenCalled();
   });
 

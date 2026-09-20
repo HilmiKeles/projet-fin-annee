@@ -44,7 +44,7 @@ export function viderSession() {
 export function destinationApresLogin(user) {
   if (estAdmin(user)) return "/admin";
   if (estEmploye(user)) return "/employe";
-  return "/profil";
+  return "/";
 }
 
 export function enTetesAuth(token = lireToken()) {
