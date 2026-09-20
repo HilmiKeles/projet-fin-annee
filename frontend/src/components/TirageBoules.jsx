@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { DUREE_JOURS, dateClotureLisible, joursAvantCloture } from '../config/jeu.js';
+import { dureeAnimationTirage } from '../utils/tirage.js';
+import LotoMachine from './LotoMachine.jsx';
 import '../styles/TirageBoules.css';
 
 const CODE_REGEX = /^[A-Z0-9]{10}$/;
 const CARACTERES = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-const DUREE_MELANGE = 2800;
 
 // Poids identiques à la répartition réelle des 500 000 tickets gagnants.
 const LOTS = [
@@ -14,22 +15,6 @@ const LOTS = [
   { emoji: '⭐', titre: 'Thé signature 100g', poids: 10 },
   { emoji: '🎁', titre: 'Coffret découverte 39 €', poids: 6 },
   { emoji: '💝', titre: 'Coffret de luxe 69 €', poids: 4 },
-];
-
-// Billes qui s'agitent dans la sphère (position et taille en % de la sphère).
-const BILLES = [
-  { gauche: 16, haut: 62, taille: 15, delai: 0 },
-  { gauche: 31, haut: 74, taille: 13, delai: -0.4 },
-  { gauche: 46, haut: 66, taille: 17, delai: -0.9 },
-  { gauche: 61, haut: 77, taille: 12, delai: -1.3 },
-  { gauche: 72, haut: 63, taille: 16, delai: -0.6 },
-  { gauche: 24, haut: 46, taille: 12, delai: -1.7 },
-  { gauche: 54, haut: 49, taille: 14, delai: -2.1 },
-  { gauche: 68, haut: 43, taille: 11, delai: -1.1 },
-  { gauche: 38, haut: 55, taille: 13, delai: -2.6 },
-  { gauche: 79, haut: 72, taille: 13, delai: -0.2 },
-  { gauche: 11, haut: 76, taille: 12, delai: -1.9 },
-  { gauche: 50, haut: 82, taille: 15, delai: -2.3 },
 ];
 
 function empreinte(code) {
@@ -66,10 +51,6 @@ function codeExemple() {
   ).join('');
 }
 
-function animationsReduites() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 export default function TirageBoules({ connecte = false }) {
   const [code, setCode] = useState('');
   const [erreur, setErreur] = useState('');
@@ -80,7 +61,7 @@ export default function TirageBoules({ connecte = false }) {
   useEffect(() => {
     if (etape !== 'tirage' || !tirage) return undefined;
 
-    const delai = animationsReduites() ? 400 : DUREE_MELANGE;
+    const delai = dureeAnimationTirage();
     const chrono = setTimeout(() => setEtape('resultat'), delai);
     return () => clearTimeout(chrono);
   }, [etape, tirage]);
@@ -116,26 +97,7 @@ export default function TirageBoules({ connecte = false }) {
 
   return (
     <div className="loto">
-      <div className={`loto-machine${etape === 'tirage' ? ' loto-machine-active' : ''}`}>
-        <div className="loto-sphere">
-          {BILLES.map((bille, index) => (
-            <span
-              key={`bille-${index}`}
-              className="loto-bille"
-              style={{
-                left: `${bille.gauche}%`,
-                top: `${bille.haut}%`,
-                width: `${bille.taille}%`,
-                animationDelay: `${bille.delai}s`,
-              }}
-              aria-hidden="true"
-            />
-          ))}
-          <span className="loto-reflet" aria-hidden="true" />
-        </div>
-        <span className="loto-goulotte" aria-hidden="true" />
-        <span className="loto-pied" aria-hidden="true" />
-      </div>
+      <LotoMachine actif={etape === 'tirage'} />
 
       <div className="loto-panneau">
         {etape === 'saisie' && (

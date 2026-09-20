@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import LotoMachine from "../components/LotoMachine.jsx";
 import { API_URL, lireToken } from "../utils/auth";
 import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
+import { dureeAnimationTirage } from "../utils/tirage.js";
 import "../styles/EnterCode.css";
+
+function attendre(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
 
 export default function EnterCode() {
   const [code, setCode] = useState("");
   const [erreur, setErreur] = useState("");
-  const [chargement, setChargement] = useState(false);
+  const [tirageEnCours, setTirageEnCours] = useState(false);
   const navigate = useNavigate();
   const connecte = Boolean(lireToken());
+  const ignoreRef = useRef(false);
+
+  useEffect(() => {
+    ignoreRef.current = false;
+    return () => {
+      ignoreRef.current = true;
+    };
+  }, []);
 
   function handleChange(e) {
     setCode(normaliserCode(e.target.value));
@@ -26,7 +42,6 @@ export default function EnterCode() {
       return;
     }
 
-    // 1. On vérifie que l'utilisateur a bien son token avant de déranger le serveur !
     const token = sessionStorage.getItem("token");
     if (!token) {
       setErreur(
@@ -35,33 +50,45 @@ export default function EnterCode() {
       return;
     }
 
-    setChargement(true);
     setErreur("");
+    setTirageEnCours(true);
+    const debut = Date.now();
 
     try {
       const reponse = await fetch(`${API_URL}/tickets/validate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // On injecte le token récupéré juste au-dessus
+          Authorization: `Bearer ${token}`,
         },
-        // J'ai retiré 'credentials: "include"' pour éviter tout conflit avec le backend
         body: JSON.stringify({ code }),
       });
 
       const data = await reponse.json();
 
       if (!reponse.ok) {
-        setErreur(
-          data.error || data.message || "Code invalide ou déjà utilisé.",
-        );
-      } else {
-        navigate("/resultat", { state: { gain: data.gain } });
+        if (!ignoreRef.current) {
+          setErreur(
+            data.error || data.message || "Code invalide ou déjà utilisé.",
+          );
+          setTirageEnCours(false);
+        }
+        return;
       }
+
+      const restant = Math.max(
+        0,
+        dureeAnimationTirage() - (Date.now() - debut),
+      );
+      if (restant > 0) {
+        await attendre(restant);
+      }
+      if (ignoreRef.current) return;
+      navigate("/resultat", { state: { gain: data.gain } });
     } catch {
+      if (ignoreRef.current) return;
       setErreur("Erreur de connexion au serveur. Réessayez.");
-    } finally {
-      setChargement(false);
+      setTirageEnCours(false);
     }
   }
 
@@ -69,47 +96,60 @@ export default function EnterCode() {
     <main className="enter-code">
       <section className="enter-code-card">
         <h1>🎟️ Participez au jeu</h1>
-        <p className="enter-code-intro">
-          Saisissez le code à <strong>10 caractères</strong> présent sur votre
-          ticket de caisse pour découvrir votre gain.
-        </p>
+        <div className="enter-code-tirage">
+          <LotoMachine actif={tirageEnCours} />
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="code">Votre code</label>
-          <input
-            id="code"
-            type="text"
-            value={code}
-            onChange={handleChange}
-            placeholder="Ex : ABC123XYZ9"
-            autoComplete="off"
-            maxLength={10}
-            required
-          />
-          <span className="compteur">{code.length}/10</span>
-
-          {erreur && (
-            <p className="erreur" role="alert">
-              {erreur}
-            </p>
-          )}
-
-          <button type="submit" className="btn-primary" disabled={chargement}>
-            {chargement ? "Vérification..." : "Valider mon code"}
-          </button>
-        </form>
-
-        {connecte ? (
-          <p className="enter-code-aide">
-            Vos lots seront enregistrés dans{" "}
-            <Link to="/profil">votre profil</Link>.
+        {tirageEnCours ? (
+          <p className="loto-attente" role="status">
+            Mélange des boules…
           </p>
         ) : (
-          <p className="enter-code-aide">
-            Pas encore inscrit ?{" "}
-            <Link to="/inscription">Créez votre compte</Link> pour participer.
-            Déjà un compte ? <Link to="/connexion">Connectez-vous</Link>.
-          </p>
+          <>
+            <p className="enter-code-intro">
+              Saisissez le code à <strong>10 caractères</strong> présent sur
+              votre ticket de caisse pour découvrir votre gain.
+            </p>
+
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="code">Votre code</label>
+              <input
+                id="code"
+                type="text"
+                value={code}
+                onChange={handleChange}
+                placeholder="Ex : ABC123XYZ9"
+                autoComplete="off"
+                maxLength={10}
+                required
+              />
+              <span className="compteur">{code.length}/10</span>
+
+              {erreur && (
+                <p className="erreur" role="alert">
+                  {erreur}
+                </p>
+              )}
+
+              <button type="submit" className="btn-primary">
+                Valider mon code
+              </button>
+            </form>
+
+            {connecte ? (
+              <p className="enter-code-aide">
+                Vos lots seront enregistrés dans{" "}
+                <Link to="/profil">votre profil</Link>.
+              </p>
+            ) : (
+              <p className="enter-code-aide">
+                Pas encore inscrit ?{" "}
+                <Link to="/inscription">Créez votre compte</Link> pour
+                participer. Déjà un compte ?{" "}
+                <Link to="/connexion">Connectez-vous</Link>.
+              </p>
+            )}
+          </>
         )}
       </section>
     </main>
