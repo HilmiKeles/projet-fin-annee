@@ -88,7 +88,11 @@ describe("POST /api/tickets/validate", () => {
     });
     expect(prisma.$transaction).toHaveBeenCalledTimes(1);
     expect(prisma.gain.create).toHaveBeenCalledWith({
-      data: { userId: "user-1", ticketCode: "ABCDEFGHIJ", lotId: "lot-infuseur" },
+      data: {
+        user: { connect: { id: "user-1" } },
+        lot: { connect: { id: "lot-infuseur" } },
+        ticket: { connect: { code: "ABCDEFGHIJ" } },
+      },
       include: { lot: true },
     });
   });

@@ -11,18 +11,18 @@ describe('Result', () => {
 
     expect(screen.getByRole('heading', { name: 'Félicitations !' })).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'Un infuseur à thé !' }),
+      screen.getByRole('heading', { name: 'Infuseur à thé' }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: 'Voir mon historique' }),
-    ).toHaveAttribute('href', '/mon-compte');
+    ).toHaveAttribute('href', '/profil');
   });
 
   it('redirige vers la saisie si aucun gain n’est fourni', async () => {
     renderPage(<Result />, {
       route: '/resultat',
       path: '/resultat',
-      routes: [{ path: '/saisie-code', element: <p>Saisie du code</p> }],
+      routes: [{ path: '/entrer-code', element: <p>Saisie du code</p> }],
     });
 
     await waitFor(() => {

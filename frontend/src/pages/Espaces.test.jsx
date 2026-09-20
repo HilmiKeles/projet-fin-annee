@@ -24,7 +24,7 @@ describe('Admin', () => {
     renderPage(<Admin />);
 
     expect(
-      screen.getByRole('heading', { name: 'Espace administrateur' }),
+      screen.getByRole('heading', { name: 'Administration' }),
     ).toBeInTheDocument();
   });
 });
