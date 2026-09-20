@@ -15,7 +15,7 @@ ticket obtenu en boutique (ou en ligne) et remportent des lots (thés, coffrets.
 - Inscription / connexion / profil utilisateur
 - Participation au jeu via code ticket
 - Visualisation des gains et des lots
-- Back-office administrateur : statistiques (tickets, lots, gagnants), export emailing — [promouvoir un compte en admin](docs/compte-admin.md)
+- Back-office administrateur : statistiques, KPI GA4 (conversion, CTA, ROI), export emailing — [promouvoir un compte en admin](docs/compte-admin.md)
 - Espace employé boutique : liste des gagnants et remise des lots — [promouvoir un compte en employé](docs/compte-employe.md)
 - Responsive (mobile / tablette / desktop), accessible et RGPD friendly
   

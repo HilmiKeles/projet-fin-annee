@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import TirageBoules from '../components/TirageBoules.jsx';
 import NewsletterForm from '../components/NewsletterForm.jsx';
 import { DUREE_JOURS, dateClotureLisible, joursAvantCloture } from '../config/jeu.js';
+import { suivreCta } from '../utils/analytics';
 import '../styles/Home.css';
 
 const TITRE = 'Lancez le tirage et tentez de remporter un cadeau';
@@ -152,7 +153,13 @@ export default function Home() {
                 reste {joursAvantCloture()} jours pour tenter votre chance.
               </p>
               <div className="jeu-tirage-actions">
-                <Link to={lienParticiper} className="btn btn-gold">Je participe</Link>
+                <Link
+                  to={lienParticiper}
+                  className="btn btn-gold"
+                  onClick={() => suivreCta('je-participe')}
+                >
+                  Je participe
+                </Link>
                 <Link to="/reglement" className="jeu-lien-discret">Voir le règlement</Link>
               </div>
             </div>
@@ -194,7 +201,13 @@ export default function Home() {
           ))}
         </div>
         <div className="lots-cta">
-          <Link to="/lots" className="btn btn-primary">Voir le détail des lots</Link>
+          <Link
+            to="/lots"
+            className="btn btn-primary"
+            onClick={() => suivreCta('voir-lots')}
+          >
+            Voir le détail des lots
+          </Link>
         </div>
       </section>
 
@@ -214,7 +227,11 @@ export default function Home() {
       <section className="cta-band">
         <h2>Prêt à tenter votre chance ?</h2>
         <p>Saisissez le code de votre ticket de caisse et découvrez votre gain en quelques secondes !</p>
-        <Link to={user ? lienParticiper : '/inscription'} className="btn btn-gold btn-participer">
+        <Link
+          to={user ? lienParticiper : '/inscription'}
+          className="btn btn-gold btn-participer"
+          onClick={() => suivreCta('je-participe-maintenant')}
+        >
           Je participe maintenant
         </Link>
       </section>

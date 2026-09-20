@@ -162,6 +162,26 @@
   box-shadow: 0 8px 20px rgba(27, 67, 50, 0.08);
 }
 
+.admin-kpis {
+  margin: 18px 0 0;
+}
+
+.admin-kpis-table {
+  margin-top: 18px;
+}
+
+.admin-kpis-budget,
+.admin-kpis-ga4 {
+  margin: 16px 0 0;
+  color: var(--gris-fonce);
+  font-size: 0.92rem;
+}
+
+.admin-kpis-ga4 a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
 .admin-codes h2 {
   margin: 0 0 8px;
   color: var(--vert-fonce);

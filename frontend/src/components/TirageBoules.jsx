@@ -4,6 +4,7 @@ import { lireToken } from "../utils/auth";
 import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
 import { validerTicket } from "../utils/tickets.js";
 import { attendre, dureeAnimationTirage } from "../utils/tirage.js";
+import { suivreConversion, suivreCta } from "../utils/analytics";
 import LotoMachine from "./LotoMachine.jsx";
 import "../styles/TirageBoules.css";
 
@@ -56,6 +57,8 @@ export default function TirageBoules() {
         await attendre(restant);
       }
       if (ignoreRef.current) return;
+      suivreCta("lancer-tirage");
+      suivreConversion(data.gain);
       navigate("/resultat", { state: { gain: data.gain } });
     } catch (err) {
       if (ignoreRef.current) return;

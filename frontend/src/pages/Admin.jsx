@@ -10,6 +10,7 @@ import {
   viderSession,
 } from "../utils/auth";
 import "../styles/Admin.css";
+import { GA4_MEASUREMENT_ID, GA4_URL } from "../utils/analytics";
 
 function formaterDate(valeur) {
   if (!valeur) return "—";
@@ -18,6 +19,16 @@ function formaterDate(valeur) {
     month: "short",
     year: "numeric",
   });
+}
+
+function formaterPourcent(valeur) {
+  return `${Number(valeur || 0).toLocaleString("fr-FR", {
+    maximumFractionDigits: 1,
+  })} %`;
+}
+
+function formaterEuro(valeur) {
+  return `${Number(valeur || 0).toLocaleString("fr-FR")} €`;
 }
 
 function telechargerCsv(nomFichier, lignes) {
@@ -415,8 +426,8 @@ export default function Admin() {
           <p className="admin-kicker">Back-office</p>
           <h1>Tableau de bord</h1>
           <p>
-            Statistiques du jeu-concours, création d'employés boutique et export
-            newsletter.
+            Statistiques du jeu-concours, KPI de campagne, création d'employés
+            boutique et export newsletter.
           </p>
         </div>
         <button
@@ -455,6 +466,74 @@ export default function Admin() {
           <p>Abonnés newsletter</p>
           <strong>{abonnes.length}</strong>
         </article>
+      </section>
+
+      <section className="admin-codes" aria-labelledby="admin-kpis-titre">
+        <h2 id="admin-kpis-titre">Tableaux de bord GA4 & KPI</h2>
+        <p>
+          Suivi du taux de conversion, des clics CTA et mesure du ROI de la
+          campagne en temps réel. Actualisez cette page pour relire les
+          indicateurs ; Google Analytics 4 reste le détail d’audience.
+        </p>
+
+        <div className="admin-stats admin-kpis" aria-label="Indicateurs de campagne">
+          <article>
+            <p>Taux de conversion</p>
+            <strong>{formaterPourcent(stats?.kpis?.tauxConversion)}</strong>
+          </article>
+          <article>
+            <p>Clics CTA</p>
+            <strong>{stats?.kpis?.clicsCta ?? "—"}</strong>
+          </article>
+          <article>
+            <p>ROI campagne</p>
+            <strong>{formaterPourcent(stats?.kpis?.roi)}</strong>
+          </article>
+          <article>
+            <p>Valeur des lots</p>
+            <strong>{formaterEuro(stats?.kpis?.valeurLots)}</strong>
+          </article>
+        </div>
+
+        {stats?.kpis?.budgetCampagne ? (
+          <p className="admin-kpis-budget">
+            ROI estimé = valeur des lots attribués / budget campagne (
+            {formaterEuro(stats.kpis.budgetCampagne)}).
+          </p>
+        ) : null}
+
+        {stats?.kpis?.clics?.length > 0 && (
+          <div className="admin-table-wrap admin-kpis-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>CTA</th>
+                  <th>Clics</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.kpis.clics.map((cta) => (
+                  <tr key={cta.name}>
+                    <td>{cta.libelle}</td>
+                    <td>{cta.total}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <p className="admin-kpis-ga4">
+          Détail d’audience (pages vues, sources, temps réel) :{" "}
+          <a
+            href={GA4_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Ouvrir Google Analytics 4
+          </a>{" "}
+          (propriété {GA4_MEASUREMENT_ID}).
+        </p>
       </section>
 
       <section className="admin-codes" aria-labelledby="admin-employes-titre">

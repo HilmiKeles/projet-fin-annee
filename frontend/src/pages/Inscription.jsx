@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { destinationApresLogin, enregistrerSession } from "../utils/auth";
+import { suivreCta } from "../utils/analytics";
 import "../styles/Auth.css";
 import GoogleButton from "../components/GoogleButton.jsx";
 
@@ -147,6 +148,7 @@ export default function Inscription() {
           role: data.role,
           email: form.email,
         });
+        suivreCta("inscription");
         navigate(destinationApresLogin(utilisateur));
       } else {
         navigate("/connexion");

@@ -121,6 +121,53 @@ describe('Admin', () => {
       }),
     );
   });
+
+  it('affiche les KPI GA4 du tableau de bord', async () => {
+    sessionStorage.setItem('token', 'jwt-admin');
+    fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          ticketsTotal: 100,
+          ticketsUsed: 40,
+          totalGains: 4,
+          totalClients: 25,
+          gagnantsParSexe: {},
+          kpis: {
+            tauxConversion: 40,
+            clicsCta: 12,
+            roi: 0.5,
+            valeurLots: 74,
+            budgetCampagne: 15000,
+            clics: [
+              { name: 'je-participe', libelle: 'Je participe', total: 12 },
+            ],
+          },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ clients: [], abonnesNewsletter: [] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ employes: [] }),
+      });
+
+    renderPage(<Admin />);
+
+    expect(
+      await screen.findByRole('heading', { name: /tableaux de bord ga4 & kpi/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/taux de conversion, des clics cta et mesure du roi/i),
+    ).toBeInTheDocument();
+    expect(screen.getByText('40 %')).toBeInTheDocument();
+    expect(screen.getByText('Je participe')).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /ouvrir google analytics 4/i }),
+    ).toHaveAttribute('href', expect.stringContaining('analytics.google.com'));
+  });
 });
 
 describe('Employe', () => {

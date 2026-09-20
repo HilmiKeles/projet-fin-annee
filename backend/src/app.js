@@ -5,6 +5,7 @@ const ticketRoutes = require("./routes/tickets");
 const adminRoutes = require("./routes/admin");
 const usersRouter = require("./routes/users");
 const newsletterRoutes = require("./routes/newsletter");
+const analyticsRoutes = require("./routes/analytics");
 const { client, httpRequestsTotal } = require("./metrics");
 const logger = require("./logger");
 
@@ -42,6 +43,7 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", usersRouter);
 app.use("/api/newsletter", newsletterRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 

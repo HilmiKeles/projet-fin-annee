@@ -5,6 +5,7 @@ import { lireToken } from "../utils/auth";
 import { CODE_REGEX, normaliserCode } from "../utils/ticketCode.js";
 import { validerTicket } from "../utils/tickets.js";
 import { attendre, dureeAnimationTirage } from "../utils/tirage.js";
+import { suivreConversion, suivreCta } from "../utils/analytics";
 import "../styles/EnterCode.css";
 
 export default function EnterCode() {
@@ -58,6 +59,8 @@ export default function EnterCode() {
         await attendre(restant);
       }
       if (ignoreRef.current) return;
+      suivreCta("valider-code");
+      suivreConversion(data.gain);
       navigate("/resultat", { state: { gain: data.gain } });
     } catch (err) {
       if (ignoreRef.current) return;

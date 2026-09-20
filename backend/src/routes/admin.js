@@ -4,17 +4,22 @@ const { PrismaClient } = require('@prisma/client');
 const { authMiddleware, requireRole } = require('../middleware/auth');
 const { genererCodeTicket } = require('../utils/ticketCode');
 const { validatePassword } = require('../utils/password');
+const { calculerKpis } = require('../utils/kpis');
 const { emailValide, normaliserEmail } = require('../services/newsletter');
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 router.get('/stats', authMiddleware, requireRole('ADMIN'), async (req, res) => {
-  const [ticketsTotal, ticketsUsed, gains, users] = await Promise.all([
+  const [ticketsTotal, ticketsUsed, gains, users, clics] = await Promise.all([
     prisma.ticket.count(),
     prisma.ticket.count({ where: { used: true } }),
     prisma.gain.findMany({ include: { user: true, lot: true } }),
-    prisma.user.count({ where: { role: 'CLIENT' } })
+    prisma.user.count({ where: { role: 'CLIENT' } }),
+    prisma.ctaClick.groupBy({
+      by: ['name'],
+      _count: { name: true },
+    }),
   ]);
 
   const byGender = gains.reduce((acc, g) => {
@@ -23,7 +28,19 @@ router.get('/stats', authMiddleware, requireRole('ADMIN'), async (req, res) => {
     return acc;
   }, {});
 
-  res.json({ ticketsTotal, ticketsUsed, totalGains: gains.length, totalClients: users, gagnantsParSexe: byGender });
+  res.json({
+    ticketsTotal,
+    ticketsUsed,
+    totalGains: gains.length,
+    totalClients: users,
+    gagnantsParSexe: byGender,
+    kpis: calculerKpis({
+      ticketsTotal,
+      ticketsUsed,
+      gains,
+      clics,
+    }),
+  });
 });
 
 router.get('/export', authMiddleware, requireRole('ADMIN'), async (req, res) => {

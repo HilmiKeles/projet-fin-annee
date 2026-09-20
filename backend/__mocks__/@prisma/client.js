@@ -34,6 +34,11 @@ const prisma = {
     update: jest.fn(),
     deleteMany: jest.fn(),
   },
+  ctaClick: {
+    create: jest.fn(),
+    count: jest.fn(),
+    groupBy: jest.fn(),
+  },
   $transaction: jest.fn((operations) => Promise.all(operations)),
 };
 

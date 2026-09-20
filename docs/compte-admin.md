@@ -3,6 +3,11 @@
 Le back-office est sur **`/admin`**
 (`https://dsp5-archi-024a-g3.fr/admin` en production).
 
+Une fois connecté, la section **Tableaux de bord GA4 & KPI** affiche le taux de
+conversion (tickets utilisés / tickets), les clics CTA du site et un ROI estimé
+(valeur des lots / `CAMPAGNE_BUDGET`). Le lien Google Analytics 4 ouvre le détail
+d’audience (pages vues, sources, temps réel).
+
 Seuls les utilisateurs dont le rôle est `ADMIN` peuvent s’y connecter.
 Un compte client créé via `/inscription` n’a **pas** ces droits tant qu’on ne le promeut pas.
 
