@@ -10,7 +10,12 @@
 jenkins.dsp5-archi-024a-g3.fr {
 	encode gzip
 	reverse_proxy jenkins:8080 {
+		header_up Host {host}
 		flush_interval -1
+		transport http {
+			read_timeout 300s
+			dial_timeout 10s
+		}
 	}
 }
 

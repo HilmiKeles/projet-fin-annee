@@ -8,6 +8,7 @@ pipeline {
         TAG           = "${env.BUILD_NUMBER}"
         JENKINS_VOL   = 'jenkins_jenkins_home'
         WORKSPACE_DIR = "/ws/workspace/${JOB_NAME}"
+        NODE_IMAGE    = 'node:22-alpine'
     }
 
     stages {
@@ -26,7 +27,7 @@ pipeline {
                             docker run --rm \
                               -v ${JENKINS_VOL}:/ws \
                               -w ${WORKSPACE_DIR}/frontend \
-                              node:20-alpine sh -c "npm ci && (npm run lint || true)"
+                              ${NODE_IMAGE} sh -c "npm ci && (npm run lint || true)"
                         """
                     }
                 }
@@ -36,7 +37,7 @@ pipeline {
                             docker run --rm \
                               -v ${JENKINS_VOL}:/ws \
                               -w ${WORKSPACE_DIR}/backend \
-                              node:20-alpine npm ci
+                              ${NODE_IMAGE} npm ci
                         """
                     }
                 }
@@ -51,7 +52,7 @@ pipeline {
                             docker run --rm \
                               -v ${JENKINS_VOL}:/ws \
                               -w ${WORKSPACE_DIR}/backend \
-                              node:20-alpine npm test
+                              ${NODE_IMAGE} npm test
                         """
                     }
                     post {
@@ -66,7 +67,7 @@ pipeline {
                             docker run --rm \
                               -v ${JENKINS_VOL}:/ws \
                               -w ${WORKSPACE_DIR}/frontend \
-                              node:20-alpine npm test
+                              ${NODE_IMAGE} npm test
                         """
                     }
                 }
@@ -79,7 +80,7 @@ pipeline {
                     docker run --rm \
                       -v ${JENKINS_VOL}:/ws \
                       -w ${WORKSPACE_DIR}/frontend \
-                      node:20-alpine npm run build
+                      ${NODE_IMAGE} npm run build
                 """
             }
         }
