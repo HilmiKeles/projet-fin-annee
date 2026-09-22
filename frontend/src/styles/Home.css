@@ -492,6 +492,7 @@
   padding: 4rem 8%;
   text-align: center;
   scroll-margin-top: 80px;
+  background: #f3f3f1;
 }
 
 .etapes h2,
@@ -536,7 +537,7 @@
 .lots-apercu {
   padding: 4rem 8%;
   text-align: center;
-  background: var(--creme);
+  background: #f3f3f1;
 }
 
 .section-subtitle {
@@ -576,6 +577,7 @@
   font-size: 0.9rem;
   color: var(--texte);
 }
+
 
 /* ---------- BANDEAU CTA ---------- */
 .cta-band {

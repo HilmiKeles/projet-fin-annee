@@ -140,7 +140,7 @@ export default function Home() {
           </div>
 
           <aside className="jeu-tirage">
-            <span className="jeu-tirage-pouce" aria-hidden="true">🎱</span>
+            <span className="jeu-tirage-pouce" aria-hidden="true"></span>
             <div className="jeu-tirage-contenu">
               <h2>Grand tirage de clôture</h2>
               <p>
@@ -209,31 +209,6 @@ export default function Home() {
             Voir le détail des lots
           </Link>
         </div>
-      </section>
-
-      <section className="home-newsletter" aria-labelledby="home-newsletter-titre">
-        <h2 id="home-newsletter-titre">Restez dans le rythme du thé</h2>
-        <p>
-          Inscrivez-vous à la newsletter pour recevoir recettes, actualités
-          boutiques et rappels du grand tirage.
-        </p>
-        <NewsletterForm variante="page" />
-        <Link to="/newsletter" className="home-newsletter-lien">
-          Lire l'aperçu du dernier numéro
-        </Link>
-      </section>
-
-      {/* ===== BANDEAU CTA ===== */}
-      <section className="cta-band">
-        <h2>Prêt à tenter votre chance ?</h2>
-        <p>Saisissez le code de votre ticket de caisse et découvrez votre gain en quelques secondes !</p>
-        <Link
-          to={user ? lienParticiper : '/inscription'}
-          className="btn btn-gold btn-participer"
-          onClick={() => suivreCta('je-participe-maintenant')}
-        >
-          Je participe maintenant
-        </Link>
       </section>
     </div>
   );
