@@ -11,6 +11,11 @@ Ce dossier decrit l'integration de Jenkins au projet Thé Tip Top.
 ## Accès
 - Production : https://jenkins.dsp5-archi-024a-g3.fr/
 - Caddy reverse-proxifie le conteneur `jenkins:8080` (pas d'exposition du port 8080 sur l'hôte)
+- Démonstration publique GitHub :
+  [CI](https://github.com/HilmiKeles/projet-fin-annee/actions/workflows/ci.yml)
+  et
+  [sous-domaines](https://github.com/HilmiKeles/projet-fin-annee/actions/workflows/sous-domaines.yml)
+  — voir aussi [`docs/ci-cd.md`](../docs/ci-cd.md)
 
 ## Démarrage (production, à la racine du repo)
 Jenkins est déclaré dans le `docker-compose.yml` racine, sur le même réseau que Caddy.
