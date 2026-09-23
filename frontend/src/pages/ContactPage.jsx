@@ -1,27 +1,49 @@
 import { useState } from 'react';
+import Honeypot from '../components/Honeypot.jsx';
+import { CHAMP_HONEYPOT, MESSAGE_ROBOT, estRobot } from '../utils/honeypot';
 import '../styles/ContactPage.css';
 
+const FORMULAIRE_VIDE = {
+  prenom: '',
+  nom: '',
+  email: '',
+  sujet: '',
+  message: '',
+  [CHAMP_HONEYPOT]: false
+};
+
 function ContactPage() {
-  const [formData, setFormData] = useState({
-    prenom: '',
-    nom: '',
-    email: '',
-    sujet: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState(FORMULAIRE_VIDE);
   const [envoye, setEnvoye] = useState(false);
+  const [erreur, setErreur] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (estRobot(formData[CHAMP_HONEYPOT])) {
+      setErreur(MESSAGE_ROBOT);
+      return;
+    }
+
+    setErreur('');
     // Prêt pour l'API backend
-    console.log('Contact envoyé:', formData);
+    console.log('Contact envoyé:', {
+      prenom: formData.prenom,
+      nom: formData.nom,
+      email: formData.email,
+      sujet: formData.sujet,
+      message: formData.message
+    });
     setEnvoye(true);
-    setFormData({ prenom: '', nom: '', email: '', sujet: '', message: '' });
+    setFormData(FORMULAIRE_VIDE);
   };
 
   const sujets = [
@@ -78,7 +100,18 @@ function ContactPage() {
           ) : (
             <>
               <h2>Envoyez-nous un message</h2>
+              {erreur && (
+                <p className="contact-erreur" role="alert">
+                  {erreur}
+                </p>
+              )}
               <form onSubmit={handleSubmit} className="contact-form">
+                <Honeypot
+                  idSuffixe="contact"
+                  checked={formData[CHAMP_HONEYPOT]}
+                  onChange={handleChange}
+                />
+
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="prenom">Prénom *</label>

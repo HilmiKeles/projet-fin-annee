@@ -6,6 +6,7 @@ const adminRoutes = require("./routes/admin");
 const usersRouter = require("./routes/users");
 const newsletterRoutes = require("./routes/newsletter");
 const analyticsRoutes = require("./routes/analytics");
+const { honeypotMiddleware } = require("./middleware/honeypot");
 const { client, httpRequestsTotal } = require("./metrics");
 const logger = require("./logger");
 
@@ -32,6 +33,9 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// Piège anti-robot : refuse toute requête dont la case invisible est cochée.
+app.use(honeypotMiddleware);
 
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", client.register.contentType);

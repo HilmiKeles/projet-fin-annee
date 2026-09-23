@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Honeypot from '../components/Honeypot.jsx';
+import { CHAMP_HONEYPOT, MESSAGE_ROBOT, estRobot } from '../utils/honeypot';
 import '../styles/ReportIssuePage.css';
 
 const ISSUE_TYPES = [
@@ -18,10 +20,12 @@ export default function ReportIssuePage() {
     description: '',
     email: '',
     screenshot: null,
-    consent: false
+    consent: false,
+    [CHAMP_HONEYPOT]: false
   });
   const [submitted, setSubmitted] = useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
+  const [erreur, setErreur] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -33,6 +37,13 @@ export default function ReportIssuePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (estRobot(formData[CHAMP_HONEYPOT])) {
+      setErreur(MESSAGE_ROBOT);
+      return;
+    }
+
+    setErreur('');
     // Génération numéro de ticket fictif
     const ticket = `TT-${Date.now().toString(36).toUpperCase()}`;
     setTicketNumber(ticket);
@@ -109,8 +120,20 @@ export default function ReportIssuePage() {
         {/* Formulaire */}
         <div className="report-form-wrapper">
           <h2>Détaillez votre problème</h2>
-          
+
+          {erreur && (
+            <p className="report-erreur" role="alert">
+              {erreur}
+            </p>
+          )}
+
           <form onSubmit={handleSubmit} className="report-form">
+            <Honeypot
+              idSuffixe="signalement"
+              checked={formData[CHAMP_HONEYPOT]}
+              onChange={handleChange}
+            />
+
             <div className="form-group">
               <label htmlFor="issueType">Type de problème *</label>
               <select

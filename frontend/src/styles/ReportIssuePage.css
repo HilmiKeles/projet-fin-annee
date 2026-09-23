@@ -96,6 +96,15 @@
   font-family: var(--font-titre);
 }
 
+.report-erreur {
+  background: #fdecea;
+  border: 1px solid #f5c2c0;
+  border-radius: 8px;
+  color: #a32b23;
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem;
+}
+
 .report-form .form-group {
   margin-bottom: 1.5rem;
 }
