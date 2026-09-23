@@ -9,7 +9,7 @@ describe('Home', () => {
     const titre = screen.getByRole('heading', { level: 1 });
     expect(titre).toHaveTextContent(/Lancez/);
     expect(titre).toHaveTextContent(/cadeau/);
-    expect(screen.getByLabelText('100% gagnant')).toBeInTheDocument();
+    expect(screen.getByLabelText(/100% gagnant/i)).toBeInTheDocument();
     expect(screen.getAllByText(/thé tip top/i).length).toBeGreaterThan(0);
   });
 

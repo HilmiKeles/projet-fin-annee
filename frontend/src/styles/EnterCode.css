@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem 1rem;
-  background: var(--creme);
+  background: transparent;
 }
 
 .enter-code-card {
@@ -67,12 +67,12 @@
 .compteur {
   text-align: right;
   font-size: 0.85rem;
-  color: #888;
+  color: var(--gris-fonce);
 }
 
 .erreur {
-  background: #fdecea;
-  color: #b3261e;
+  background: var(--erreur-fond);
+  color: var(--erreur);
   padding: 0.75rem;
   border-radius: 8px;
   text-align: center;
@@ -96,7 +96,7 @@
 
 .btn-participer:hover:not(:disabled) {
   background: var(--vert-fonce);
-  color: #C9A227;
+  color: var(--or);
 }
 
 .btn-primary:disabled {

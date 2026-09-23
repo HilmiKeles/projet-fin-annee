@@ -6,8 +6,8 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 0.75rem 1.5rem;
-  background-color: #2d5016;
-  color: #fff;
+  background-color: var(--vert-fonce);
+  color: var(--blanc);
   text-decoration: none;
   font-weight: 500;
   border-radius: 0 0 8px 8px;
@@ -25,7 +25,7 @@
 }
 
 .main-content:focus-visible {
-  outline: 3px solid #c1a35e;
+  outline: 3px solid var(--or);
   outline-offset: -3px;
 }
 

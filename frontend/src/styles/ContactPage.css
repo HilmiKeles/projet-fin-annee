@@ -91,7 +91,7 @@
 }
 
 .contact-form-wrapper {
-  background: white;
+  background: var(--blanc);
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(27, 67, 50, 0.12);
@@ -127,7 +127,7 @@
   font-size: 15px;
   font-family: var(--font-texte);
   transition: border-color 0.2s, box-shadow 0.2s;
-  background: white;
+  background: var(--blanc);
 }
 
 .form-group textarea {

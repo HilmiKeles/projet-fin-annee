@@ -1,7 +1,7 @@
 .admin-liste-outils input[type="search"] {
   min-width: 240px;
   padding: 10px 14px;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--bordure);
   border-radius: 8px;
   font-size: 0.95rem;
   font-family: inherit;

@@ -53,7 +53,7 @@
 
 /* ----- Section principale ----- */
 .footer-main {
-  background: #f3f3f1;
+  background: var(--creme);
   padding: 48px 24px 32px;
 }
 
@@ -128,8 +128,7 @@
 
 /* --- Colonnes --- */
 .footer-col h3 {
-  color: var(--dore);
-  color: black;
+  color: var(--vert-fonce);
   font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;

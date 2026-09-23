@@ -5,8 +5,7 @@ import { DUREE_JOURS, dateClotureLisible, joursAvantCloture } from '../config/je
 import { suivreCta } from '../utils/analytics';
 import '../styles/Home.css';
 
-const TITRE = 'Lancez le tirage et tentez de remporter un cadeau';
-
+const TITRE = ' Jeu concours lancez le tirage et tentez de remporter un cadeau';
 // Éléments qui remontent en fond du bandeau (position en %, durée en secondes).
 const DECOR = [
   { emoji: '🍃', gauche: 5, taille: 90, duree: 19, delai: 0 },
@@ -19,25 +18,6 @@ const DECOR = [
   { emoji: '🍵', gauche: 87, taille: 90, duree: 25, delai: -5 },
   { emoji: '🍃', gauche: 96, taille: 90, duree: 22, delai: -18 },
 ];
-
-// Flèche décorative qui relie chaque consigne à l'élément correspondant.
-function Fleche({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 76 26"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M72 5 C52 2 28 5 13 19" />
-      <path d="M13 19 L26 14" />
-      <path d="M13 19 L16 5" />
-    </svg>
-  );
-}
 
 export default function Home() {
   const user = JSON.parse(sessionStorage.getItem('user') || 'null');
@@ -88,34 +68,29 @@ export default function Home() {
         </div>
 
         <div className="jeu-hero-inner">
+          <h1 className="jeu-titre">
+            {TITRE.split(' ').map((mot, index) => (
+              <span
+                key={`${mot}-${index}`}
+                className="jeu-titre-mot"
+                style={{ animationDelay: `${index * 0.07}s` }}
+              >
+                {mot}
+              </span>
+            ))}
+          </h1>
+
           <div className="jeu-colonne jeu-colonne-gauche">
             <div className="jeu-hero-entete">
-              <h1 className="jeu-titre">
-                {TITRE.split(' ').map((mot, index) => (
-                  <span
-                    key={`${mot}-${index}`}
-                    className="jeu-titre-mot"
-                    style={{ animationDelay: `${index * 0.07}s` }}
-                  >
-                    {mot}
-                  </span>
-                ))}
-              </h1>
-
-              <div className="jeu-badge-gagnant" aria-label="100% gagnant">
+              <div className="jeu-badge-gagnant" aria-label="Jeu concours 100% gagnant">
                 <div className="jeu-badge-gagnant-etoiles" aria-hidden="true" />
                 <div className="jeu-badge-gagnant-cercle">
+                  <span className="jeu-badge-titre">Jeu concours</span>
                   <span className="jeu-badge-pourcent">100%</span>
-                  <span className="jeu-badge-texte">GAGNANT</span>
+                  <span className="jeu-badge-texte">Gagnant</span>
                 </div>
               </div>
             </div>
-
-            <p className="jeu-marque">
-              <span className="jeu-marque-logo" aria-hidden="true">🍵</span>
-              <span className="jeu-marque-nom">Thé Tip Top</span>
-              <span className="jeu-marque-note">Ouverture de la 10ᵉ boutique — Nice</span>
-            </p>
           </div>
 
           <div className="jeu-colonne jeu-colonne-centre">
@@ -124,15 +99,9 @@ export default function Home() {
 
           <div className="jeu-colonne jeu-colonne-droite">
             <div className="jeu-scene-infos">
-              <a className="jeu-btn-comment" href="#comment-jouer">
-                Comment jouer ?
-                <Fleche className="jeu-fleche-comment" />
-              </a>
-
               <ol className="jeu-consignes">
                 {consignes.map((consigne, index) => (
                   <li key={consigne} className="jeu-consigne">
-                    <Fleche className="jeu-consigne-fleche" />
                     <span className="jeu-consigne-num">{index + 1}</span>
                     <span className="jeu-consigne-texte">{consigne}</span>
                   </li>
@@ -140,31 +109,6 @@ export default function Home() {
               </ol>
             </div>
 
-            <aside className="jeu-tirage">
-              <span className="jeu-tirage-pouce" aria-hidden="true"></span>
-              <div className="jeu-tirage-contenu">
-                <h2>Grand tirage de clôture</h2>
-                <p>
-                  Le jeu-concours dure <strong>{DUREE_JOURS} jours</strong>. À sa clôture, le{' '}
-                  <strong>{dateClotureLisible()}</strong>, un tirage au sort désignera le
-                  gagnant du gros lot : <strong>un an de thé offert, d'une valeur de 360 €</strong>.
-                </p>
-                <p className="jeu-tirage-note">
-                  Chaque code saisi vous inscrit automatiquement au grand tirage. Il vous
-                  reste {joursAvantCloture()} jours pour tenter votre chance.
-                </p>
-                <div className="jeu-tirage-actions">
-                  <Link
-                    to={lienParticiper}
-                    className="btn btn-gold"
-                    onClick={() => suivreCta('je-participe')}
-                  >
-                    Je participe
-                  </Link>
-                  <Link to="/reglement" className="jeu-lien-discret">Voir le règlement</Link>
-                </div>
-              </div>
-            </aside>
           </div>
         </div>
       </section>
