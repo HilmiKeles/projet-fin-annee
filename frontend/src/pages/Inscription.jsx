@@ -4,6 +4,8 @@ import { destinationApresLogin, enregistrerSession } from "../utils/auth";
 import { suivreCta } from "../utils/analytics";
 import "../styles/Auth.css";
 import GoogleButton from "../components/GoogleButton.jsx";
+import Honeypot from "../components/Honeypot.jsx";
+import { CHAMP_HONEYPOT, MESSAGE_ROBOT, estRobot } from "../utils/honeypot";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -18,6 +20,7 @@ export default function Inscription() {
     confirmation: "",
     consentement: false,
     newsletter: false,
+    [CHAMP_HONEYPOT]: false,
   });
   const [erreurs, setErreurs] = useState({});
   const [chargement, setChargement] = useState(false);
@@ -107,6 +110,12 @@ export default function Inscription() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (estRobot(form[CHAMP_HONEYPOT])) {
+      setErreurs({ global: MESSAGE_ROBOT });
+      return;
+    }
+
     const nouvellesErreurs = valider();
 
     if (Object.keys(nouvellesErreurs).length > 0) {
@@ -189,6 +198,12 @@ export default function Inscription() {
         )}
 
         <form onSubmit={handleSubmit} noValidate>
+          <Honeypot
+            idSuffixe="inscription"
+            checked={form[CHAMP_HONEYPOT]}
+            onChange={handleChange}
+          />
+
           <div className="form-ligne">
             <div className="form-groupe">
               <label htmlFor="prenom">Prénom</label>

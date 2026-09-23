@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { destinationApresLogin, enregistrerSession } from "../utils/auth";
 import GoogleButton from "../components/GoogleButton.jsx";
+import Honeypot from "../components/Honeypot.jsx";
+import { MESSAGE_ROBOT, estRobot } from "../utils/honeypot";
 import "../styles/Auth.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
@@ -13,6 +15,7 @@ export default function Connexion() {
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
+  const [piegeRobot, setPiegeRobot] = useState(false);
 
   const handleGoogleResponse = async (response) => {
     setErreur("");
@@ -48,6 +51,12 @@ export default function Connexion() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErreur("");
+
+    if (estRobot(piegeRobot)) {
+      setErreur(MESSAGE_ROBOT);
+      return;
+    }
+
     setChargement(true);
 
     try {
@@ -109,6 +118,12 @@ export default function Connexion() {
         )}
 
         <form onSubmit={handleSubmit} noValidate>
+          <Honeypot
+            idSuffixe="connexion"
+            checked={piegeRobot}
+            onChange={(e) => setPiegeRobot(e.target.checked)}
+          />
+
           <div className="form-groupe">
             <label htmlFor="email">Adresse e-mail</label>
             <input

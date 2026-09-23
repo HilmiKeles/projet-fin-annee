@@ -1,0 +1,13 @@
+/* Champ piège anti-robot : présent dans le DOM, invisible et inaccessible
+   pour les visiteurs humains (lecteurs d'écran et clavier compris).
+   On évite display:none, que certains robots détectent pour ignorer le champ. */
+.honeypot {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}

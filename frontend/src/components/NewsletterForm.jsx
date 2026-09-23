@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Honeypot from "./Honeypot.jsx";
+import { MESSAGE_ROBOT, estRobot } from "../utils/honeypot";
 import "../styles/Newsletter.css";
 
 const API_URL = import.meta.env.VITE_API_URL || "/api";
@@ -11,12 +13,18 @@ export default function NewsletterForm({ variante = "page" }) {
   const [erreur, setErreur] = useState("");
   const [succes, setSucces] = useState(false);
   const [chargement, setChargement] = useState(false);
+  const [piegeRobot, setPiegeRobot] = useState(false);
 
   const sombre = variante === "sombre";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErreur("");
+
+    if (estRobot(piegeRobot)) {
+      setErreur(MESSAGE_ROBOT);
+      return;
+    }
 
     if (!EMAIL_REGEX.test(email.trim())) {
       setErreur("Indiquez une adresse e-mail valide.");
@@ -76,6 +84,12 @@ export default function NewsletterForm({ variante = "page" }) {
 
   return (
     <form className={`nl-form ${sombre ? "nl-form-sombre" : ""}`} onSubmit={handleSubmit} noValidate>
+      <Honeypot
+        idSuffixe={`newsletter-${variante}`}
+        checked={piegeRobot}
+        onChange={(event) => setPiegeRobot(event.target.checked)}
+      />
+
       <div className="nl-form-ligne">
         <label className="sr-only" htmlFor={`newsletter-email-${variante}`}>
           Adresse e-mail
