@@ -7,8 +7,8 @@ describe('Home', () => {
     renderPage(<Home />);
 
     const titre = screen.getByRole('heading', { level: 1 });
-    expect(titre).toHaveTextContent(/Lancez/);
-    expect(titre).toHaveTextContent(/cadeau/);
+    expect(titre).toHaveTextContent(/lancez/i);
+    expect(titre).toHaveTextContent(/cadeau/i);
     expect(screen.getByLabelText(/100% gagnant/i)).toBeInTheDocument();
     expect(screen.getAllByText(/thé tip top/i).length).toBeGreaterThan(0);
   });
@@ -24,20 +24,19 @@ describe('Home', () => {
   it('envoie un visiteur non connecté vers la connexion', () => {
     renderPage(<Home />);
 
-    expect(screen.getByRole('link', { name: 'Je participe' })).toHaveAttribute(
-      'href',
-      '/connexion',
-    );
+    expect(
+      screen.getByRole('link', { name: 'Connectez-vous pour jouer' }),
+    ).toHaveAttribute('href', '/connexion');
   });
 
-  it('envoie un utilisateur connecté vers la saisie de code', () => {
+  it('permet à un utilisateur connecté de lancer le tirage', () => {
+    sessionStorage.setItem('token', 'jwt-test');
     sessionStorage.setItem('user', JSON.stringify({ id: 'user-1', role: 'CLIENT' }));
 
     renderPage(<Home />);
 
-    expect(screen.getByRole('link', { name: 'Je participe' })).toHaveAttribute(
-      'href',
-      '/entrer-code',
-    );
+    expect(
+      screen.getByRole('button', { name: 'Lancer le tirage' }),
+    ).toBeInTheDocument();
   });
 });
