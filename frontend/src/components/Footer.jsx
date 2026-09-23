@@ -30,7 +30,7 @@ export default function Footer() {
             </div>
             <div className="footer-brand-socials">
               <a
-                href="https://facebook.com"
+                href="https://facebook.com/thetiptop_projet"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -107,7 +107,7 @@ export default function Footer() {
             <ul className="footer-contact-list">
               <li> 18 rue Léon Frot, 75011 Paris</li>
               <li> 01 23 45 67 89</li>
-              <li> contact@thetiptop.fr</li>
+              <li> contact@thetiptop.com</li>
             </ul>
           </div>
         </div>

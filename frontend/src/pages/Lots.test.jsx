@@ -47,7 +47,7 @@ describe('Lots', () => {
 
     expect(screen.getByRole('link', { name: 'Saisir mon code' })).toHaveAttribute(
       'href',
-      '/mon-compte',
+      '/entrer-code',
     );
   });
 });

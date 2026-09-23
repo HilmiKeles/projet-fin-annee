@@ -90,7 +90,7 @@ export default function ReportIssuePage() {
           <ul>
             <li>
               <strong>📧 Non réception des emails</strong>
-              Vérifiez vos spams. Ajoutez contact@thetiptop.fr à vos contacts.
+              Vérifiez vos spams. Ajoutez contact@thetiptop.com à vos contacts.
             </li>
             <li>
               <strong>🎫 Code ticket invalide</strong>
@@ -179,7 +179,7 @@ export default function ReportIssuePage() {
                   onChange={handleChange}
                   required
                 />
-                J'accepte que mes données soient utilisées pour le traitement de ce signalement conformément à la <Link to="/politique-confidentialite">politique de confidentialité</Link> *
+                J'accepte que mes données soient utilisées pour le traitement de ce signalement conformément à la <Link to="/confidentialite">politique de confidentialité</Link> *
               </label>
             </div>
 
