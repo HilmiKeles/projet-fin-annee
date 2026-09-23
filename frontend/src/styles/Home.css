@@ -105,9 +105,9 @@
 /* ---------- BADGE 100% GAGNANT ---------- */
 .jeu-hero-entete {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(16px, 3vw, 32px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
   margin-bottom: 1.4rem;
 }
 
@@ -215,16 +215,42 @@
   50% { transform: scale(1.12); }
 }
 
+/* Trois colonnes. Pour changer la disposition, réordonner les noms
+   dans grid-template-areas (gauche, centre, droite). */
 .jeu-hero-inner {
   position: relative;
   z-index: 1;
-  max-width: 1100px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(240px, 0.85fr) minmax(0, 1.1fr);
+  grid-template-areas: "gauche centre droite";
+  gap: clamp(20px, 2.5vw, 40px);
+  align-items: center;
   margin: 0 auto;
+}
+
+.jeu-colonne {
+  min-width: 0;
+}
+
+.jeu-colonne-gauche {
+  grid-area: gauche;
+}
+
+.jeu-colonne-centre {
+  grid-area: centre;
+  display: flex;
+  justify-content: center;
+}
+
+.jeu-colonne-droite {
+  grid-area: droite;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .jeu-titre,
 .jeu-marque,
-.jeu-scene,
 .jeu-tirage {
   position: relative;
   z-index: 1;
@@ -237,7 +263,7 @@
   margin: 0;
   color: var(--vert-fonce);
   font-family: var(--font-accueil);
-  font-size: clamp(3.5rem, 3vw, 2.5rem);
+  font-size: clamp(1.7rem, 2.3vw, 2.5rem);
   font-weight: 800;
   line-height: 1.25;
   letter-spacing: 0.01em;
@@ -276,7 +302,8 @@
   justify-content: center;
   gap: 8px 16px;
   width: fit-content;
-  margin: 0 auto 2.5rem;
+  max-width: 100%;
+  margin: 0;
   padding: 12px 28px;
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.92);
@@ -304,14 +331,7 @@
   font-weight: 600;
 }
 
-/* ---------- SCÈNE : ROUE + CONSIGNES ---------- */
-.jeu-scene {
-  display: grid;
-  grid-template-columns: minmax(280px, 460px) 1fr;
-  align-items: center;
-  gap: 48px;
-}
-
+/* ---------- CONSIGNES ---------- */
 .jeu-scene-infos {
   display: flex;
   flex-direction: column;
@@ -340,12 +360,7 @@
 }
 
 .jeu-fleche-comment {
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 16px);
-  width: 88px;
-  color: var(--or);
-  transform: translateY(-50%);
+  display: none;
 }
 
 .jeu-consignes {
@@ -405,14 +420,11 @@
 
 /* ---------- ENCART TIRAGE AU SORT ---------- */
 .jeu-tirage {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  width: 100%;
   gap: 26px;
-  margin-top: 2.5rem;
   padding: 28px 32px;
   border-radius: 20px;
   background: var(--blanc);
-  box-shadow: 0 14px 34px rgba(27, 67, 50, 0.2);
 }
 
 .jeu-tirage-pouce {
@@ -492,6 +504,7 @@
   padding: 4rem 8%;
   text-align: center;
   scroll-margin-top: 80px;
+  background: #f3f3f1;
 }
 
 .etapes h2,
@@ -536,7 +549,7 @@
 .lots-apercu {
   padding: 4rem 8%;
   text-align: center;
-  background: var(--creme);
+  background: #f3f3f1;
 }
 
 .section-subtitle {
@@ -577,6 +590,7 @@
   color: var(--texte);
 }
 
+
 /* ---------- BANDEAU CTA ---------- */
 .cta-band {
   background: var(--vert-fonce);
@@ -607,8 +621,15 @@
     width: clamp(120px, 28vw, 170px);
   }
 
+  .jeu-hero-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "gauche"
+      "centre"
+      "droite";
+  }
+
   .jeu-hero-entete {
-    flex-direction: column-reverse;
     align-items: center;
     text-align: center;
   }
@@ -617,11 +638,12 @@
     text-align: center;
   }
 
-  .jeu-scene {
-    grid-template-columns: 1fr;
-    gap: 36px;
+  .jeu-marque {
+    margin-right: auto;
+    margin-left: auto;
   }
 
+  .jeu-colonne-droite,
   .jeu-scene-infos {
     align-items: center;
   }

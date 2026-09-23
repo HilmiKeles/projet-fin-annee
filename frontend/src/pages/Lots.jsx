@@ -150,7 +150,7 @@ export default function Lots() {
       <section className="lots-cta">
         <h2>Vous avez un code ?</h2>
         <p>Ne perdez pas une seconde, votre lot vous attend !</p>
-        <Link to={user ? "/mon-compte" : "/connexion"} className="btn btn-gold">
+        <Link to={user ? "/entrer-code" : "/connexion"} className="btn btn-gold">
           Saisir mon code
         </Link>
       </section>

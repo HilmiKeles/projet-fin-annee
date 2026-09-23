@@ -1,0 +1,52 @@
+name: Sous-domaines publics
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sous-domaines-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sonde:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Site
+            url: https://dsp5-archi-024a-g3.fr/
+          - name: Jenkins
+            url: https://jenkins.dsp5-archi-024a-g3.fr/
+          - name: Prometheus
+            url: https://prometheus.dsp5-archi-024a-g3.fr/
+          - name: Grafana
+            url: https://grafana.dsp5-archi-024a-g3.fr/
+          - name: Kibana
+            url: https://kibana.dsp5-archi-024a-g3.fr/
+    steps:
+      - name: Vérifier que le sous-domaine répond
+        env:
+          URL: ${{ matrix.url }}
+        run: |
+          set -euo pipefail
+          code="$(curl -sS -o /tmp/body -w "%{http_code}" --max-time 25 -L "$URL" || true)"
+          echo "HTTP $code — $URL"
+          case "$code" in
+            200|301|302|303|401|403)
+              echo "Sous-domaine joignable publiquement."
+              ;;
+            *)
+              echo "Le sous-domaine n'est pas démontré publiquement (code $code)."
+              exit 1
+              ;;
+          esac

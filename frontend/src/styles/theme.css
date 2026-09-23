@@ -14,9 +14,9 @@
   --dore-clair: var(--or-clair);
   --blanc-casse: var(--creme);
   --gris-fonce: #4a5459;
-  --font-titre: Georgia, "Times New Roman", serif;
+  --font-titre: "Nunito", var(--font-texte);
   --font-texte: "Segoe UI", system-ui, sans-serif;
-  --font-accueil: "Nunito", var(--font-texte);
+  --font-accueil: var(--font-titre);
 }
 
 * {

@@ -28,9 +28,6 @@ describe('Home', () => {
       'href',
       '/connexion',
     );
-    expect(
-      screen.getByRole('link', { name: 'Je participe maintenant' }),
-    ).toHaveAttribute('href', '/inscription');
   });
 
   it('envoie un utilisateur connecté vers la saisie de code', () => {

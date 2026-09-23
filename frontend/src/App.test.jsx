@@ -41,6 +41,14 @@ describe('App — routage', () => {
     ).toBeInTheDocument();
   });
 
+  it('affiche le jeu-concours sur /jeu-concours', () => {
+    visiter('/jeu-concours');
+
+    expect(
+      screen.getByRole('heading', { level: 1 }),
+    ).toHaveTextContent(/Lancez/);
+  });
+
   it('affiche la page contact sur /contact', () => {
     visiter('/contact');
 

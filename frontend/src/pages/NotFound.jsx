@@ -13,7 +13,7 @@ export default function NotFound() {
         </p>
         <div className="notfound-actions">
           <Link to="/" className="btn-primary">Retour à l'accueil</Link>
-          <Link to="/participer" className="btn-secondary">Participer au jeu</Link>
+          <Link to="/entrer-code" className="btn-secondary">Participer au jeu</Link>
         </div>
       </div>
     </main>

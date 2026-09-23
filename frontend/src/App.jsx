@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 
 // Pages
@@ -31,6 +31,10 @@ function App() {
         <Route element={<Layout />}>
           {/* Toutes les routes, aucune protégée */}
           <Route path="/" element={<Home />} />
+          <Route path="/jeu-concours" element={<Home />} />
+          <Route path="/participer" element={<Navigate to="/entrer-code" replace />} />
+          <Route path="/mon-compte" element={<Navigate to="/profil" replace />} />
+          <Route path="/politique-confidentialite" element={<Navigate to="/confidentialite" replace />} />
           <Route path="/reglement" element={<Reglement />} />
           <Route path="/entrer-code" element={<EnterCode />} />
           <Route path="/connexion" element={<Connexion />} />
