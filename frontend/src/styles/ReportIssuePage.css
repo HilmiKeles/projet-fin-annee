@@ -54,7 +54,7 @@
 
 .report-faq li {
   padding: 1rem;
-  background: white;
+  background: var(--blanc);
   border-radius: 12px;
   margin-bottom: 0.75rem;
 }
@@ -82,7 +82,7 @@
 
 /* ---------- FORMULAIRE ---------- */
 .report-form-wrapper {
-  background: white;
+  background: var(--blanc);
   border-radius: 16px;
   padding: 2.5rem;
   box-shadow: 0 4px 12px rgba(27, 67, 50, 0.12);
@@ -118,7 +118,7 @@
   font-size: 15px;
   font-family: var(--font-texte);
   transition: border-color 0.2s, box-shadow 0.2s;
-  background: white;
+  background: var(--blanc);
 }
 
 .report-form textarea {
@@ -229,7 +229,7 @@ input[type="file"] {
 
 /* ---------- CONTACT ALT ---------- */
 .report-alt {
-  background: white;
+  background: var(--blanc);
   border-radius: 16px;
   padding: 2rem;
   text-align: center;

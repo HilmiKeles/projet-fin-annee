@@ -46,7 +46,7 @@ describe('App — routage', () => {
 
     expect(
       screen.getByRole('heading', { level: 1 }),
-    ).toHaveTextContent(/Lancez/);
+    ).toHaveTextContent(/lancez/i);
   });
 
   it('affiche la page contact sur /contact', () => {

@@ -3,7 +3,7 @@
    ============================================ */
 
 .legal-page {
-  background: var(--blanc-casse, #faf9f6);
+  background: transparent;
   min-height: 100vh;
   padding: 48px 24px;
 }
@@ -94,12 +94,12 @@
 }
 
 .legal-table tbody tr:hover {
-  background: #e8f5e9;
+  background: var(--fond-haut);
 }
 
 /* ----- Encadré projétudiant ----- */
 .legal-highlight {
-  background: linear-gradient(135deg, var(--vert-clair) 0%, #e8f5e9 100%);
+  background: linear-gradient(135deg, var(--vert-clair) 0%, var(--fond-haut) 100%);
   border-radius: 12px;
   padding: 24px;
   margin-top: 40px;

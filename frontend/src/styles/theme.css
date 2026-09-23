@@ -2,12 +2,25 @@
   --vert-the: #3a7d44;
   --vert-fonce: #1b4332;
   --vert-clair: #d8f3dc;
-  --creme: #fefae0;
+  --creme: #eef1ee;
   --or: #c9a227;
   --or-clair: #e8cf6b;
   --or-fonce: #a8871f;
+  --gris: #8d938d;
+  --gris-clair: #c5cac5;
+  --gris-moyen: #5d635d;
   --blanc: #ffffff;
   --texte: #2d3436;
+  --fond-haut: #eaf8ee;
+  --fond-bas: #b9e3c1;
+  --bordure: #c5ddc9;
+  --erreur: #9b2c2c;
+  --erreur-fond: #fdecea;
+  --erreur-fonce: #7a2222;
+  --succes: #1b4332;
+  --succes-fond: #d8f3dc;
+  --alerte: #856404;
+  --alerte-fond: #fff8dc;
 
   /* Alias historiques encore utilisés par les pages Lots, Résultat, etc. */
   --dore: var(--or);
@@ -26,13 +39,15 @@
 body {
   font-family: var(--font-texte);
   color: var(--texte);
-  background: var(--blanc);
+  background: linear-gradient(180deg, var(--fond-haut) 0%, var(--vert-clair) 55%, var(--fond-bas) 100%);
+  background-attachment: fixed;
   margin: 0;
   line-height: 1.6;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-titre);
+  color: var(--vert-fonce);
   line-height: 1.3;
 }
 

@@ -3,17 +3,16 @@
   display: flex;
   justify-content: center;
   padding: 3rem 1rem;
-  background: linear-gradient(135deg, #faf7f0 0%, #e8f5e9 100%);
 }
 
 .account-chargement {
-  color: #1b4332;
+  color: var(--vert-fonce);
   font-size: 1.1rem;
   align-self: center;
 }
 
 .account-card {
-  background: #ffffff;
+  background: var(--blanc);
   border-radius: 20px;
   padding: 2.5rem;
   max-width: 640px;
@@ -23,27 +22,27 @@
 }
 
 .account-card h1 {
-  color: #1b4332;
+  color: var(--vert-fonce);
   font-size: 2rem;
   margin: 0 0 1.5rem;
 }
 
 .account-card h2 {
-  color: #2d6a4f;
+  color: var(--vert-the);
   font-size: 1.3rem;
   margin: 2rem 0 1rem;
 }
 
 .account-profil {
-  background: #f4f9f5;
-  border: 1px solid #d8e6dc;
+  background: var(--vert-clair);
+  border: 1px solid var(--bordure);
   border-radius: 12px;
   padding: 1.25rem;
 }
 
 .account-profil p {
   margin: 0.3rem 0;
-  color: #444;
+  color: var(--texte);
 }
 
 .account-newsletter {
@@ -55,7 +54,7 @@
   align-items: flex-start;
   gap: 0.7rem;
   cursor: pointer;
-  color: #444;
+  color: var(--texte);
 }
 
 .account-newsletter-toggle input {
@@ -64,7 +63,7 @@
 
 .account-newsletter-msg {
   margin: 0.75rem 0 0;
-  color: #2d6a4f;
+  color: var(--vert-the);
   font-weight: 600;
   font-size: 0.9rem;
 }
@@ -75,14 +74,14 @@
 }
 
 .account-newsletter-lien a {
-  color: #2d6a4f;
+  color: var(--vert-the);
   font-weight: 600;
 }
 
 .account-vide {
   text-align: center;
   padding: 2rem 0;
-  color: #666;
+  color: var(--gris-fonce);
 }
 
 .account-vide .btn-primary {
@@ -103,7 +102,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  border: 2px solid #d8e6dc;
+  border: 2px solid var(--bordure);
   border-radius: 12px;
   padding: 1rem;
   transition: border-color 0.2s;
@@ -126,13 +125,13 @@
 }
 
 .gain-details strong {
-  color: #1b4332;
+  color: var(--vert-fonce);
 }
 
 .gain-code,
 .gain-date {
   font-size: 0.85rem;
-  color: #777;
+  color: var(--gris-fonce);
 }
 
 .gain-code {
@@ -148,18 +147,18 @@
 }
 
 .gain-statut.a-retirer {
-  background: #fff3cd;
-  color: #856404;
+  background: var(--alerte-fond);
+  color: var(--alerte);
 }
 
 .gain-statut.remis {
-  background: #d4edda;
-  color: #155724;
+  background: var(--succes-fond);
+  color: var(--succes);
 }
 
-.btn-primary {
-  background: #2d6a4f;
-  color: white;
+.account .btn-primary {
+  background: var(--vert-the);
+  color: var(--blanc);
   border: none;
   padding: 0.9rem 1.8rem;
   border-radius: 12px;
@@ -170,13 +169,13 @@
   transition: transform 0.15s, background 0.2s;
 }
 
-.btn-primary:hover {
-  background: #1b4332;
+.account .btn-primary:hover {
+  background: var(--vert-fonce);
   transform: translateY(-2px);
 }
 
-.btn-primary:disabled,
-.btn-danger:disabled {
+.account .btn-primary:disabled,
+.account .btn-danger:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -196,13 +195,13 @@
 
 .account-form label {
   font-weight: 600;
-  color: #1b4332;
+  color: var(--vert-fonce);
   font-size: 0.92rem;
 }
 
 .account-form input[type="password"] {
   padding: 0.75rem 1rem;
-  border: 2px solid #d8e6dc;
+  border: 2px solid var(--bordure);
   border-radius: 10px;
   font-size: 1rem;
   font-family: inherit;
@@ -210,13 +209,13 @@
 
 .account-form input[type="password"]:focus {
   outline: none;
-  border-color: #2d6a4f;
+  border-color: var(--vert-the);
 }
 
 .account-form .champ-aide {
   margin: 0;
   font-size: 0.82rem;
-  color: #777;
+  color: var(--gris-fonce);
 }
 
 .account-form .btn-primary,
@@ -226,16 +225,16 @@
 }
 
 .account-succes {
-  background: #d4edda;
-  color: #155724;
+  background: var(--succes-fond);
+  color: var(--succes);
   padding: 0.75rem 1rem;
   border-radius: 10px;
   margin: 0;
 }
 
 .account-gains-alerte {
-  background: #fff3cd;
-  color: #856404;
+  background: var(--alerte-fond);
+  color: var(--alerte);
   padding: 0.75rem 1rem;
   border-radius: 10px;
   font-weight: 600;
@@ -244,18 +243,18 @@
 .account-danger {
   margin-top: 2.5rem;
   padding: 1.25rem;
-  border: 1px solid #f5c2c7;
-  background: #fff8f8;
+  border: 1px solid var(--erreur);
+  background: var(--erreur-fond);
   border-radius: 12px;
 }
 
 .account-danger h2 {
-  color: #b3261e;
+  color: var(--erreur);
   margin: 0 0 0.5rem;
 }
 
 .account-danger > p {
-  color: #666;
+  color: var(--gris-fonce);
   margin: 0 0 1rem;
 }
 
@@ -264,8 +263,8 @@
 }
 
 .btn-danger {
-  background: #b3261e;
-  color: white;
+  background: var(--erreur);
+  color: var(--blanc);
   border: none;
   padding: 0.9rem 1.8rem;
   border-radius: 12px;
@@ -276,13 +275,13 @@
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: #8c1d16;
+  background: var(--erreur-fonce);
   transform: translateY(-2px);
 }
 
 .erreur {
-  background: #fdecea;
-  color: #b3261e;
+  background: var(--erreur-fond);
+  color: var(--erreur);
   padding: 0.75rem 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
