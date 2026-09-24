@@ -149,6 +149,9 @@ export default function Connexion() {
               required
               placeholder="Votre mot de passe"
             />
+            <p className="auth-oublie">
+              <Link to="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
+            </p>
           </div>
 
           <button

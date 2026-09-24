@@ -1,4 +1,10 @@
 const prisma = {
+  passwordReset: {
+    create: jest.fn(),
+    findUnique: jest.fn(),
+    delete: jest.fn(),
+    deleteMany: jest.fn(),
+  },
   user: {
     create: jest.fn(),
     findUnique: jest.fn(),

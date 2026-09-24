@@ -36,6 +36,9 @@ describe('Connexion', () => {
     expect(
       screen.getByRole('link', { name: /créez votre compte gratuitement/i }),
     ).toHaveAttribute('href', '/inscription');
+    expect(
+      screen.getByRole('link', { name: /mot de passe oublié/i }),
+    ).toHaveAttribute('href', '/mot-de-passe-oublie');
   });
 
   it('affiche une erreur si les identifiants sont refusés', async () => {

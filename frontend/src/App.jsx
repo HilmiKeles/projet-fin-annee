@@ -7,6 +7,8 @@ import Home from './pages/Home.jsx';
 import Reglement from './pages/Reglement.jsx'; 
 import EnterCode from './pages/EnterCode.jsx';   
 import Connexion from './pages/Connexion.jsx'; 
+import MotDePasseOublie from './pages/MotDePasseOublie.jsx';
+import ReinitialiserMotDePasse from './pages/ReinitialiserMotDePasse.jsx';
 import Inscription from './pages/Inscription.jsx';
 import Profil from './pages/Profil.jsx';
 import Lots from './pages/Lots.jsx';
@@ -38,6 +40,8 @@ function App() {
           <Route path="/reglement" element={<Reglement />} />
           <Route path="/entrer-code" element={<EnterCode />} />
           <Route path="/connexion" element={<Connexion />} />
+          <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
+          <Route path="/reinitialiser-mot-de-passe" element={<ReinitialiserMotDePasse />} />
           <Route path="/inscription" element={<Inscription />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/lots" element={<Lots />} />

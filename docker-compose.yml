@@ -16,12 +16,22 @@ services:
       timeout: 5s
       retries: 5
 
+  mailpit:
+    image: axllent/mailpit
+    container_name: thetiptop_mailpit
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
   backend:
     build: ./backend
     container_name: thetiptop_backend
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     environment:
       DATABASE_URL: postgresql://thetiptop:${DB_PASSWORD:-secret}@db:5432/thetiptop
       JWT_SECRET: ${JWT_SECRET:-change-me-super-secret-key}
@@ -31,6 +41,13 @@ services:
       PORT: 4000
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-349236804300-ri1ua1ahuj1vd14bmf0297gjjgd7r927.apps.googleusercontent.com}
       CAMPAGNE_BUDGET: ${CAMPAGNE_BUDGET:-15000}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-Thé Tip Top <noreply@thetiptop.fr>}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:-http://localhost}
     command: sh -c "npx prisma db push --accept-data-loss && node src/index.js"
     ports:
       - "4000:4000"
