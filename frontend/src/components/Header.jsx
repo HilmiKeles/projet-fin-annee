@@ -129,7 +129,7 @@ export default function Header() {
                 onClick={fermerMenu}
                 className="nav-link"
               >
-                Participer
+                S'inscrire
               </NavLink>
             </>
           )}
