@@ -1,10 +1,16 @@
+const crypto = require("crypto");
 const request = require("supertest");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 jest.mock("../src/services/googleAuth");
+jest.mock("../src/services/mail", () => ({
+  envoyerEmail: jest.fn(),
+  urlApplication: jest.fn(() => "http://localhost"),
+}));
 
 const { verifierCredentialGoogle } = require("../src/services/googleAuth");
+const { envoyerEmail } = require("../src/services/mail");
 const app = require("../src/app");
 const { prisma } = require("@prisma/client");
 
@@ -193,5 +199,156 @@ describe("POST /api/auth/google", () => {
     expect(res.status).toBe(200);
     expect(res.body.user.id).toBe("user-1");
     expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/auth/forgot-password", () => {
+  beforeEach(() => {
+    envoyerEmail.mockResolvedValue(undefined);
+  });
+
+  it("refuse une adresse e-mail invalide", async () => {
+    const res = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({ email: "pas-un-email" });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/e-mail/i);
+    expect(prisma.passwordReset.create).not.toHaveBeenCalled();
+  });
+
+  it("ne révèle pas qu'un compte est inconnu", async () => {
+    prisma.user.findUnique.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({ email: "inconnu@example.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toMatch(/compte existe/i);
+    expect(res.body.lien).toBeUndefined();
+    expect(prisma.passwordReset.create).not.toHaveBeenCalled();
+    expect(envoyerEmail).not.toHaveBeenCalled();
+  });
+
+  it("envoie un e-mail avec un lien à usage limité pour un compte connu", async () => {
+    prisma.user.findUnique.mockResolvedValue({
+      id: "user-1",
+      email: "jean@example.com",
+    });
+    prisma.passwordReset.deleteMany.mockResolvedValue({ count: 0 });
+    prisma.passwordReset.create.mockResolvedValue({ id: "reset-1" });
+
+    const res = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({ email: "Jean@example.com" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toMatch(/e-mail/i);
+    expect(res.body.lien).toBeUndefined();
+    expect(envoyerEmail).toHaveBeenCalledTimes(1);
+
+    const message = envoyerEmail.mock.calls[0][0];
+    expect(message.to).toBe("jean@example.com");
+    const token = message.text.match(/token=([a-f0-9]{64})/)[1];
+    expect(message.html).toContain(token);
+
+    const data = prisma.passwordReset.create.mock.calls[0][0].data;
+    expect(data.userId).toBe("user-1");
+    expect(data.tokenHash).toBe(
+      crypto.createHash("sha256").update(token).digest("hex"),
+    );
+    expect(new Date(data.expiresAt).getTime()).toBeGreaterThan(Date.now());
+  });
+
+  it("annule le lien si l'e-mail ne part pas", async () => {
+    envoyerEmail.mockRejectedValue(
+      Object.assign(new Error("Impossible d'envoyer l'e-mail pour le moment."), {
+        status: 503,
+      }),
+    );
+    prisma.user.findUnique.mockResolvedValue({
+      id: "user-1",
+      email: "jean@example.com",
+    });
+    prisma.passwordReset.deleteMany.mockResolvedValue({ count: 1 });
+    prisma.passwordReset.create.mockResolvedValue({ id: "reset-1" });
+
+    const res = await request(app)
+      .post("/api/auth/forgot-password")
+      .send({ email: "jean@example.com" });
+
+    expect(res.status).toBe(503);
+    expect(res.body.error).toMatch(/e-mail/i);
+    expect(prisma.passwordReset.deleteMany).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("POST /api/auth/reset-password", () => {
+  it("refuse un mot de passe trop faible", async () => {
+    const res = await request(app).post("/api/auth/reset-password").send({
+      token: "a".repeat(64),
+      password: "faible",
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/mot de passe/i);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it("refuse un lien inconnu", async () => {
+    prisma.passwordReset.findUnique.mockResolvedValue(null);
+
+    const res = await request(app).post("/api/auth/reset-password").send({
+      token: "a".repeat(64),
+      password: "Password1!",
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toMatch(/invalide ou a expiré/i);
+  });
+
+  it("refuse un lien expiré", async () => {
+    prisma.passwordReset.findUnique.mockResolvedValue({
+      id: "reset-1",
+      userId: "user-1",
+      expiresAt: new Date(Date.now() - 1000),
+    });
+
+    const res = await request(app).post("/api/auth/reset-password").send({
+      token: "a".repeat(64),
+      password: "Password1!",
+    });
+
+    expect(res.status).toBe(400);
+    expect(prisma.passwordReset.delete).toHaveBeenCalledWith({
+      where: { id: "reset-1" },
+    });
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it("remplace le mot de passe puis invalide le lien", async () => {
+    prisma.passwordReset.findUnique.mockResolvedValue({
+      id: "reset-1",
+      userId: "user-1",
+      expiresAt: new Date(Date.now() + 60_000),
+    });
+    prisma.user.update.mockResolvedValue({ id: "user-1" });
+    prisma.passwordReset.deleteMany.mockResolvedValue({ count: 1 });
+
+    const res = await request(app).post("/api/auth/reset-password").send({
+      token: "a".repeat(64),
+      password: "Nouveau1!",
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toMatch(/mis à jour/i);
+
+    const data = prisma.user.update.mock.calls[0][0].data;
+    expect(data.password).not.toBe("Nouveau1!");
+    expect(await bcrypt.compare("Nouveau1!", data.password)).toBe(true);
+    expect(prisma.passwordReset.deleteMany).toHaveBeenCalledWith({
+      where: { userId: "user-1" },
+    });
   });
 });

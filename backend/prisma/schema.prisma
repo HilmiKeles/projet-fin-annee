@@ -21,9 +21,19 @@ model User {
   role       Role     @default(CLIENT)
   firstName  String   @default("Cher")     // Valeur par défaut pour sauver la base
   lastName   String   @default("Client")   // Valeur par défaut pour sauver la base
-  newsletter Boolean  @default(false)      // Ajout de l'opt-in newsletter
-  createdAt  DateTime @default(now())
-  gains      Gain[]
+  newsletter     Boolean         @default(false)      // Ajout de l'opt-in newsletter
+  createdAt      DateTime        @default(now())
+  gains          Gain[]
+  passwordResets PasswordReset[]
+}
+
+model PasswordReset {
+  id        String   @id @default(uuid())
+  tokenHash String   @unique
+  expiresAt DateTime
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model NewsletterSubscriber {

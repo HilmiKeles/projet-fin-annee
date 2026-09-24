@@ -159,6 +159,41 @@
   text-align: left;
 }
 
+.auth-succes {
+  background: var(--succes-fond);
+  border: 1px solid var(--succes);
+  border-radius: 8px;
+  color: var(--succes);
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.auth-succes p {
+  margin: 0;
+}
+
+.auth-succes p + p {
+  margin-top: 8px;
+}
+
+.auth-succes a {
+  color: var(--vert-fonce);
+  font-weight: 700;
+}
+
+.auth-oublie {
+  margin: 8px 0 0;
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.auth-oublie a {
+  color: var(--vert-the);
+  font-weight: 600;
+}
+
 .auth-bouton {
   width: 100%;
   padding: 14px;
